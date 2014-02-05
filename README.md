@@ -8,3 +8,5 @@ Wiki Pages:
  - [Related Technology](https://github.com/OpenUHClassScheduleHelper/OpenUHClassScheduleHelper/wiki/Related-Technology)
  - [Team Meetings](https://github.com/OpenUHClassScheduleHelper/OpenUHClassScheduleHelper/wiki/Team-Meetings)
  - [User Interviews](https://github.com/OpenUHClassScheduleHelper/OpenUHClassScheduleHelper/wiki/User-Interviews)
+ - [High Fidelity Mockups](http://openuhclassschedulehelper.github.io/uimockup/)
+ 
