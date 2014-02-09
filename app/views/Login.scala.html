@@ -1,0 +1,24 @@
+@(page: String)
+
+@Main(page) {
+    <div class="full col-sm-6 login-panel">
+        <h4 class="text-center">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Please log in</h3>
+                </div>
+                <div class="panel-body">
+                    <fieldset>
+                        <div class="form-group" >
+                            <input name="email" value="" class="form-control" placeholder="E-mail" type="text">
+                        </div>
+                        <div class="form-group" >
+                            <input name="password" value="" class="form-control" placeholder="Password" type="password">
+                        </div>
+                        <input id="loginsubmit" class="btn btn-lg btn-success btn-block" type="submit" value="Login">
+                    </fieldset>
+                </div>
+            </div>
+        </h4>
+    </div>
+}
