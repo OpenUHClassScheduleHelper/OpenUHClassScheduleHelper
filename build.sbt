@@ -1,4 +1,4 @@
-name := "open-uh-class-schedule-helper"
+name := "OpenUHClassScheduleHelper"
 
 version := "1.0-SNAPSHOT"
 
