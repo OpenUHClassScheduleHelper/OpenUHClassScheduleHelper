@@ -54,7 +54,7 @@ public class Application extends Controller {
    * @return The results page.
    */
   public static Result result() {
-    return ok(Result.render("Results"));
+    return ok(Results.render("Results"));
   }
   
 }
