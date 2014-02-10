@@ -5,6 +5,7 @@ import play.mvc.Result;
 import views.html.Index;
 import views.html.Login;
 import views.html.Register;
+import views.html.Results;
 
 public class Application extends Controller {
   
@@ -46,6 +47,14 @@ public class Application extends Controller {
    */
   public static Result register() {
     return ok(Register.render("Register"));
+  }
+  
+  /**
+   * Returns the Results page.
+   * @return The results page.
+   */
+  public static Result result() {
+    return ok(Result.render("Results"));
   }
   
 }

@@ -1,0 +1,91 @@
+@(page: String)
+
+
+@Main(page) {
+<div> 
+                 <h2>Results</h2>
+                 <table class="result-table table-striped">
+                 <tr>
+                   <th>CRN</th>
+                   <th>Course</th>
+                   <th class="hidden-xs">Title</th>
+                   <th class="hidden-xs hidden-sm">Department</th>
+                   <th>Gen Ed./Focus</th>
+                   <th>Instructor</th>
+                   <th class="hidden-xs hidden-sm">Location</th>
+                   <th>Time</th>
+                   <th></th>
+                 </tr>
+                 
+                 <tr>
+                   <td>84935</td>
+                   <td>ICS 111</td>
+                   <td class="hidden-xs">Intro to Computer Science I</td>
+                   <td class="hidden-xs hidden-sm">ICS</td>
+                   <td></td>
+                   <td>Ravi Narayan</td>
+                   <td class="hidden-xs hidden-sm">POST 127, POST 319</td>
+                   <td>M 0530-0800p, W 0530-0645p</td>
+                 </tr>
+                 
+                 <tr>
+                   <td>84095</td>
+                   <td>ICS 141</td>
+                   <td class="hidden-xs">Discrete Math for CS I</td>
+                   <td class="hidden-xs hidden-sm">ICS</td>
+                   <td></td>
+                   <td>Kazuo Sugihara</td>
+                   <td class="hidden-xs hidden-sm">BIL 150, MSB 114</td>
+                   <td>TR 0130-0245p, F 1200-0115p</td>
+                   <td><button class="btn btn-success btn-sm"><div class="glyphicon glyphicon-plus"></div> Add To Schedule</button></td>
+                 </tr>
+                 
+                 <tr>
+                   <td>84494</td>
+                   <td>ICS 212</td>
+                   <td class="hidden-xs">Program Structure</td>
+                   <td class="hidden-xs hidden-sm">ICS</td>
+                   <td></td>
+                   <td>Julia Patriarche</td>
+                   <td class="hidden-xs hidden-sm">TBA</td>
+                   <td>TBA</td>
+                   <td><button class="btn btn-success btn-sm"><div class="glyphicon glyphicon-plus"></div> Add To Schedule</button></td>
+                 </tr>
+                 
+                 
+                 </table>
+                    
+                </div>
+                  <h2>My Courses</h2>
+                  <table class="result-table table-striped">
+                    <tr>
+                   <th>CRN</th>
+                   <th>Course</th>
+                   <th class="hidden-xs">Title</th>
+                   <th class="hidden-xs hidden-sm">Department</th>
+                   <th>Gen Ed./Focus</th>
+                   <th>Instructor</th>
+                   <th class="hidden-xs hidden-sm">Location</th>
+                   <th>Time</th>
+                   <th></th>
+                   </tr>
+                   
+                   <tr>
+                   <td>84935</td>
+                   <td>ICS 111</td>
+                   <td class="hidden-xs">Intro to Computer Science I</td>
+                   <td class="hidden-xs hidden-sm">ICS</td>
+                   <td></td>
+                   <td>Ravi Narayan</td>
+                   <td class="hidden-xs hidden-sm">POST 127, POST 319</td>
+                   <td>M 0530-0800p, W 0530-0645p</td>
+                   <td><button class="btn btn-danger btn-sm"><div class="glyphicon glyphicon-remove"></div> Remove</button></td>
+                 </tr>
+                  </table>
+                <div>
+                
+                </div>
+
+
+
+}
