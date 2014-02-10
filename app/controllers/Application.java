@@ -7,6 +7,7 @@ import views.html.Index;
 import views.html.Login;
 import views.html.Register;
 import views.html.Search;
+imtport views.html.Account;
 
 public class Application extends Controller {
   
@@ -56,6 +57,14 @@ public class Application extends Controller {
    */
   public static Result register() {
     return ok(Register.render("Register"));
+  }
+  
+  /**
+   * Returns the Account page.
+   * @return The account page.
+   */
+  public static Result account() {
+    return ok(Account.render("Account"));
   }
   
 }

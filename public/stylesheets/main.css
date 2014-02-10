@@ -7,10 +7,12 @@
 
 td, th {
   text-align: center;
+  padding: 5px;
 } 
 
 h2 {
   margin-top: 3%;
+  margin-left: 10px;
 }
 
 .login-panel { 
@@ -20,7 +22,7 @@ h2 {
 }
 
 .maincol {
-  background-image: url("../images/manoaseal_watermark.jpg"); 
+  background-image: url('manoaseal_watermark.jpg'); 
   background-size: 75% 75%; 
   background-repeat:no-repeat;
   background-position: 50% 60%;
@@ -36,6 +38,13 @@ h2 {
   width: 100px;
 }
 
+#lg-menu {
+font-size: 18px;
+}
+
+#sm-menu {
+font-size: 14px;
+}
 
 /* custom template */
 html, body {
