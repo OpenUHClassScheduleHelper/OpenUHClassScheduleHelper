@@ -1,10 +1,12 @@
 package controllers;
 
+import models.CourseDB;
 import play.mvc.Controller;
 import play.mvc.Result;
 import views.html.Index;
 import views.html.Login;
 import views.html.Register;
+import views.html.Search;
 
 public class Application extends Controller {
   
@@ -15,7 +17,15 @@ public class Application extends Controller {
   public static Result index() {
     return ok(Index.render("Home"));
   }
- 
+
+  /**
+   * Returns the search results page.
+   * @return The search results page.
+   */
+  public static Result searchResults() {
+    return ok(Search.render("Search Results", CourseDB.getCourses()));
+  }
+  
   /**
    * Returns the login page.
    * @return The login page.

@@ -54,7 +54,7 @@ $('[data-toggle=offcanvas]').click(function() {
                 </ul>
                
                 <ul class="nav hidden-xs" id="lg-menu">
-                    <li class="active"><a href="search.html"><i class="glyphicon glyphicon-search"></i> Search</a></li>
+                    <li class="active"><a href="@routes.Application.searchResults()"><i class="glyphicon glyphicon-search"></i> Search</a></li>
                     <li><a href="print.html"><i class="glyphicon glyphicon-print"></i> Print Schedule</a></li>
                     <li><a href="email.html"><i class="glyphicon glyphicon-envelope"></i> Email Schedule</a></li>
                     <li><a href="map.html"><i class="glyphicon glyphicon-road"></i> View Map</a></li>
@@ -66,7 +66,7 @@ $('[data-toggle=offcanvas]').click(function() {
               
                 <!-- tiny only nav-->
               <ul class="nav visible-xs" id="xs-menu">
-                    <li><a href="search.html" class="text-center"><i class="glyphicon glyphicon-search"></i></a></li>
+                    <li><a href="@routes.Application.searchResults()" class="text-center"><i class="glyphicon glyphicon-search"></i></a></li>
                     <li><a href="print.html" class="text-center"><i class="glyphicon glyphicon-print"></i></a></li>
                     <li><a href="email.html" class="text-center"><i class="glyphicon glyphicon-envelope"></i></a></li>
                     <li><a href="map.html" class="text-center"><i class="glyphicon glyphicon-road"></i></a></li>
