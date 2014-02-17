@@ -11,3 +11,4 @@ Wiki Pages:
  - [High Fidelity Mockups](http://openuhclassschedulehelper.github.io/uimockup/)
  - [Use Cases](https://github.com/OpenUHClassScheduleHelper/OpenUHClassScheduleHelper/wiki/Use-Cases)
  - [Stakeholder Requirements](https://github.com/OpenUHClassScheduleHelper/OpenUHClassScheduleHelper/wiki/Stakeholder-Requirements)
+ - [Mockup Evaluations](https://github.com/OpenUHClassScheduleHelper/OpenUHClassScheduleHelper/wiki/Mockup-Evaluations)
