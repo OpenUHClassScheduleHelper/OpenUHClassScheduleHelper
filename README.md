@@ -9,4 +9,5 @@ Wiki Pages:
  - [Team Meetings](https://github.com/OpenUHClassScheduleHelper/OpenUHClassScheduleHelper/wiki/Team-Meetings)
  - [User Interviews](https://github.com/OpenUHClassScheduleHelper/OpenUHClassScheduleHelper/wiki/User-Interviews)
  - [High Fidelity Mockups](http://openuhclassschedulehelper.github.io/uimockup/)
- 
+ - [Stakeholder Requirements](https://github.com/OpenUHClassScheduleHelper/OpenUHClassScheduleHelper/wiki/Use-Cases)
+ - [Use Cases](https://github.com/OpenUHClassScheduleHelper/OpenUHClassScheduleHelper/wiki/Stakeholder-Requirements)
