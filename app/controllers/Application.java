@@ -54,7 +54,7 @@ public class Application extends Controller {
    * Returns the Results page.
    * @return The results page.
    */
-  public static Result result() {
+  public static Result getResults() {
     return ok(Results.render("Results"));
   }
   
@@ -62,8 +62,8 @@ public class Application extends Controller {
    * Returns the personal account page.
    * @return The account page.
    */
-  public static Result account() {
-    return ok(Account.render("Account"));
+  public static Result myAccount() {
+    return ok(Account.render("My Account"));
   }
   
 }
