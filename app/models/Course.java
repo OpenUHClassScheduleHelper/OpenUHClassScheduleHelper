@@ -1,5 +1,8 @@
 package models;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Course {
   
   private String courseNumber;
@@ -92,6 +95,15 @@ public class Course {
 
   public void setCourseNumber(String courseNumber) {
     this.courseNumber = courseNumber;
+  }
+  
+  /**
+   * Gets a 3d array (maybe) of course meeting times.
+   * Format s/b [Day][Start][End].
+   * @return
+   */
+  public static List<String> getMeetingTimes() {
+    return new ArrayList<String>();
   }
   
 }
