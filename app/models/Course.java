@@ -8,10 +8,10 @@ public class Course {
   private String courseTitle;
   private String instructor;
   private String room;
-  
-  /**
-   * To do: credits, seats available, days, time, dates
-   */
+  private int credits;
+  private int seats;
+  private String days;
+  private String time;
   
   /**
    * default constructor.
@@ -27,7 +27,12 @@ public class Course {
    * @param section
    * @param courseTitle
    * @param instructor
-   * @param room
+   * @param credits
+   * @param seats
+   * @param days
+   * @param time
+   * @param room  (remove room?)
+   * TODO: add new parameters, get/set them
    */
   public Course(String courseNumber, String courseName, String section, String courseTitle, String instructor, 
                   String room) {

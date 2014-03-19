@@ -5,10 +5,8 @@ import java.util.List;
 import models.Course;
 
 /**
- * Class that stored form data for textbook.
- * @author Owner
- *
- */
+ * Class that stores form data for the course.
+*/
 public class CourseFormData {
 
   /** course number. */
@@ -33,9 +31,12 @@ public class CourseFormData {
   
   /**
    * Constructor. 
-   * 
    * @param courseNumber - the course number
-   * to do later
+   * @param courseName - the course name
+   * @param section - the section
+   * @param courseTitle - the course title
+   * @param instructor - the course instructor
+   * @param room - the room the course is in
    */
   public CourseFormData(String courseNumber, String courseName, String section, String courseTitle, String instructor, 
       String room) {

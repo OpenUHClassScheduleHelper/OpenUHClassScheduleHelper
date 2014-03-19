@@ -7,8 +7,7 @@ import java.util.Map;
 import views.formdata.CourseFormData;
 
 /**
- * Class that stores a DB of textbooks.
- *
+ * Class that stores a DB of the courses.
  */
 public class CourseDB {
   
@@ -31,18 +30,17 @@ public class CourseDB {
   }
   
   /**
-   * Gets the List of textbooks.
-   * 
-   * @return List of text books.
+   * Gets the List of courses.
+   * @return List of courses.
    */
   public static List<Course> getCourses() {
     return new ArrayList<>(courses.values());
   }
   
   /**
-   * Gets a textbook based on ISBN.
-   * @param ISBN the isbn.
-   * @return textbook the textbook to return.
+   * Gets a course based on CRN.
+   * @param crn the course number.
+   * @return The course.
    */
   public static Course getCourse(String crn) {
     Course course = courses.get(crn);
