@@ -7,6 +7,7 @@ import views.html.Login;
 import views.html.Register;
 import views.html.Results;
 import views.html.Account;
+import views.html.Test;
 
 public class Application extends Controller {
   
@@ -23,7 +24,7 @@ public class Application extends Controller {
    * @return The login page.
    */
   public static Result login() {
-    return ok(Login.render("Login"));
+    return ok(Test.render("Login"));
   }
   
   /**
