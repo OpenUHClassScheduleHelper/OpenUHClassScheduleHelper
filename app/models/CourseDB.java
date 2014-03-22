@@ -21,8 +21,8 @@ public class CourseDB {
   public static Course addCourse(CourseFormData formData) {
     String crn = formData.courseNumber;
   
-    Course course = new Course(formData.courseNumber, formData.courseName, formData.section,
-      formData.courseTitle, formData.instructor, formData.room);
+    Course course = new Course(formData.genFocus, formData.courseNumber, formData.courseName, formData.section,
+      formData.courseTitle, formData.credits, formData.instructor, formData.seats, formData.meeting, formData.room);
     
     courses.put(crn, course);
     

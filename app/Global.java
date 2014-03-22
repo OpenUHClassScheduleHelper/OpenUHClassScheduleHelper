@@ -1,7 +1,10 @@
+import java.util.ArrayList;
+import java.util.List;
 import play.Application;
 import play.GlobalSettings;
 import models.CourseDB;
 import models.UserInfoDB;
+import models.Meeting;
 import views.formdata.CourseFormData;
 
 /**
@@ -16,37 +19,73 @@ public class Global extends GlobalSettings {
    */
   public void onStart(Application app) {
     
+	/** list object **/
+	List<Meeting> meeting = new ArrayList<Meeting>();
+	
     /** Adds a user. **/
     UserInfoDB.addUserInfo("John Smith", "smith@example.com", "password");
     
     /** 
 	 *  Adds a course. 
-	 *  CRN, course name, section, course title, credits, instructor, seats, days, time 
+	 *  Meeting is cleared before a new course is added.
 	**/
 	
-    CourseDB.addCourse(new CourseFormData("85248", "ICS 101B", "003", "Tools Inf Age: General", "4", 
-					                     +"K Binsted", "4", "TR", "0900-1015a"));
-    CourseDB.addCourse(new CourseFormData("85251", "ICS 101B", "006", "Tools Inf Age: General", "4", 
-					                     +"K Binsted", "0", "TR", "0900-1015a"));
-    CourseDB.addCourse(new CourseFormData("86041", "ICS 110", "001", "Programming through Animations", "3", 
-					                     +"G Poisson", "12", "TR", "1030-1145a"));
-    CourseDB.addCourse(new CourseFormData("84935", "ICS 111", "003", "Intro to Computer Science I", "4", 
-					                     +"R Narayan", "4", "MW", "0530-0800p"));
-    CourseDB.addCourse(new CourseFormData("84095", "ICS 141", "002", "Discrete Math for CS I", "3", 
-					                     +"K Sugihara", "7", "TRF", "0130-0245p"));
-    CourseDB.addCourse(new CourseFormData("84095", "ICS 211", "001", "Intro to Computer Science II", "3", 
-					                     +"C Moore", "3", "MWF", "1030-1145a"));
-	/** add more here 
-    CourseDB.addCourse(new CourseFormData("85248", "ICS 101B", "003", "Tools Inf Age: General", "4", 
-					                     +"K Binsted", "4", "T TR", "0900-1015a"));
-    CourseDB.addCourse(new CourseFormData("85248", "ICS 101B", "003", "Tools Inf Age: General", "4", 
-					                     +"K Binsted", "4", "T TR", "0900-1015a"));
-    CourseDB.addCourse(new CourseFormData("85248", "ICS 101B", "003", "Tools Inf Age: General", "4", 
-					                     +"K Binsted", "4", "T TR", "0900-1015a"));
-    CourseDB.addCourse(new CourseFormData("85248", "ICS 101B", "003", "Tools Inf Age: General", "4", 
-					                     +"K Binsted", "4", "T TR", "0900-1015a"));
-    CourseDB.addCourse(new CourseFormData("85248", "ICS 101B", "003", "Tools Inf Age: General", "4", 
-					                     +"K Binsted", "4", "T TR", "0900-1015a"));
-    **/										 
+	// ICS101B
+    meeting.add(new Meeting("T", "0900a", "1015a", "BIL152");
+    meeting.add(new Meeting("T", "1030a", "1145a", "POST318A");
+    meeting.add(new Meeting("R", "1030a", "1145a", "POST318A");
+  	
+    CourseDB.addCourse(new CourseFormData("", "85248", "ICS 101B", "003", "Tools Inf Age: General", "4", 
+					                     +"K Binsted", "4", meeting, "BIL152"));
+										 
+	meeting.clear();
+
+	// ICS101B
+    meeting.add(new Meeting("T", "0900a", "1015a", "BIL152");
+    meeting.add(new Meeting("T", "1200p", "0115p", "POST318A");
+    meeting.add(new Meeting("R", "1200p", "0115p", "POST318A");
+	
+    CourseDB.addCourse(new CourseFormData("", "85251", "ICS 101B", "006", "Tools Inf Age: General", "4", 
+					                     +"K Binsted", "0", meeting, "BIL152"));
+ 
+	meeting.clear();
+
+	// ICS110
+    meeting.add(new Meeting("T", "1030a", "1145a", "POST319");
+    meeting.add(new Meeting("R", "1030a", "1145a", "POST319");
+
+    CourseDB.addCourse(new CourseFormData("", "86041", "ICS 110", "001", "Programming through Animations", "3", 
+					                     +"G Poisson", "12", meeting, "POST319"));
+
+	meeting.clear();
+    
+	// ICS111
+    meeting.add(new Meeting("M", "0530p", "0800p", "BIL152");
+    meeting.add(new Meeting("W", "0530p", "0645p", "POST319");
+
+	CourseDB.addCourse(new CourseFormData("", "84935", "ICS 111", "003", "Intro to Computer Science I", "4", 
+					                     +"R Narayan", "4", meeting, "POST127"));
+
+	meeting.clear();
+
+	// ICS141
+    meeting.add(new Meeting("T", "0130p", "0245p", "BIL150");
+    meeting.add(new Meeting("R", "0130p", "0245p", "BIL150");
+    meeting.add(new Meeting("F", "1200p", "0115p", "MSB114");
+	
+	CourseDB.addCourse(new CourseFormData("", "84095", "ICS 141", "002", "Discrete Math for CS I", "3", 
+					                     +"K Sugihara", "7", meeting, "BIL150"));
+
+	meeting.clear();
+
+	// ICS211
+    meeting.add(new Meeting("M", "1030a", "1145a", "MSB114");
+    meeting.add(new Meeting("W", "1030a", "1145a", "MSB114");
+	meeting.add(new Meeting("W", "0300p", "0415p", "POST319");
+    meeting.add(new Meeting("F", "0300p", "0415p", "POST319");
+	
+	CourseDB.addCourse(new CourseFormData("", "84095", "ICS 211", "001", "Intro to Computer Science II", "3", 
+					                     +"C Moore", "3", meeting, "MSB114"));
+	meeting.clear();
   }
 }

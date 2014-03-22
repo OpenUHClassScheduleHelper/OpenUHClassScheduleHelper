@@ -2,20 +2,25 @@ package models;
 
 import java.util.ArrayList;
 import java.util.List;
+import models.Meeting;
 
 public class Course {
   
+  private String genFocus;
   private String courseNumber;
   private String courseName;
   private String section;
   private String courseTitle;
+  private String credits;
   private String instructor;
-  private String room;
-  private int credits;
-  private int seats;
+  private String seats;
+  /**
   private String days;
   private String time;
-  
+  **/
+  private List<Meeting> meeting;
+  private String room;
+    
   /**
    * default constructor.
    */
@@ -25,30 +30,58 @@ public class Course {
   
   /**
    * Constructor.
+   * @param genFocus
    * @param courseNumber
    * @param courseName
    * @param section
    * @param courseTitle
-   * @param instructor
    * @param credits
+   * @param instructor
    * @param seats
-   * @param days
-   * @param time
-   * @param room  (remove room?)
+   * @param meeting object (todo)
+   * @param room 
    * TODO: add new parameters, get/set them
    */
-  public Course(String courseNumber, String courseName, String section, String courseTitle, String instructor, 
-                  String room) {
+  public Course(String genFocus, String courseNumber, String courseName, String section, String courseTitle, String credits, 
+                String instructor, String seats, List<Meeting> meeting, String room) {
     
+	this.setGenFocus(genFocus)
     this.setCourseNumber(courseNumber);
     this.setCourseName(courseName);
     this.setSection(section);
     this.setCourseTitle(courseTitle);
+	this.setCredits(credits);
     this.setInstructor(instructor);
+	this.setSeats(seats)
+	this.meeting(meeting);
     this.setRoom(room);
     
   }
+  
+  public String getGenFocus() {
+    return genFocus;
+  }
+  
+  public void setGenFocus(String genFocus) {
+    this.genFocus = genFocus;
+  }
+  
+  public String getCredits() {
+    return credits;
+  }
+  
+  public void setCredits(String credits) {
+    this.credits = credits;
+  }
 
+  public String getSeats() {
+    return seats;
+  }
+  
+  public void setSeats(String seats) {
+    this.seats = seats;
+  }
+    
   public String getRoom() {
     return room;
   }
@@ -97,13 +130,12 @@ public class Course {
     this.courseNumber = courseNumber;
   }
   
-  /**
-   * Gets a 3d array (maybe) of course meeting times.
-   * Format s/b [Day][Start][End].
-   * @return
-   */
-  public static List<String> getMeetingTimes() {
-    return new ArrayList<String>();
+  public List<Meeting> getMeeting() {
+    return meeting;
+  }
+  
+  public void setMeeting() {
+    this.meeting = meeting;
   }
   
 }
