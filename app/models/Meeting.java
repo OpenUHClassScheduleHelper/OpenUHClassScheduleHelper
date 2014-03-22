@@ -18,10 +18,12 @@ public class Meeting {
   }
   
   /**
-   * Constructor.
-   * @param day
-   * @param start
-   * @param end
+   * Constructor for the object to be placed in the meeting list.
+   * The list will be used to construct the Course object.
+   * @param day The day of the week
+   * @param start The class start time
+   * @param end The class end time
+   * @param room The location of the class (for that day)
    */
   public Meeting(String day, String start, String end, String room) {
 	this.setDay(day)
