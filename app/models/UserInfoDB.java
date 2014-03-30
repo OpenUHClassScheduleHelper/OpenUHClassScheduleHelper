@@ -14,45 +14,31 @@ public class UserInfoDB {
   
   /**
    * Adds the specified user to the UserInfoDB.
-   * @param name The users name.
-   * @param email The users email.
-   * @param password The users password. 
+   * @param userName The UH userName of the user.
+   * @param firstName The users first name.
+   * @param lastName The users last name.
+   * @param role The users role - student, instructor.
    */
-  public static void addUserInfo(String name, String email, String password) {
-    userinfos.put(email, new UserInfo(name, email, password));
+  public static void addUserInfo(String userName, String firstName, String lastName, String role) {
+    userinfos.put(userName, new UserInfo(userName, firstName, lastName, role));
   }
   
   /**
-   * Returns true if the email represents a known user.
-   * @param email The users email.
+   * Returns true if the user name represents a known user.
+   * @param userName The users UH user name.
    * @return True if the user exists in the database.
    */
-  public static boolean isUser(String email) {
-    return userinfos.containsKey(email);
+  public static boolean isUser(String userName) {
+    return userinfos.containsKey(userName);
   }
 
   /**
-   * Returns the UserInfo associated with the email, or null if not found.
-   * @param email The users email.
+   * Returns the UserInfo associated with the userName, or null if not found.
+   * @param userName The users UH user name.
    * @return The UserInfo.
    */
-  public static UserInfo getUser(String email) {
-    return userinfos.get((email == null) ? "" : email);
+  public static UserInfo getUser(String userName) {
+    return userinfos.get((userName == null) ? "" : userName);
   }
 
-  /**
-   * Returns true if email and password are valid credentials.
-   * @param email The email. 
-   * @param password The password. 
-   * @return True if email is a valid user email and password is valid for that email.
-   */
-  public static boolean isValid(String email, String password) {
-    return ((email != null) 
-            &&
-            (password != null) 
-            &&
-            isUser(email) 
-            &&
-            getUser(email).getPassword().equals(password));
-  }
 }
