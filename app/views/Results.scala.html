@@ -1,8 +1,7 @@
 @(page: String, focusList: Map[String, Boolean], dayList: Map[String, Boolean], searchForm : Form[views.formdata.SearchForm])
-
+@import bootstrap3._
 
 @Main(page, true) {
-@import bootstrap3._
 
  <script type='text/javascript'>
             $(document).ready(function() {
@@ -110,26 +109,9 @@
             <option>Topics in Software (ICS 691)</option>
           </select>               
       </div>
-      @checkboxes(searchForm("Focus"), label = "Focus", checkboxMap = focusList)
-      <div class="checkbox" style="margin-left:5px">
-          <label><b>Focus</b>: </label>
-          <label><input type="checkbox"> ETH </label>
-          <label><input type="checkbox"> HAP </label>
-          <label><input type="checkbox"> OC </label>
-          <label><input type="checkbox"> WI </label>
-      </div>
+      @checkboxes(searchForm("Focus"), label = "Focus:", checkboxMap = focusList)
       <br>
-      @checkboxes(searchForm("Focus"), label = "Focus", checkboxMap = dayList)
-      <div class="checkbox" style="margin-top:5px">
-          <label><b>Days</b>: </label>
-          <label><input type="checkbox"> M </label>
-          <label><input type="checkbox"> Tu </label>
-          <label><input type="checkbox"> W </label>
-          <label><input type="checkbox"> Th </label>
-          <label><input type="checkbox"> F </label>
-          <label><input type="checkbox"> Sa </label>
-          <label><input type="checkbox"> Su </label>          
-      </div>
+      @checkboxes(searchForm("Days"), label = "Days:", checkboxMap = dayList)
       <div class="checkbox" style="margin-left:10px;padding-top:10px">
         <div id="slider-range"></div>
         <b>Time Range:<span id="time"></span></b>       

@@ -7,8 +7,12 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import models.UserInfoDB;
 import org.w3c.dom.Document;
+import play.data.Form;
 import play.mvc.Controller;
 import play.mvc.Result;
+import views.formdata.Days;
+import views.formdata.FocusTypes;
+import views.formdata.SearchForm;
 import views.html.Index;
 import views.html.Register;
 import views.html.Results;
@@ -21,6 +25,8 @@ public class Application extends Controller {
   private static final String CAS_VALIDATE = "https://cas-test.its.hawaii.edu/cas/serviceValidate";
 
   private static final String CAS_LOGOUT = "https://cas-test.its.hawaii.edu/cas/logout";
+  
+  private static final Form<SearchForm> searchForm = Form.form(SearchForm.class);
   
   /**
    * Returns the home page.
@@ -97,7 +103,7 @@ public static Result login() throws Exception {
 
         session("username", username);
         
-        UserInfoDB.addUserInfo(username, "", "");
+        UserInfoDB.addUserInfo(username, "", "", "");
 
         return redirect(routes.Application.getResults());
 
@@ -145,7 +151,7 @@ public static Result logout() throws Exception {
    * @return The results page.
    */
   public static Result getResults() {
-    return ok(Results.render("Results"));
+    return ok(Results.render("Results", FocusTypes.getFocusTypes(), Days.getDays(), searchForm));
   }
   
   /**
@@ -156,8 +162,11 @@ public static Result logout() throws Exception {
     return ok(Account.render("My Account"));
   }
   
-  public static ClassSearch() {
-    
+  
+  public static Result classSearch() {
+    Form<SearchForm> formData = searchForm.bindFromRequest();
+    SearchForm data = formData.get();
+    return redirect(routes.Application.index());
   }
   
 }
