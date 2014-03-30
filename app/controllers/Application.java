@@ -3,6 +3,8 @@ package controllers;
 import java.util.ArrayList;
 import models.UserComment;
 import models.UserCommentDB;
+import models.UserInfo;
+import models.UserInfoDB;
 import play.mvc.Controller;
 import play.mvc.Result;
 import views.html.Index;
@@ -27,13 +29,8 @@ public class Application extends Controller {
    * @return The login page.
    */
   public static Result login() {
-    ArrayList<UserComment> comments = UserCommentDB.getCommentsByUserName("julia4");
-    
-    for (UserComment comment : comments) {
-      System.out.println(comment.getPostDate() + " " + comment.getFullName() + ", " + comment.getComment() +
-                         " " + comment.isInstructorPost());
-    }
-    return ok(Test.render());
+    UserInfo user = UserInfoDB.getUser("jortal");
+    return ok(Test.render(user));
   }
   
   /**
