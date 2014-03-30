@@ -3,6 +3,18 @@
 
 @Main(page, true) {
 
+  <link rel="stylesheet" href="@routes.Assets.at("fullcalendar/fullcalendar.css")">
+  <link rel="stylesheet" media="print" href="@routes.Assets.at("fullcalendar/fullcalendar.print.css")">
+
+</script>
+
+<style type='text/css'>
+    #calendar {
+        width: 900px;
+        margin: 0 auto;
+        }
+</style>
+
  <!-- search form -->
   <div id="searchFormWrapper">
     <form class="form-inline" role="form">
@@ -64,8 +76,9 @@
     <h2 id="resultsHeader">Results</h2>
 
     <div class="visible-sm visible-xs">
-      <a class="btn course-dropdown-button" id="resultbutton1" onMouseOut="div.show('84935')"
-        onMouseOver="div.hide('84935')"> ICS 111 Intro to Computer Science I </a>
+      <a class="btn course-dropdown-button" 
+         id="resultbutton1" onMouseOut=""
+         onMouseOver=""> ICS 111 Intro to Computer Science I </a>
       <div class="mobileresults" id="resultinfo1">
         <p>
           <b>CRN: </b><br>84935
@@ -90,8 +103,8 @@
         <p></p>
       </div>
 
-      <a class="btn course-dropdown-button" id="resultbutton2" onMouseOut="div.show('84095')"
-        onMouseOver="div.hide('84095')"> ICS 142 Discrete Math for CS I </a>
+      <a class="btn course-dropdown-button" id="resultbutton2" onMouseOut=""
+        onMouseOver=""> ICS 142 Discrete Math for CS I </a>
       <div class="mobileresults" id="resultinfo2">
         <p>
           <b>CRN: </b><br>84095
@@ -121,8 +134,8 @@
         </p>
       </div>
 
-      <a class="btn course-dropdown-button" id="resultbutton3" onMouseOut="conflict.hide('84494')"
-        onMouseOver="conflict.show('84494')"> ICS 212 Program Structure </a>
+      <a class="btn course-dropdown-button" id="resultbutton3" onMouseOut=""
+        onMouseOver=""> ICS 212 Program Structure </a>
       <div class="mobileresults" id="resultinfo3">
         <p>
           <b>CRN: </b><br>84494
@@ -167,7 +180,7 @@
         <th></th>
       </tr>
 
-      <tr id="84935" onMouseOut="div.hide('84935')" onMouseOver="div.show('84935')">
+      <tr id="84935" onMouseOut="" onMouseOver="">
         <td><a id="classinfobutton1">84935</a></td>
         <td>ICS 111</td>
         <td>Intro to Computer Science I</td>
@@ -179,14 +192,13 @@
         <td class="buttoncolumn">
           <button class="btn btn-success btn-sm added" title="Already Added">
             <div class="glyphicon glyphicon-plus" title="Already Added"></div>
-          </button> <img class="infoicon" id="infoicon1" src="more_information_icon.jpg" data-toggle="modal"
+          </button> <img class="infoicon" id="infoicon1" src="@routes.Assets.at("images/more_information_icon.jpg")" data-toggle="modal"
           data-target="#infomodal1" title="Late Breaking News"></img>
-          <img class="watchicon" src="eye.svg" data-toggle="modal" data-target="#watchmodal"></img>
+          <img class="watchicon" src="@routes.Assets.at("images/eye.svg")" data-toggle="modal" data-target="#watchmodal"></img>
         </td>
       </tr>
 
-
-      <tr id="84095" onMouseOut="div.hide('84095')" onMouseOver="div.show('84095')">
+      <tr id="84095" onMouseOut="" onMouseOver="">
         <td><a id="classinfobutton2">84095</a></td>
         <td>ICS 141</td>
         <td>Discrete Math for CS I</td>
@@ -198,14 +210,14 @@
         <td class="buttoncolumn"><a href="addclassresults.html"><button class="btn btn-success btn-sm"
               title="Add to Schedule">
               <div class="glyphicon glyphicon-plus" title="Add to Schedule"></div>
-            </button></a> <img class="infoicon" src="more_information_icon.jpg" data-toggle="modal" data-target="#infomodal2"
+            </button></a> <img class="infoicon" src="@routes.Assets.at("images/more_information_icon.jpg")" data-toggle="modal" data-target="#infomodal2"
           title="Late Breaking News"></img>
-          <img class="watchicon" src="eye.svg" data-toggle="modal" data-target="#watchmodal"></img>
+          <img class="watchicon" src="@routes.Assets.at("images/eye.svg")" data-toggle="modal" data-target="#watchmodal"></img>
           </td>
       </tr>
 
 
-      <tr id="84494" onMouseOut="conflict.hide('84494')" onMouseOver="conflict.show('84494')">
+      <tr id="84494" onMouseOut="" onMouseOver="">
         <td><a id="classinfobutton3">84494</a></td>
         <td>ICS 212</td>
         <td>Program Structure</td>
@@ -217,9 +229,9 @@
         <td class="buttoncolumn"><a href="addclassresults.html"><button class="btn btn-success btn-sm"
               title="Add to Schedule">
               <div class="glyphicon glyphicon-plus" title="Add to Schedule"></div>
-            </button></a> <img class="infoicon" src="more_information_icon.jpg" data-toggle="modal" data-target="#infomodal3"
+            </button></a> <img class="infoicon" src="@routes.Assets.at("images/more_information_icon.jpg")" data-toggle="modal" data-target="#infomodal3"
           title="Late Breaking News"></img>
-          <img class="watchicon" src="eye.svg" data-toggle="modal" data-target="#watchmodal"></img>
+          <img class="watchicon" src="@routes.Assets.at("images/eye.svg")" data-toggle="modal" data-target="#watchmodal"></img>
           </td>
       </tr>
 
@@ -227,165 +239,12 @@
     </table>
 
   </div>
+  
   <h2>My Schedule</h2>
-
-  <div class="table-responsive" style="margin-left: 10px; margin-right: 10px;">
-    <table class="table table-bordered table-striped">
-      <thead>
-        <tr id="conflict-alert" style="display: none; background-color: #F58E9D;">
-          <td colspan="6">Conflict Exists</td>
-        </tr>
-        <tr>
-          <th>Time</th>
-          <th>Monday</th>
-          <th>Tuesday</th>
-          <th>Wednesday</th>
-          <th>Thursday</th>
-          <th>Friday</th>
-        </tr>
-      </thead>
-
-      <tbody>
-        <tr>
-          <td>7:30-8:20</td>
-          <td id="tempCell" name="84935">ICS111</td>
-          <!-- Monday -->
-          <td></td>
-          <!-- Tuesday -->
-          <td id="tempCell" name="84935">ICS111</td>
-          <!-- Wednesday -->
-          <td></td>
-          <!-- Thursday -->
-          <td></td>
-          <!-- Friday -->
-        </tr>
-        <tr>
-          <td>8:30-9:20</td>
-          <td></td>
-          <!-- Monday -->
-          <td></td>
-          <!-- Tuesday -->
-          <td></td>
-          <!-- Wednesday -->
-          <td></td>
-          <!-- Thursday -->
-          <td></td>
-          <!-- Friday -->
-        </tr>
-        <tr>
-          <td>9:30-10:20</td>
-          <td>ICS211</td>
-          <!-- Monday -->
-          <td></td>
-          <!-- Tuesday -->
-          <td>ICS211</td>
-          <!-- Wednesday -->
-          <td></td>
-          <!-- Thursday -->
-          <td></td>
-          <!-- Friday -->
-        </tr>
-        <tr>
-          <td>10:30-11:20</td>
-          <td></td>
-          <!-- Monday -->
-          <td>ENG111</td>
-          <!-- Tuesday -->
-          <td></td>
-          <!-- Wednesday -->
-          <td>ENG111</td>
-          <!-- Thursday -->
-          <td></td>
-          <!-- Friday -->
-        </tr>
-        <tr>
-          <td>11:30-12:20</td>
-          <td name="84494">MATH242</td>
-          <!-- Monday -->
-          <td></td>
-          <!-- Tuesday -->
-          <td name="84494">MATH242</td>
-          <!-- Wednesday -->
-          <td></td>
-          <!-- Thursday -->
-          <td></td>
-          <!-- Friday -->
-        </tr>
-        <tr>
-          <td>12:30-1:20</td>
-          <td></td>
-          <!-- Monday -->
-          <td></td>
-          <!-- Tuesday -->
-          <td></td>
-          <!-- Wednesday -->
-          <td></td>
-          <!-- Thursday -->
-          <td></td>
-          <!-- Friday -->
-        </tr>
-        <tr>
-          <td>1:30-2:20</td>
-          <td></td>
-          <!-- Monday -->
-          <td id="tempCell" name="84095">ICS141</td>
-          <!-- Tuesday -->
-          <td></td>
-          <!-- Wednesday -->
-          <td id="tempCell" name="84095">ICS141</td>
-          <!-- Thursday -->
-          <td></td>
-          <!-- Friday -->
-        </tr>
-        <tr>
-          <td>2:30-3:20</td>
-          <td></td>
-          <!-- Monday -->
-          <td></td>
-          <!-- Tuesday -->
-          <td></td>
-          <!-- Wednesday -->
-          <td></td>
-          <!-- Thursday -->
-          <td></td>
-          <!-- Friday -->
-        </tr>
-        <tr>
-          <td>3:30-4:20</td>
-          <td></td>
-          <!-- Monday -->
-          <td></td>
-          <!-- Tuesday -->
-          <td></td>
-          <!-- Wednesday -->
-          <td></td>
-          <!-- Thursday -->
-          <td></td>
-          <!-- Friday -->
-        </tr>
-        <tr>
-          <td>4:30-5:20</td>
-          <td></td>
-          <!-- Monday -->
-          <td></td>
-          <!-- Tuesday -->
-          <td></td>
-          <!-- Wednesday -->
-          <td></td>
-          <!-- Thursday -->
-          <td></td>
-          <!-- Friday -->
-        </tr>
-      </tbody>
-    </table>
-
-  </div>
+  <div id='calendar'></div>
+  
   <!-- /main -->
   <div class="bottom-spacing"></div>
-  </div>
-  </div>
-
-  </div>
 
   <div class="modal fade" id="infomodal1">
     <div class="modal-dialog">
@@ -564,5 +423,64 @@
     </div>
   </div>
 
+  <script src="@routes.Assets.at("lib/jquery.min.js")"></script>
+  <script src="@routes.Assets.at("lib/jquery-ui.custom.min.js")"></script>
+  <script src="@routes.Assets.at("fullcalendar/fullcalendar.min.js")"></script>
+
+<script type='text/javascript'>
+    $(document).ready(function() {
+    
+        var date = new Date();
+        var d = date.getDate();
+        var m = date.getMonth();
+        var y = date.getFullYear();
+        
+        $('#calendar').fullCalendar({
+            editable: true,
+            header: false,           // remove header 
+            allDaySlot: false,       // remove allday slot from top of calendar 
+            slotEventOverlap: false, // prevent overlapping events 
+            defaultView: 'agendaWeek',
+            events: [
+                {
+                    id: 999,
+                    title: 'Repeating Event',
+                    start: new Date(y, m, d-3, 16, 0),
+                    allDay: false
+                },
+                {
+                    id: 999,
+                    title: 'Repeating Event',
+                    start: new Date(y, m, d+4, 16, 0),
+                    allDay: false
+                },
+                {
+                    title: 'Meeting',
+                    start: new Date(y, m, d, 10, 30),
+                    allDay: false
+                },
+                {
+                    title: 'Lunch',
+                    start: new Date(y, m, d, 12, 0),
+                    end: new Date(y, m, d, 14, 0),
+                    allDay: false
+                },
+                {
+                    title: 'Birthday Party',
+                    start: new Date(y, m, d+1, 19, 0),
+                    end: new Date(y, m, d+1, 22, 30),
+                    allDay: false
+                },
+                {
+                    title: 'Click for Google',
+                    start: new Date(y, m, 28),
+                    end: new Date(y, m, 29),
+                    url: 'http://google.com/'
+                }
+            ]
+        });
+        
+    });
+</script>
 
 }

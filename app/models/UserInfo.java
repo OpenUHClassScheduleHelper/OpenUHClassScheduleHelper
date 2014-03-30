@@ -1,5 +1,6 @@
 package models;
 
+
 /**
  * Represents users of the application.
  * @author Rob Namahoe
@@ -9,7 +10,7 @@ public class UserInfo {
   private String name;
   private String email;
   private String password;
-  
+
   /**
    * Creates a new UserInfo instance.
    * @param name The name.
@@ -58,5 +59,5 @@ public class UserInfo {
   public void setPassword(String password) {
     this.password = password;
   }
-
+  
 }

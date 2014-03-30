@@ -24,7 +24,7 @@ public class Application extends Controller {
    * @return The login page.
    */
   public static Result login() {
-    return ok(Test.render("Login"));
+    return ok(Test.render());
   }
   
   /**

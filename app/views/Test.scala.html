@@ -1,17 +1,66 @@
-@(page: String)
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN""http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html>
-<head>
-<link rel="stylesheet" href="@routes.Assets.at("fullcalendar/fullcalendar.css")">
-<link rel="stylesheet" media="print" href="@routes.Assets.at("fullcalendar/fullcalendar.print.css")">
 
-<script src='../lib/jquery.min.js'></script>
-<script src='../lib/jquery-ui.custom.min.js'></script>
+<head></head>
+<body>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="http:////netdna.bootstrapcdn.com/bootswatch/3.0.0/spacelab/bootstrap.min.css">
 
-<script src="@routes.Assets.at("lib/jquery.min.js")"></script>
-<script src="@routes.Assets.at("lib/jquery-ui.custom.min.js")"></script>
-<script src="@routes.Assets.at("fullcalendar/fullcalendar.min.js")"></script>
+<!--  Load site-specific customizations after bootstrap. -->
+<link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/main.css")">
+<link rel="shortcut icon" type="image/png" href="@routes.Assets.at("images/favicon.png")">
+
+<!-- Load Google Fonts -->
+<link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Abel|Ubuntu">
+  <link rel="stylesheet" href="@routes.Assets.at("fullcalendar/fullcalendar.css")">
+  <link rel="stylesheet" media="print" href="@routes.Assets.at("fullcalendar/fullcalendar.print.css")">
+
+
+
+  <!-- Responsive navbar -->
+  <div class="navbar navbar-inverse" role="navigation">
+    <div class="navbar-inner">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <!--  Display three horizontal lines when navbar collapsed. -->
+            <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="index.html"></a>
+        </div>
+        <div class="collapse navbar-collapse">
+          <ul class="nav navbar-nav navbar-right">
+            <li>
+              <a href="@routes.Application.index()" 
+                 style="color:white">Search
+              </a>
+            </li>
+            <li>
+              <a href="@routes.Application.index()" 
+                 style="color:white">View Map
+              </a>
+            </li>
+            <li>
+              <a href="@routes.Application.myAccount()" 
+                 style="color:white">My Account
+              </a>
+            </li>
+            <li>
+              <a href="@routes.Application.index()" 
+                 style="color: white">Sign Out
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>  
+  <!-- End Navbar -->
+  
+<div id='calendar'></div>
+  <script src="@routes.Assets.at("lib/jquery.min.js")"></script>
+  <script src="@routes.Assets.at("lib/jquery-ui.custom.min.js")"></script>
+  <script src="@routes.Assets.at("fullcalendar/fullcalendar.min.js")"></script>
 
 <script type='text/javascript'>
     $(document).ready(function() {
@@ -22,23 +71,12 @@
         var y = date.getFullYear();
         
         $('#calendar').fullCalendar({
-            editable: false,
-            header: {
-                left: '',
-                center: 'title',
-                right: ''
-            },
+            editable: true,
+            header: false,           // remove header 
+            allDaySlot: false,       // remove allday slot from top of calendar 
+            slotEventOverlap: false, // prevent overlapping events 
             defaultView: 'agendaWeek',
             events: [
-                {
-                    title: 'All Day Event',
-                    start: new Date(y, m, 1)
-                },
-                {
-                    title: 'Long Event',
-                    start: new Date(y, m, d-5),
-                    end: new Date(y, m, d-2)
-                },
                 {
                     id: 999,
                     title: 'Repeating Event',
@@ -82,21 +120,12 @@
 </script>
 
 <style type='text/css'>
-    body {
-        margin-top: 40px;
-        text-align: center;
-        font-size: 14px;
-        font-family: "Lucida Grande",Helvetica,Arial,Verdana,sans-serif;
-        }
-
     #calendar {
+        margin-top:80px;
         width: 900px;
         margin: 0 auto;
         }
-
 </style>
-</head>
-<body>
-<div id='calendar'></div>
+
 </body>
 </html>
