@@ -14,7 +14,15 @@ public class Global extends GlobalSettings {
    */
   public void onStart(Application app) {
     
-    UserInfoDB.addUserInfo("John Smith", "smith@example.com", "password");
+    // Add students to the database
+    UserInfoDB.addUserInfo("rnamahoe", "Robert", "Namahoe", "student");
+    UserInfoDB.addUserInfo("ekomiyama", "Evan", "Komiyama", "student");
+    UserInfoDB.addUserInfo("jortal", "Jon", "Ortal", "student");
+    
+    // Add instructors to the database
+    UserInfoDB.addUserInfo("rnarayan", "Ravi", "Narayan", "faculty");
+    UserInfoDB.addUserInfo("sugihara", "Kazuo", "Sugihara", "faculty");
+    UserInfoDB.addUserInfo("julia4", "Julia", "Patriarche", "faculty");
     
   }
 }

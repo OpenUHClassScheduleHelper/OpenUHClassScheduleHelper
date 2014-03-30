@@ -1,62 +1,117 @@
 package models;
 
+
 /**
  * Represents users of the application.
  * @author Rob Namahoe
  */
 public class UserInfo {
  
-  private String name;
-  private String email;
-  private String password;
-  
+  private String userName;   
+  private String firstName;
+  private String lastName;
+  private String role;    
+  private String telephone;
+
   /**
    * Creates a new UserInfo instance.
-   * @param name The name.
-   * @param email The email.
-   * @param password The password.
+   * @param userName The UH username of the user.
+   * @param firstName The users first name.
+   * @param lastName The users last name.
+   * @param role The users eduPersonAffiliation - student, faculty, etc.
    */
-  public UserInfo(String name, String email, String password) {
-    this.name = name;
-    this.email = email;
-    this.password = password;
+  public UserInfo(String userName, String firstName, String lastName, String role) {
+    this.userName = userName;
+    this.firstName = firstName;
+    this.lastName = lastName;
+    this.role = role;
+  }
+
+  /**
+   * @return the userName
+   */
+  public String getUserName() {
+    return userName;
+  }
+
+  /**
+   * @param userName the userName to set
+   */
+  public void setUserName(String userName) {
+    this.userName = userName;
+  }
+
+  /**
+   * @return the firstName
+   */
+  public String getFirstName() {
+    return firstName;
+  }
+
+  /**
+   * @param firstName the firstName to set
+   */
+  public void setFirstName(String firstName) {
+    this.firstName = firstName;
+  }
+
+  /**
+   * @return the lastName
+   */
+  public String getLastName() {
+    return lastName;
+  }
+
+  /**
+   * @param lastName the lastName to set
+   */
+  public void setLastName(String lastName) {
+    this.lastName = lastName;
+  }
+
+  /**
+   * @return the role
+   */
+  public String getRole() {
+    return role;
+  }
+
+  /**
+   * @param role the role to set
+   */
+  public void setRole(String role) {
+    this.role = role;
+  }
+
+  /**
+   * @return the telephone
+   */
+  public String getTelephone() {
+    return telephone;
+  }
+
+  /**
+   * @param telephone the telephone to set
+   */
+  public void setTelephone(String telephone) {
+    this.telephone = telephone;
+  }
+
+  /**
+   * Get the users full name.
+   * @return The users first and last name.
+   */
+  public String getFullName() {
+    return this.firstName + " " + this.lastName;
   }
   
   /**
-   * @return the name
+   * Determines if the current user is faculty.
+   * @return true if the current user is a faculty member, false otherwise.
    */
-  public String getName() {
-    return name;
+  public boolean isInstructor() {
+    return role.equals("faculty");
   }
-  /**
-   * @param name the name to set
-   */
-  public void setName(String name) {
-    this.name = name;
-  }
-  /**
-   * @return the email
-   */
-  public String getEmail() {
-    return email;
-  }
-  /**
-   * @param email the email to set
-   */
-  public void setEmail(String email) {
-    this.email = email;
-  }
-  /**
-   * @return the password
-   */
-  public String getPassword() {
-    return password;
-  }
-  /**
-   * @param password the password to set
-   */
-  public void setPassword(String password) {
-    this.password = password;
-  }
-
+  
+  
 }
