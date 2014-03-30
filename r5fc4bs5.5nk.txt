@@ -1,0 +1,69 @@
+﻿Merge remote-tracking branch 'origin/courseDB-courseClass'
+
+Conflicts:
+	app/Global.java
+	app/views/formdata/package-info.java
+#
+# It looks like you may be committing a merge.
+# If this is not correct, please remove the file
+#	.git/MERGE_HEAD
+# and try again.
+
+
+# Please enter the commit message for your changes. Lines starting
+# with '#' will be ignored, and an empty message aborts the commit.
+# On branch master
+# All conflicts fixed but you are still merging.
+#   (use "git commit" to conclude merge)
+#
+# Changes to be committed:
+#
+#	modified:   app/Global.java
+#	modified:   app/controllers/Application.java
+#	new file:   app/models/Course.java
+#	new file:   app/models/CourseDB.java
+#	new file:   app/models/Meeting.java
+#	modified:   app/views/Account.scala.html
+#	new file:   app/views/Search.scala.html
+#	new file:   app/views/formdata/CourseFormData.java
+#	modified:   app/views/formdata/package-info.java
+#	deleted:    bin/.gitignore
+#	deleted:    bin/LICENSE
+#	deleted:    bin/README.md
+#	deleted:    bin/app/views/index.scala.html
+#	deleted:    bin/app/views/main.scala.html
+#	deleted:    bin/build.sbt
+#	deleted:    bin/conf/application.cloudbees.conf
+#	deleted:    bin/conf/application.conf
+#	deleted:    bin/conf/evolutions/default/1.sql
+#	deleted:    bin/conf/routes
+#	deleted:    bin/project/build.properties
+#	deleted:    bin/project/plugins.sbt
+#	deleted:    bin/public/images/Jaunt.jpg
+#	deleted:    bin/public/images/favicon.png
+#	deleted:    bin/public/javascripts/jquery-1.9.0.min.js
+#	deleted:    bin/public/stylesheets/main.css
+#	new file:   bin/routes_reverseRouting.scala
+#	new file:   bin/routes_routing.scala
+#	new file:   bin/views/Account.scala.html
+#	new file:   bin/views/Index.scala.html
+#	new file:   bin/views/Login.scala.html
+#	new file:   bin/views/Main.scala.html
+#	new file:   bin/views/Register.scala.html
+#	new file:   bin/views/Results.scala.html
+#	new file:   bin/views/Search.scala.html
+#	new file:   bin/views/html/Account.template.scala
+#	new file:   bin/views/html/Index.template.scala
+#	new file:   bin/views/html/Login.template.scala
+#	new file:   bin/views/html/Main.template.scala
+#	new file:   bin/views/html/Register.template.scala
+#	new file:   bin/views/html/Results.template.scala
+#	new file:   bin/views/html/Search.template.scala
+#	modified:   conf/routes
+#	modified:   public/stylesheets/main.css
+#
+# Untracked files:
+#   (use "git add <file>..." to include in what will be committed)
+#
+#	bin/.gitignore
+
