@@ -5,11 +5,11 @@ import java.net.URLEncoder;
 import java.util.Map;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import models.UserInfoDB;
 import org.w3c.dom.Document;
 import play.mvc.Controller;
 import play.mvc.Result;
 import views.html.Index;
-import views.html.Login;
 import views.html.Register;
 import views.html.Results;
 import views.html.Account;
@@ -96,10 +96,10 @@ public static Result login() throws Exception {
         session().clear();
 
         session("username", username);
+        
+        UserInfoDB.addUserInfo(username, "", "");
 
-        User.add(-1, username, "");
-
-        return redirect(routes.Application.appInterface());
+        return redirect(routes.Application.getResults());
 
       } else {
 
@@ -122,7 +122,7 @@ public static Result logout() throws Exception {
 
   session().clear();
 
-  String serviceURL = routes.Application.home().absoluteURL(request());
+  String serviceURL = routes.Application.index().absoluteURL(request());
 
   serviceURL = URLEncoder.encode(serviceURL, "UTF-8");
 
@@ -154,6 +154,10 @@ public static Result logout() throws Exception {
    */
   public static Result myAccount() {
     return ok(Account.render("My Account"));
+  }
+  
+  public static ClassSearch() {
+    
   }
   
 }

@@ -1,7 +1,8 @@
-@(page: String)
+@(page: String, focusList: Map[String, Boolean], dayList: Map[String, Boolean], searchForm : Form[views.formdata.SearchForm])
 
 
 @Main(page, true) {
+@import bootstrap3._
 
  <script type='text/javascript'>
             $(document).ready(function() {
@@ -109,6 +110,7 @@
             <option>Topics in Software (ICS 691)</option>
           </select>               
       </div>
+      @checkboxes(searchForm("Focus"), label = "Focus", checkboxMap = focusList)
       <div class="checkbox" style="margin-left:5px">
           <label><b>Focus</b>: </label>
           <label><input type="checkbox"> ETH </label>
@@ -117,6 +119,7 @@
           <label><input type="checkbox"> WI </label>
       </div>
       <br>
+      @checkboxes(searchForm("Focus"), label = "Focus", checkboxMap = dayList)
       <div class="checkbox" style="margin-top:5px">
           <label><b>Days</b>: </label>
           <label><input type="checkbox"> M </label>
@@ -303,7 +306,7 @@
     </table>
 
   </div>
-  <h2>My Schedule</h2>
+  <h2 id="schedule-header">My Schedule</h2>
 
   <div class="table-responsive" style="margin-left: 10px; margin-right: 10px;">
     <table class="table table-bordered table-striped">

@@ -58,7 +58,7 @@
 
 #searchFormWrapper{
   margin-top: 10px;
-  margin-left: 10px;
+  margin-left: 15%;
   margin-bottom: 0px;
 }
 
@@ -79,7 +79,9 @@
 }
 
 #resultsHeader{
-  margin-top: 10px;
+  margin-top: 20px;
+  margin-left:45%;
+  margin-right:50%;
 }
 
 fieldset{
@@ -468,7 +470,8 @@ height: 100%;
   margin: 10px;
   border: solid;
   border-spacing: 10px;
-  max-width: 1000px;
+  margin-left:12%;
+  max-width: 968px;
 }
 
 .my-courses-table {
@@ -568,6 +571,11 @@ margin-left: 10px;
 
 .classinfo {
   text-align: left;
+}
+
+#schedule-header {
+  margin-left: 42%;
+  margin-right: 40%;
 }
 
 .added {
