@@ -10,9 +10,12 @@ import org.w3c.dom.Document;
 import play.data.Form;
 import play.mvc.Controller;
 import play.mvc.Result;
+<<<<<<< HEAD
 import views.formdata.Days;
 import views.formdata.FocusTypes;
 import views.formdata.SearchForm;
+=======
+>>>>>>> b86d5218d324881d01eeb77342a2ea8fec2b9a31
 import java.util.List;
 import java.util.ArrayList;
 import views.html.Index;
@@ -178,6 +181,7 @@ public static Result logout() throws Exception {
     return ok(Account.render("My Account"));
   }
   
+
   public static Result classSearch() {
     Form<SearchForm> formData = searchForm.bindFromRequest();
     SearchForm data = formData.get();
