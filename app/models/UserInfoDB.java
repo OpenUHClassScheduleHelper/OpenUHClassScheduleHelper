@@ -8,7 +8,7 @@ import java.util.Map;
  * Will be implemented using MySQL at a later time.
  * @author Rob Namahoe
  */
-public class UserInfoDB {
+public class UserInfoDB { 
   
   private static Map<String, UserInfo> userinfos = new HashMap<String, UserInfo>();
   
