@@ -18,8 +18,6 @@ public class UserCommentDB {
    */
   public static void addComment(String crn, String user, String theComment) {
     UserComment comment = new UserComment(crn, user, theComment);
-    System.out.println(comment.getDate());
-    System.out.println(comment.getTime());
     comments.add(comment);
   }
   
@@ -28,7 +26,7 @@ public class UserCommentDB {
    * @param crn The CRN of the course.
    * @return A list of UserComment objects associated with the given CRN.
    */
-  public ArrayList<UserComment> getCommentsByCrn(String crn) {
+  public static ArrayList<UserComment> getCommentsByCrn(String crn) {
     ArrayList<UserComment> results = new ArrayList<UserComment>();
     for (UserComment comment : comments) {
       if (comment.getCrn().equals(crn)) {
@@ -40,17 +38,17 @@ public class UserCommentDB {
   
   /**
    * Get a list of all comments associated with a user.
-   * @param user The user name.
+   * @param userName The users UH username.
    * @return A list of UserComment objects associated with the given user.
    */
-  public ArrayList<UserComment> getCommentsByUser(String user) {
+  public static ArrayList<UserComment> getCommentsByUserName(String userName) {
     ArrayList<UserComment> results = new ArrayList<UserComment>();
     for (UserComment comment : comments) {
-      if (comment.getUser().equals(user)) {
+      if (comment.getUserName().equals(userName)) {
         results.add(comment);
       }
     }
     return results;
   }
-  
+ 
 }
