@@ -41,9 +41,6 @@ public class Global extends GlobalSettings {
     /** list object **/
     List<Meeting> meeting = new ArrayList<Meeting>();
 
-    /** Adds a user. **/
-    UserInfoDB.addUserInfo("John Smith", "smith@example.com", "password");
-
     /**
      * Adds a course. A new meeting list is needed for each course at this time.
      **/

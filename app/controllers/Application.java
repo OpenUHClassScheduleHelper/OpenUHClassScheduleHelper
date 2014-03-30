@@ -103,7 +103,7 @@ public static Result login() throws Exception {
 
         session("username", username);
         
-        UserInfoDB.addUserInfo(username, "", "");
+        UserInfoDB.addUserInfo(username, "", "", "");
 
         return redirect(routes.Application.getResults());
 
@@ -159,9 +159,9 @@ public static Result logout() throws Exception {
   /**
    * Returns the Results page.
    * @return The results page.
-   */
+   */   
   public static Result getResults() {
-    return ok(Results.render("Results"));
+    return ok(Index.render("index"));
   }
   
   /**
@@ -172,8 +172,9 @@ public static Result logout() throws Exception {
     return ok(Account.render("My Account"));
   }
   
-  public static ClassSearch() {
-    
+  public static Result ClassSearch() {
+    List<Course> courseList = CourseDB.getCourses();
+    return ok(Search.render("Search", true, courseList));    
   }
   
 }
