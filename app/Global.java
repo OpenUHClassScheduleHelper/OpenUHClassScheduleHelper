@@ -1,5 +1,6 @@
 import play.Application;
 import play.GlobalSettings;
+import models.UserCommentDB;
 import models.UserInfoDB;
 
 /**
@@ -24,5 +25,9 @@ public class Global extends GlobalSettings {
     UserInfoDB.addUserInfo("sugihara", "Kazuo", "Sugihara", "faculty");
     UserInfoDB.addUserInfo("julia4", "Julia", "Patriarche", "faculty");
     
+    // Add User Comments to the database
+    UserCommentDB.addComment("84935", "jortal", "Professor Narayan is in the process of trying to make ICS 111 a WI credit.");
+    UserCommentDB.addComment("84935", "rnarayan", "This class will now be available with a WI credit.");
+    UserCommentDB.addComment("84494", "julia4", "This class will be conducted as an online course.");
   }
 }
