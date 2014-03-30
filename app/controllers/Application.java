@@ -9,10 +9,16 @@ import models.UserInfoDB;
 import org.w3c.dom.Document;
 import play.mvc.Controller;
 import play.mvc.Result;
+import java.util.List;
+import java.util.ArrayList;
 import views.html.Index;
 import views.html.Register;
 import views.html.Results;
+import views.html.Search;
 import views.html.Account;
+import models.Course;
+import models.CourseDB;
+import models.Meeting;
 
 public class Application extends Controller {
 
@@ -139,7 +145,17 @@ public static Result logout() throws Exception {
   public static Result register() {
     return ok(Register.render("Register"));
   }
-  
+
+  /**
+   * Returns the sample resutls page to see if classes are implemented properly.
+   * This is only for testing!
+   * @return The registration page.
+   */
+  public static Result searchResults() {
+    List<Course> courseList = CourseDB.getCourses();
+    return ok(Search.render("Search", true, courseList));
+  }
+    
   /**
    * Returns the Results page.
    * @return The results page.

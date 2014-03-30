@@ -68,14 +68,24 @@
 
 #selDept{
   width: 273px;
+
 }
 
 #selCourse{
   width: 200px;
 }
 
-#selInstructor{
+#selInstructor {
   width: 150px;
+}
+
+#lg-menu {
+font-size: 18px;
+}
+
+#sm-menu {
+font-size: 14px;
+>>>>>>> origin/courseClass
 }
 
 #resultsHeader{
