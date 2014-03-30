@@ -6,7 +6,7 @@ import java.util.ArrayList;
  * An in-memory repo to store user comments
  * @author rckndn
  */
-public class UserCommentDB {
+public class UserCommentDB { 
   
   private static ArrayList<UserComment> comments = new ArrayList<UserComment>();
   
