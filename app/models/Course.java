@@ -5,7 +5,7 @@ import java.util.List;
 import models.Meeting;
 
 public class Course {
-  
+
   private String genFocus;
   private String courseNumber;
   private String courseName;
@@ -14,22 +14,19 @@ public class Course {
   private String credits;
   private String instructor;
   private String seats;
-  /**
-  private String days;
-  private String time;
-  **/
   private List<Meeting> meeting;
   private String room;
-    
+
   /**
    * default constructor.
    */
   public Course() {
-    //default constructor
+    // default constructor
   }
-  
+
   /**
    * Constructor.
+   * 
    * @param genFocus
    * @param courseNumber
    * @param courseName
@@ -39,37 +36,36 @@ public class Course {
    * @param instructor
    * @param seats
    * @param meeting object (todo)
-   * @param room 
-   * TODO: add new parameters, get/set them
+   * @param room TODO: add new parameters, get/set them
    */
-  public Course(String genFocus, String courseNumber, String courseName, String section, String courseTitle, String credits, 
-                String instructor, String seats, List<Meeting> meeting, String room) {
-    
-	this.setGenFocus(genFocus)
+  public Course(String genFocus, String courseNumber, String courseName, String section, String courseTitle,
+      String credits, String instructor, String seats, List<Meeting> meeting, String room) {
+
+    this.setGenFocus(genFocus);
     this.setCourseNumber(courseNumber);
     this.setCourseName(courseName);
     this.setSection(section);
     this.setCourseTitle(courseTitle);
-	this.setCredits(credits);
+    this.setCredits(credits);
     this.setInstructor(instructor);
-	this.setSeats(seats)
-	this.meeting(meeting);
+    this.setSeats(seats);
     this.setRoom(room);
-    
+    this.setMeeting(meeting);
+
   }
-  
+
   public String getGenFocus() {
     return genFocus;
   }
-  
+
   public void setGenFocus(String genFocus) {
     this.genFocus = genFocus;
   }
-  
+
   public String getCredits() {
     return credits;
   }
-  
+
   public void setCredits(String credits) {
     this.credits = credits;
   }
@@ -77,11 +73,11 @@ public class Course {
   public String getSeats() {
     return seats;
   }
-  
+
   public void setSeats(String seats) {
     this.seats = seats;
   }
-    
+
   public String getRoom() {
     return room;
   }
@@ -129,13 +125,13 @@ public class Course {
   public void setCourseNumber(String courseNumber) {
     this.courseNumber = courseNumber;
   }
-  
+
   public List<Meeting> getMeeting() {
     return meeting;
   }
-  
-  public void setMeeting() {
+
+  public void setMeeting(List<Meeting> meeting) {
     this.meeting = meeting;
   }
-  
+
 }

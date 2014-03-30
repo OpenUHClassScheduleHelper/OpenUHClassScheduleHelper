@@ -16,7 +16,7 @@ GET     /logout                     controllers.Application.logout()
 
 GET     /results                    controllers.Application.getResults()
 
-GET     /myaccount                    controllers.Application.myAccount()
+GET     /myaccount                  controllers.Application.myAccount()
 
 
 # Map static resources from the /public folder to the /assets URL path

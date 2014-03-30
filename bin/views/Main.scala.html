@@ -1,0 +1,81 @@
+@(page: String, isLoggedIn: Boolean)(content: Html)
+
+<!DOCTYPE html>
+
+<html>
+<head>
+<title>@page</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="http:////netdna.bootstrapcdn.com/bootswatch/3.0.0/spacelab/bootstrap.min.css">
+
+<!--  Load site-specific customizations after bootstrap. -->
+<link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/main.css")">
+<link rel="shortcut icon" type="image/png" href="@routes.Assets.at("images/favicon.png")">
+
+<!-- Load Google Fonts -->
+<link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Abel|Ubuntu">
+
+<!-- social glyphicons -->
+<link href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+
+<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+<!--[if lt IE 9]>
+          <script src="http://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.6.2/html5shiv.js"></script>
+          <script src="http://cdnjs.cloudflare.com/ajax/libs/respond.js/1.2.0/respond.js"></script>
+        <![endif]-->
+</head>
+
+<body>
+  <!-- Responsive navbar -->
+  <div class="navbar navbar-inverse" role="navigation">
+    <div class="navbar-inner">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <!--  Display three horizontal lines when navbar collapsed. -->
+            <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="index.html"></a>
+        </div>
+        <div class="collapse navbar-collapse">
+          @if(isLoggedIn) {
+          <ul class="nav navbar-nav navbar-right">
+            <li>
+              <a href="@routes.Application.index()" 
+                 style="color: @if(page=="Results"){black}else{white};">Search
+              </a>
+            </li>
+            <li>
+              <a href="@routes.Application.index()" 
+                 style="color: @if(page=="Campus Map"){black}else{white};">View Map
+              </a>
+            </li>
+            <li>
+              <a href="@routes.Application.myAccount()" 
+                 style="color: @if(page=="My Account"){black}else{white};">My Account
+              </a>
+            </li>
+            <li>
+              <a href="@routes.Application.index()" 
+                 style="color: white">Sign Out
+              </a>
+            </li>
+          </ul>
+          } else {
+          <ul class="nav navbar-nav navbar-right">
+            <li><a href="@routes.Application.login()" style="color: white;">Sign In</a></li>
+          </ul>
+          }
+        </div>
+      </div>
+    </div>
+  </div>  
+  <!-- End Navbar -->
+  
+  @content
+  
+  <!-- Load Bootstrap JavaScript components. HTMLUnit (used in testing) requires JQuery 1.8.3 or below). -->
+  <script src="http://code.jquery.com/jquery-1.8.3.min.js"></script>
+  <script src="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
+</body>
+</html>
