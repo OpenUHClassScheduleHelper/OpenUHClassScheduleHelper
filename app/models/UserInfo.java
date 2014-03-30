@@ -8,7 +8,7 @@ package models;
 public class UserInfo {
  
   private String userName;   
-  private String firstName;
+  private String firstName; 
   private String lastName;
   private String role;    
   private String telephone;
