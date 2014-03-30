@@ -11,9 +11,12 @@ import play.data.Form;
 import play.mvc.Controller;
 import play.mvc.Result;
 <<<<<<< HEAD
+<<<<<<< HEAD
 import views.formdata.Days;
 import views.formdata.FocusTypes;
 import views.formdata.SearchForm;
+=======
+>>>>>>> b86d5218d324881d01eeb77342a2ea8fec2b9a31
 =======
 >>>>>>> b86d5218d324881d01eeb77342a2ea8fec2b9a31
 import java.util.List;
@@ -170,7 +173,11 @@ public static Result logout() throws Exception {
    * @return The results page.
    */   
   public static Result getResults() {
+<<<<<<< HEAD
     return ok(Results.render("Results", FocusTypes.getFocusTypes(), Days.getDays(), searchForm));
+=======
+    return ok(Index.render("index"));
+>>>>>>> b86d5218d324881d01eeb77342a2ea8fec2b9a31
   }
   
   /**
@@ -181,11 +188,17 @@ public static Result logout() throws Exception {
     return ok(Account.render("My Account"));
   }
   
+<<<<<<< HEAD
 
   public static Result classSearch() {
     Form<SearchForm> formData = searchForm.bindFromRequest();
     SearchForm data = formData.get();
     return redirect(routes.Application.index());
+=======
+  public static Result ClassSearch() {
+    List<Course> courseList = CourseDB.getCourses();
+    return ok(Search.render("Search", true, courseList));    
+>>>>>>> b86d5218d324881d01eeb77342a2ea8fec2b9a31
   }
   
 }
