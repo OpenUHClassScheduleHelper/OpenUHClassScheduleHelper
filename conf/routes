@@ -14,8 +14,12 @@ GET     /register                   controllers.Application.register()
 
 GET     /results                    controllers.Application.getResults()
 
+GET     /populateInstructors        controllers.Application.populateInstructorList(dept: String)
+GET     /populateCourses            controllers.Application.populateCourseList(dept: String)
+
 GET     /myaccount                  controllers.Application.myAccount()
 
 
 # Map static resources from the /public folder to the /assets URL path
+GET     /assets/js/routes           controllers.Application.jsRoutes()
 GET     /assets/*file               controllers.Assets.at(path="/public", file)

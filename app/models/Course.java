@@ -36,6 +36,7 @@ public class Course {
    * @param instructor
    * @param seats
    * @param meeting object (todo)
+   * @param department
    * @param room TODO: add new parameters, get/set them
    */
   public Course(String genFocus, String courseNumber, String courseName, String section, String courseTitle,

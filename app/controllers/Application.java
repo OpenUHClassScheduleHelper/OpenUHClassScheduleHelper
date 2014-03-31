@@ -7,10 +7,12 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import models.UserInfoDB;
 import org.w3c.dom.Document;
+import play.Routes;
 import play.data.Form;
 import play.mvc.Controller;
 import play.mvc.Result;
 import views.formdata.Days;
+import views.formdata.Departments;
 import views.formdata.FocusTypes;
 import views.formdata.SearchForm;
 import java.util.List;
@@ -167,7 +169,7 @@ public static Result logout() throws Exception {
    * @return The results page.
    */   
   public static Result getResults() {
-    return ok(Results.render("Results", FocusTypes.getFocusTypes(), Days.getDays(), searchForm));
+    return ok(Results.render("Results", FocusTypes.getFocusTypes(), Days.getDays(), Departments.getDepartments(), searchForm));
   }
   
   /**
@@ -182,6 +184,40 @@ public static Result logout() throws Exception {
     Form<SearchForm> formData = searchForm.bindFromRequest();
     SearchForm data = formData.get();
     return redirect(routes.Application.index());
+  }
+  
+  public static Result populateInstructorList(String dept) {
+    List<String> instructors = CourseDB.getInstructors(dept);
+    String instructorddl = "";
+    for(int i = 0; i < instructors.size(); i++) {
+       String first = instructors.get(i).split(" ")[0];
+       String last = instructors.get(i).split(" ")[1];
+       instructorddl += "<option>" + last + ", " + first + "</option>" + "\n";
+    }
+    
+    return ok(instructorddl);
+    
+  }
+  
+  
+  public static Result populateCourseList(String dept) {
+    List<String> courses = CourseDB.getCourses(dept);
+    String courseddl = "";
+    for(int i = 0; i < courses.size(); i++) {
+       courseddl += "<option>" + courses.get(i) + "</option>" + "\n";
+    }
+    
+    return ok(courseddl);
+    
+  }
+  
+  
+  public static Result jsRoutes()
+  {
+      response().setContentType("text/javascript");
+      return ok(Routes.javascriptRouter("appRoutes", //appRoutes will be the JS object available in our view
+                                        routes.javascript.Application.populateInstructorList(),
+                                        routes.javascript.Application.populateCourseList()));
   }
   
 }

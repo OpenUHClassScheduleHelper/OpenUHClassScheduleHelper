@@ -1,4 +1,4 @@
-@(page: String, focusList: Map[String, Boolean], dayList: Map[String, Boolean], searchForm : Form[views.formdata.SearchForm])
+@(page: String, focusList: Map[String, Boolean], dayList: Map[String, Boolean], departmentList: Map[String, Boolean], searchForm : Form[views.formdata.SearchForm])
 @import bootstrap3._
 
 @Main(page, true) {
@@ -77,36 +77,48 @@
                                 slideTime();
                             });
         </script>
+        
+<script type="text/javascript">
+function getInstructorList() {
+	var deptIndex = document.getElementById("selDept").selectedIndex;
+	var departmentList = document.getElementById("selDept").options;
+	//alert(departmentList[deptIndex].text);
+	appRoutes.controllers.Application.populateInstructorList(departmentList[deptIndex].text).ajax({
+	  success: function(data) {
+	    //alert(data);
+	    document.getElementById("selInstructor").innerHTML="<option>Instructor</option>" + data;
+	  }
+	})
+}
+
+function getCourseList() {
+    var courseIndex = document.getElementById("selDept").selectedIndex;
+    var courseList = document.getElementById("selDept").options;
+    //alert(departmentList[deptIndex].text);
+    appRoutes.controllers.Application.populateCourseList(courseList[courseIndex].text).ajax({
+      success: function(data) {
+        //alert(data);
+        document.getElementById("selCourse").innerHTML="<option>Course Title</option>" + data;
+      }
+    })
+}
+
+
+
+
+</script>
 
 
  <!-- search form -->
   <div id="searchFormWrapper">
     <form class="form-inline" role="form">
       <div id="searchForm" class="form-group">
-          <select id="selDept" class="form-control" placeholder="Department">
-            <option>Department</option>
-            <option>Academy for Creative Media (ACM)</option>
-            <option>Accounting (ACC)</option>
-            <option>Aerospace Studies (AS)</option>
-            <option>...</option>
-            <option>Information & Computer Science (ICS)</option>
-          </select>
-          <select id="selInstructor" class="form-control" placeholder="Instructor">
+          @searchselect(searchForm("department"), id = "selDept", searchType = "Department", optionMap = departmentList, isMultiple = false, "getInstructorList(); getCourseList();")
+          <select id="selInstructor" class="form-control" placeholder="Instructor" onchange="instructorsToCourses()">
             <option>Instructor</option>
-            <option>Baek, Kyungim</option>
-            <option>Binsted, Kimberly</option>
-            <option>Endicott, Barbara</option>
-            <option>Johnson, Philip</option>
-            <option>...</option>
-            <option>Sugihara, Kazuo</option>
           </select>
-          <select id="selCourse" class="form-control" placeholder="Course Title">
+          <select id="selCourse" class="form-control" placeholder="Course Title" onchange="coursesToInstructors()">
             <option>Course Title</option>
-            <option>Intro to CS I (ICS 111)</option>
-            <option>Discrete Math for CS I (ICS 141)</option>
-            <option>Intro to CS II (ICS 211)</option>
-            <option>...</option>
-            <option>Topics in Software (ICS 691)</option>
           </select>               
       </div>
       @checkboxes(searchForm("Focus"), label = "Focus:", checkboxMap = focusList)
@@ -122,7 +134,7 @@
 
   <!-- results -->
   <div>
-    <h2 id="resultsHeader">Results</h2>
+    <h2 id="resultsHeader"><b>Results</b></h2>
 
     <div class="visible-sm visible-xs">
       <a class="btn course-dropdown-button" id="resultbutton1" onMouseOut="div.show('84935')"

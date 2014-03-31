@@ -52,6 +52,32 @@ public class CourseDB {
     return course;
   }
   
+  public static List<String> getCourses(String dept) {
+    List<String> courseDeptList = new ArrayList<>();
+    List<Course> courseList = CourseDB.getCourses();
+    for (Course course : courseList) {
+      String courseDept = course.getCourseName().split(" ")[0];
+      if(courseDept.equals(dept)) {
+        courseDeptList.add(course.getCourseTitle() + " (" + course.getCourseName() + ")"); 
+      }
+    }
+    return courseDeptList;
+  }
+  
+  
+  public static List<String> getInstructors(String dept) {
+    List<String> instructorMap = new ArrayList<>();
+    List<Course> courseList = CourseDB.getCourses();
+    for (Course course : courseList) {
+      String courseDept = course.getCourseName().split(" ")[0];
+      String courseInstructor = course.getInstructor();
+      if(courseDept.equals(dept) && (! instructorMap.contains(courseInstructor))) {
+        instructorMap.add(courseInstructor); 
+      }
+    }
+    return instructorMap;
+  }
+  
  
   
 }
