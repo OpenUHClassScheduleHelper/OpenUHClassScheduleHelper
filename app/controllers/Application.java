@@ -57,12 +57,7 @@ public static Result login() throws Exception {
 
   serviceURL = URLEncoder.encode(serviceURL, "UTF-8");
 
-
-
-
   // no query means the user needs to login
-
-
   if(query.size() == 0) {
 
     // url to initiate CAS login
@@ -84,7 +79,7 @@ public static Result login() throws Exception {
       // url to validate the ticket
 
       String validateURL = CAS_VALIDATE + "?service=" + serviceURL + "&ticket=" + ticket;
-
+      
       // this junk is needed to parse the xml response from the CAS server
 
       DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
@@ -110,10 +105,8 @@ public static Result login() throws Exception {
         session().clear();
 
         session("username", username);
-        
-        UserInfoDB.addUserInfo(username, "", "", "");
 
-        return redirect(routes.Application.getResults());
+        return redirect(routes.Application.searchResults());
 
       } else {
 
@@ -133,15 +126,11 @@ public static Result login() throws Exception {
 public static Result logout() throws Exception {
 
   // clear your session
-
   session().clear();
-
   String serviceURL = routes.Application.index().absoluteURL(request());
-
   serviceURL = URLEncoder.encode(serviceURL, "UTF-8");
 
   // redirect to CAS logout
-
   return redirect(CAS_LOGOUT + "?service=" + serviceURL);
 
 }
