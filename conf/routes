@@ -19,6 +19,8 @@ GET     /populateCourses            controllers.Application.populateCourseList(d
 
 GET     /myaccount                  controllers.Application.myAccount()
 
+GET     /test                       controllers.Application.test()
+
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/js/routes           controllers.Application.jsRoutes()

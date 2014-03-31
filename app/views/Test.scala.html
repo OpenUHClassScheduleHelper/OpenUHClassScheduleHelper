@@ -1,0 +1,5 @@
+@(page: String, items: List[Course]) 
+
+@for(item <- items) {
+    <p>@item.getCourseName()</p>
+}

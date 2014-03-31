@@ -22,6 +22,7 @@ import views.html.Register;
 import views.html.Results;
 import views.html.Search;
 import views.html.Account;
+import views.html.Test;
 import models.Course;
 import models.CourseDB;
 import models.Meeting;
@@ -36,6 +37,12 @@ public class Application extends Controller {
   private static final String CAS_VALIDATE = "https://cas-test.its.hawaii.edu/cas/serviceValidate";
   private static final String CAS_LOGOUT = "https://cas-test.its.hawaii.edu/cas/logout";
   private static final Form<SearchForm> searchForm = Form.form(SearchForm.class);
+  
+  
+  public static Result test() {
+    List<Course> courses = CourseDB.getCourses();
+    return ok(Test.render("Test", courses));
+  }
   
   /**
    * Returns the home page.
