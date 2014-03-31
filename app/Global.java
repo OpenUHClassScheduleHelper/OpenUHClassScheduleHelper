@@ -5,6 +5,7 @@ import play.GlobalSettings;
 import models.UserCommentDB;
 import models.Course;
 import models.CourseDB;
+import models.UserInfo;
 import models.UserInfoDB;
 import models.Meeting;
 import views.formdata.CourseFormData;
@@ -35,6 +36,10 @@ public class Global extends GlobalSettings {
     
     // Add User Comments to the database
     UserCommentDB.addComment("84935", "jortal", "Professor Narayan is in the process of trying to make ICS 111 a WI credit.");
+    
+    UserCommentDB.addComment("84935", "rnamahoe", "Tough class but you sure do learn a lot!");
+    UserCommentDB.addComment("86041", "rnamahoe", "I thought ICS111 was hard...this class is impossible!");
+    
     UserCommentDB.addComment("84935", "rnarayan", "This class will now be available with a WI credit.");
     UserCommentDB.addComment("84494", "julia4", "This class will be conducted as an online course.");
     
@@ -104,6 +109,13 @@ public class Global extends GlobalSettings {
 
     CourseDB.addCourse(new CourseFormData("", "84095", "ICS 211", "001", "Intro to Computer Science II", "3",
         "C Moore", "3", meeting6, "MSB114"));
+    
+    
+    // Create schedules and watch lists for users
+    UserInfo user = UserInfoDB.getUser("rnamahoe");
+    user.addToSchedule(CourseDB.getCourse("85248"));
+    user.addToSchedule(CourseDB.getCourse("86041"));
+    user.addToWatchList(CourseDB.getCourse("84095"));
 
   }
 }

@@ -25,15 +25,16 @@ import views.html.Account;
 import models.Course;
 import models.CourseDB;
 import models.Meeting;
+import models.UserCommentDB;
+import models.UserInfo;
 
 public class Application extends Controller {
 
-  private static final String CAS_LOGIN = "https://cas-test.its.hawaii.edu/cas/login";
-
-  private static final String CAS_VALIDATE = "https://cas-test.its.hawaii.edu/cas/serviceValidate";
-
-  private static final String CAS_LOGOUT = "https://cas-test.its.hawaii.edu/cas/logout";
+  private static String currentUser;
   
+  private static final String CAS_LOGIN = "https://cas-test.its.hawaii.edu/cas/login";
+  private static final String CAS_VALIDATE = "https://cas-test.its.hawaii.edu/cas/serviceValidate";
+  private static final String CAS_LOGOUT = "https://cas-test.its.hawaii.edu/cas/logout";
   private static final Form<SearchForm> searchForm = Form.form(SearchForm.class);
   
   /**
@@ -105,7 +106,8 @@ public static Result login() throws Exception {
         session().clear();
 
         session("username", username);
-
+        currentUser = username;
+        
         return redirect(routes.Application.searchResults());
 
       } else {
@@ -172,7 +174,9 @@ public static Result logout() throws Exception {
    * @return The account page.
    */
   public static Result myAccount() {
-    return ok(Account.render("My Account"));
+    UserInfo user = UserInfoDB.getUser(currentUser);
+    return ok(Account.render("My Account", user, user.getSchedule(), user.getWatchList(),
+                              UserCommentDB.getCommentsByUserName(currentUser)));
   }
 
   
