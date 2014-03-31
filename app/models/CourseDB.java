@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import com.avaje.ebean.Page;
 import views.formdata.CourseFormData;
 
 /**
@@ -76,6 +77,50 @@ public class CourseDB {
       }
     }
     return instructorMap;
+  }
+  
+  
+  public static List<Course> courseSearchList(String[] days, String[] genFocus, String department, String courseTitleandName, String instructor, String startTime, String endTime) {
+    List<Course> courseList = CourseDB.getCourses();
+    List<Course> tempCourseList = new ArrayList<>();
+    List<Course> finalCourseList = new ArrayList<>();
+    if(! department.equals("Any Department")) {
+       for(Course course : courseList) {
+         String thisDept = course.getCourseName().split(" ")[0];
+         if(thisDept.equals(department)) {
+           finalCourseList.add(course);
+         }
+       }
+       
+       if(! instructor.equals("Any Instructor") && (! instructor.equals(""))) {
+         String first = instructor.split(", ")[1];
+         String last = instructor.split(", ")[0];
+         String instructorNameFirstLast = first + " " + last;
+         for(Course course : finalCourseList) {
+           if(! instructorNameFirstLast.equals(course.getInstructor())) {
+             tempCourseList.add(course);
+           }
+         }
+       }
+       
+       
+       if(! courseTitleandName.equals("Any Course") && (! courseTitleandName.equals(""))) {
+         String courseTitleNoCourseName = courseTitleandName.split(" \\(")[0];
+         for(Course course : finalCourseList) {
+           if(! courseTitleNoCourseName.equals(course.getCourseTitle())) {
+             tempCourseList.add(course);
+           }
+         }
+       }
+       
+       for(Course course : tempCourseList) {
+         finalCourseList.remove(course);
+       }
+       
+    }
+    
+    return finalCourseList;
+    
   }
   
  

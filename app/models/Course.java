@@ -134,5 +134,26 @@ public class Course {
   public void setMeeting(List<Meeting> meeting) {
     this.meeting = meeting;
   }
+  
+  public String getCourseDept() {
+    return this.courseName.split(" ")[0];
+  }
+  
+  public String printMeeting() {
+    String meetingString = "";
+    return meetingString;
+  }
+  
+  public String printRooms() {
+    String rooms = "";
+    for(Meeting newMeeting : meeting) {
+      if(rooms != "") {
+        rooms = rooms + ", " + newMeeting.getRoom();
+      }else {
+        rooms = newMeeting.getRoom();
+      }
+    }
+    return rooms;
+  }
 
 }

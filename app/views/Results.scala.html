@@ -1,4 +1,5 @@
-@(page: String, focusList: Map[String, Boolean], dayList: Map[String, Boolean], departmentList: Map[String, Boolean], searchForm : Form[views.formdata.SearchForm])
+@(page: String, focusList: Map[String, Boolean], dayList: Map[String, Boolean], departmentList: Map[String, Boolean], resultsList: List[Course], searchForm : Form[views.formdata.SearchForm])
+@import helper.form 
 @import bootstrap3._
 
 @Main(page, true) {
@@ -52,6 +53,8 @@
                                     endTime = getTime(hours1, minutes1);
                                     $("#time")
                                             .text(startTime + ' - ' + endTime);
+                                    document.getElementById('startTime').value = startTime;
+                                    document.getElementById('endTime').value = endTime;
                                 }
 
                                 function getTime(hours, minutes) {
@@ -86,7 +89,7 @@ function getInstructorList() {
 	appRoutes.controllers.Application.populateInstructorList(departmentList[deptIndex].text).ajax({
 	  success: function(data) {
 	    //alert(data);
-	    document.getElementById("selInstructor").innerHTML="<option>Instructor</option>" + data;
+	    document.getElementById("selInstructor").innerHTML="<option>Any Instructor</option>" + data;
 	  }
 	})
 }
@@ -98,13 +101,10 @@ function getCourseList() {
     appRoutes.controllers.Application.populateCourseList(courseList[courseIndex].text).ajax({
       success: function(data) {
         //alert(data);
-        document.getElementById("selCourse").innerHTML="<option>Course Title</option>" + data;
+        document.getElementById("selCourse").innerHTML="<option>Any Course</option>" + data;
       }
     })
 }
-
-
-
 
 </script>
 
@@ -112,24 +112,29 @@ function getCourseList() {
  <!-- search form -->
   <div id="searchFormWrapper">
     <form class="form-inline" role="form">
+      @form(routes.Application.getResults(), 'class -> "form-group") {
       <div id="searchForm" class="form-group">
-          @searchselect(searchForm("department"), id = "selDept", searchType = "Department", optionMap = departmentList, isMultiple = false, "getInstructorList(); getCourseList();")
-          <select id="selInstructor" class="form-control" placeholder="Instructor" onchange="instructorsToCourses()">
-            <option>Instructor</option>
+          @searchselect(searchForm("department"), id = "selDept", searchType = "Any Department", optionMap = departmentList, isMultiple = false, "getInstructorList(); getCourseList();")
+          <select name="instructor" id="selInstructor" class="form-control" placeholder="Instructor" onchange="instructorsToCourses()">
+            <option>Any Instructor</option>
           </select>
-          <select id="selCourse" class="form-control" placeholder="Course Title" onchange="coursesToInstructors()">
-            <option>Course Title</option>
+          <select name="course" id="selCourse" class="form-control" placeholder="Course Title" onchange="coursesToInstructors()">
+            <option>Any Course</option>
           </select>               
       </div>
-      @checkboxes(searchForm("Focus"), label = "Focus:", checkboxMap = focusList)
+      @checkboxes(searchForm("focus"), label = "Focus:", checkboxMap = focusList)
       <br>
-      @checkboxes(searchForm("Days"), label = "Days:", checkboxMap = dayList)
+      @checkboxes(searchForm("days"), label = "Days:", checkboxMap = dayList)
       <div class="checkbox" style="margin-left:10px;padding-top:10px">
         <div id="slider-range"></div>
         <b>Time Range:<span id="time"></span></b>       
       </div>
-      <button type="submit" class="btn btn-primary" style="margin-left:15px">Search</button>
+      <input type='hidden' id= 'startTime' name='startTime' value='' />
+      <input type='hidden' id= 'endTime' name='endTime' value='' />
+
+      <button type="submit" class="btn btn-primary" style="margin-left:15px" onClick="submitForm()">Search</button>
     </form>
+    }
   </div>
 
   <!-- results -->
@@ -226,7 +231,9 @@ function getCourseList() {
       </div>
     </div>
 
-
+@if(resultsList.size() == 0) {
+<h3 id="resultsHeader">No Results</h3>
+}else {
     <table class="result-table hidden-sm hidden-xs">
       <tr class="tableheader">
         <th>CRN</th>
@@ -239,68 +246,34 @@ function getCourseList() {
         <th>Time</th>
         <th></th>
       </tr>
-
-      <tr id="84935" onMouseOut="div.hide('84935')" onMouseOver="div.show('84935')">
-        <td><a id="classinfobutton1">84935</a></td>
-        <td>ICS 111</td>
-        <td>Intro to Computer Science I</td>
-        <td>ICS</td>
-        <td></td>
-        <td>Ravi Narayan</td>
-        <td>POST 127, POST 319</td>
-        <td>MW 0730-0820a</td>
-        <td class="buttoncolumn">
+      @for(course <- resultsList) {
+        <tr id="@course.getCourseNumber()">
+          <td>@course.getCourseNumber()</td>
+          <td>@course.getCourseName()</td>
+          <td>@course.getCourseTitle</td>
+          <td>@course.getCourseDept()</td>
+          <td>@course.getGenFocus()</td>
+          <td>@course.getInstructor()</td>
+          <td>@for(meeting <- course.getMeeting()) {
+              @meeting.getRoom()<br>
+              }</td>
+          <td>@for(meeting <- course.getMeeting()) {
+               @meeting.getDay() @meeting.getStart()-@meeting.getEnd()<br>
+               }</td>
+          <td class="buttoncolumn">
           <button class="btn btn-success btn-sm added" title="Already Added">
             <div class="glyphicon glyphicon-plus" title="Already Added"></div>
           </button> <img class="infoicon" id="infoicon1" src="@routes.Assets.at("images/more_information_icon.jpg")" data-toggle="modal"
           data-target="#infomodal1" title="Late Breaking News"></img>
           <img class="watchicon" src="@routes.Assets.at("images/eye.svg")" data-toggle="modal" data-target="#watchmodal"></img>
         </td>
-      </tr>
-
-
-      <tr id="84095" onMouseOut="div.hide('84095')" onMouseOver="div.show('84095')">
-        <td><a id="classinfobutton2">84095</a></td>
-        <td>ICS 141</td>
-        <td>Discrete Math for CS I</td>
-        <td>ICS</td>
-        <td></td>
-        <td>Kazuo Sugihara</td>
-        <td>BIL 150, MSB 114</td>
-        <td>TR 0130-0220p</td>
-        <td class="buttoncolumn"><a href="addclassresults.html"><button class="btn btn-success btn-sm"
-              title="Add to Schedule">
-              <div class="glyphicon glyphicon-plus" title="Add to Schedule"></div>
-            </button></a> <img class="infoicon" src="@routes.Assets.at("images/more_information_icon.jpg")" data-toggle="modal" data-target="#infomodal2"
-          title="Late Breaking News"></img>
-          <img class="watchicon" src="@routes.Assets.at("images/eye.svg")" data-toggle="modal" data-target="#watchmodal"></img>
-          </td>
-      </tr>
-
-
-      <tr id="84494" onMouseOut="conflict.hide('84494')" onMouseOver="conflict.show('84494')">
-        <td><a id="classinfobutton3">84494</a></td>
-        <td>ICS 212</td>
-        <td>Program Structure</td>
-        <td>ICS</td>
-        <td></td>
-        <td>Julia Patriarche</td>
-        <td>TBA</td>
-        <td>MW 1130-1220p</td>
-        <td class="buttoncolumn"><a href="addclassresults.html"><button class="btn btn-success btn-sm"
-              title="Add to Schedule">
-              <div class="glyphicon glyphicon-plus" title="Add to Schedule"></div>
-            </button></a> <img class="infoicon" src="@routes.Assets.at("images/more_information_icon.jpg")" data-toggle="modal" data-target="#infomodal3"
-          title="Late Breaking News"></img>
-          <img class="watchicon" src="@routes.Assets.at("images/eye.svg")" data-toggle="modal" data-target="#watchmodal"></img>
-          </td>
-      </tr>
-
-
-    </table>
+        </tr>
+      }
+      </table>
+}
 
   </div>
-  <h2 id="schedule-header">My Schedule</h2>
+  <h2 id="schedule-header"><b>My Schedule</b></h2>
 
   <div class="table-responsive" style="margin-left: 10px; margin-right: 10px;">
     <table class="table table-bordered table-striped">

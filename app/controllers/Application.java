@@ -158,7 +158,13 @@ public static Result logout() throws Exception {
    * @return The results page.
    */   
   public static Result getResults() {
-    return ok(Results.render("Results", FocusTypes.getFocusTypes(), Days.getDays(), Departments.getDepartments(), searchForm));
+    Form<SearchForm> formData = searchForm.bindFromRequest();
+    SearchForm data = formData.get();
+    List<Course> resultsList = new ArrayList<>();
+    if(data != null) {
+      resultsList = CourseDB.courseSearchList(data.days, data.focus, data.department, data.course, data.instructor, data.startTime, data.endTime);
+    }
+    return ok(Results.render("Results", FocusTypes.getFocusTypes(), Days.getDays(), Departments.getDepartments(), resultsList, searchForm));
   }
   
   /**
@@ -169,11 +175,14 @@ public static Result logout() throws Exception {
     return ok(Account.render("My Account"));
   }
 
+  
   public static Result classSearch() {
     Form<SearchForm> formData = searchForm.bindFromRequest();
     SearchForm data = formData.get();
-    return redirect(routes.Application.index());
+    
+    return redirect(routes.Application.getResults());
   }
+  
   
   public static Result populateInstructorList(String dept) {
     List<String> instructors = CourseDB.getInstructors(dept);

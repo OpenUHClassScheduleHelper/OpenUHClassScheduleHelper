@@ -63,5 +63,9 @@ public class Meeting {
   public void setRoom(String room) {
     this.room = room;
   }
+  
+  public String getMeetingString() {
+     return this.day + " " + this.start + "-" + this.end + " " + this.room;
+  }
 
 }

@@ -18,10 +18,10 @@ public class SearchForm {
   public String course = "";
   
   /**Focus field**/
-  public String[] focus = {"ETH", "HAP", "WI", "OC"};
+  public String[] focus = null;
   
   /**Days field**/
-  public String[] days = {"M", "T", "W", "Th", "F", "Sa", "Su"};
+  public String[] days = null;
   
   /**StartTime field**/
   public String startTime = "";
