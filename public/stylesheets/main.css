@@ -239,6 +239,12 @@ input[type=radio]{
   margin-left:10px;
 }
 
+#calendar {
+  margin-top:80px;
+  width: 900px;
+  margin: 0 auto;
+}
+        
 /************* Schedule Table End *************/
 
 /************* Instructor-courses CSS *************/

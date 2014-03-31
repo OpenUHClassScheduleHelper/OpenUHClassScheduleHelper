@@ -3,8 +3,69 @@
 
 @Main(page, true) {
 
+<!-- FullCalendar Scripts and Style -->
+<link rel="stylesheet" href="@routes.Assets.at("fullcalendar/fullcalendar.css")">
+<link rel="stylesheet" media="print" href="@routes.Assets.at("fullcalendar/fullcalendar.print.css")">
+<script src="@routes.Assets.at("lib/jquery.min.js")"></script>
+<script src="@routes.Assets.at("lib/jquery-ui.custom.min.js")"></script>
+<script src="@routes.Assets.at("fullcalendar/fullcalendar.min.js")"></script>
+<script type='text/javascript'>
+    $(document).ready(function() {
+    
+        var date = new Date();
+        var d = date.getDate();
+        var m = date.getMonth();
+        var y = date.getFullYear();
+        
+        $('#calendar').fullCalendar({
+            editable: true,
+            header: false,           // remove header 
+            allDaySlot: false,       // remove allday slot from top of calendar 
+            slotEventOverlap: false, // prevent overlapping events 
+            defaultView: 'agendaWeek',
+            events: [
+                {
+                    id: 999,
+                    title: 'Repeating Event',
+                    start: new Date(y, m, d-3, 16, 0),
+                    allDay: false
+                },
+                {
+                    id: 999,
+                    title: 'Repeating Event',
+                    start: new Date(y, m, d+4, 16, 0),
+                    allDay: false
+                },
+                {
+                    title: 'Meeting',
+                    start: new Date(y, m, d, 10, 30),
+                    allDay: false
+                },
+                {
+                    title: 'Lunch',
+                    start: new Date(y, m, d, 12, 0),
+                    end: new Date(y, m, d, 14, 0),
+                    allDay: false
+                },
+                {
+                    title: 'Birthday Party',
+                    start: new Date(y, m, d+1, 19, 0),
+                    end: new Date(y, m, d+1, 22, 30),
+                    allDay: false
+                },
+                {
+                    title: 'Click for Google',
+                    start: new Date(y, m, 28),
+                    end: new Date(y, m, 29),
+                    url: 'http://google.com/'
+                }
+            ]
+        });
+        
+    });
 
-<div id='calendar'></div>
+</script>
+<!-- / FullCalendar Scripts and Style -->
 
   <h2>Information</h2>
   <p class="info">
@@ -46,164 +107,8 @@
 
   <div class="tab-content" style="margin-left: 10px; margin-right: 10px;">
     <div class="tab-pane active" id="Schedule">
-     
-      <h1>Current Schedule
-        <button type="button" 
-                class="btn btn-primary btn-sm pull-right print-schedule-button">
-                <span class="glyphicon glyphicon-print"></span> Print
-        </button>
-      </h1>
-      
-      <div class="table-responsive" style="margin-left: 10px; margin-right: 10px;">
-        <table class="table table-bordered table-striped">
-          <thead>
-            <tr>
-              <th>Time</th>
-              <th>Monday</th>
-              <th>Tuesday</th>
-              <th>Wednesday</th>
-              <th>Thursday</th>
-              <th>Friday</th>
-            </tr>
-          </thead>
-
-          <tbody>
-            <tr>
-              <td>7:30-8:20</td>
-              <td>ICS111</td>
-              <!-- Monday -->
-              <td></td>
-              <!-- Tuesday -->
-              <td>ICS111</td>
-              <!-- Wednesday -->
-              <td></td>
-              <!-- Thursday -->
-              <td></td>
-              <!-- Friday -->
-            </tr>
-            <tr>
-              <td>8:30-9:20</td>
-              <td></td>
-              <!-- Monday -->
-              <td></td>
-              <!-- Tuesday -->
-              <td></td>
-              <!-- Wednesday -->
-              <td></td>
-              <!-- Thursday -->
-              <td></td>
-              <!-- Friday -->
-            </tr>
-            <tr>
-              <td>9:30-10:20</td>
-              <td>ICS211</td>
-              <!-- Monday -->
-              <td></td>
-              <!-- Tuesday -->
-              <td>ICS211</td>
-              <!-- Wednesday -->
-              <td></td>
-              <!-- Thursday -->
-              <td></td>
-              <!-- Friday -->
-            </tr>
-            <tr>
-              <td>10:30-11:20</td>
-              <td></td>
-              <!-- Monday -->
-              <td>ENG111</td>
-              <!-- Tuesday -->
-              <td></td>
-              <!-- Wednesday -->
-              <td>ENG111</td>
-              <!-- Thursday -->
-              <td></td>
-              <!-- Friday -->
-            </tr>
-            <tr>
-              <td>11:30-12:20</td>
-              <td>MATH242</td>
-              <!-- Monday -->
-              <td></td>
-              <!-- Tuesday -->
-              <td>MATH242</td>
-              <!-- Wednesday -->
-              <td></td>
-              <!-- Thursday -->
-              <td></td>
-              <!-- Friday -->
-            </tr>
-            <tr>
-              <td>12:30-1:20</td>
-              <td></td>
-              <!-- Monday -->
-              <td></td>
-              <!-- Tuesday -->
-              <td></td>
-              <!-- Wednesday -->
-              <td></td>
-              <!-- Thursday -->
-              <td></td>
-              <!-- Friday -->
-            </tr>
-            <tr>
-              <td>1:30-2:20</td>
-              <td></td>
-              <!-- Monday -->
-              <td>ICS141</td>
-              <!-- Tuesday -->
-              <td></td>
-              <!-- Wednesday -->
-              <td>ICS141</td>
-              <!-- Thursday -->
-              <td></td>
-              <!-- Friday -->
-            </tr>
-            <tr>
-              <td>2:30-3:20</td>
-              <td></td>
-              <!-- Monday -->
-              <td></td>
-              <!-- Tuesday -->
-              <td></td>
-              <!-- Wednesday -->
-              <td></td>
-              <!-- Thursday -->
-              <td></td>
-              <!-- Friday -->
-            </tr>
-            <tr>
-              <td>3:30-4:20</td>
-              <td></td>
-              <!-- Monday -->
-              <td></td>
-              <!-- Tuesday -->
-              <td></td>
-              <!-- Wednesday -->
-              <td></td>
-              <!-- Thursday -->
-              <td></td>
-              <!-- Friday -->
-            </tr>
-            <tr>
-              <td>4:30-5:20</td>
-              <td></td>
-              <!-- Monday -->
-              <td></td>
-              <!-- Tuesday -->
-              <td></td>
-              <!-- Wednesday -->
-              <td></td>
-              <!-- Thursday -->
-              <td></td>
-              <!-- Friday -->
-            </tr>
-          </tbody>
-        </table>
-      </div>
-
-
-
+      <h1>Current Schedule</h1>
+      <div id='calendar'></div>
     </div>
 
     <div class="tab-pane" id="WatchList">
