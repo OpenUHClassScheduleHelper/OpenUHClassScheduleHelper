@@ -24,7 +24,7 @@ public class Application extends Controller {
 
   private static final String CAS_LOGIN = "https://cas-test.its.hawaii.edu/cas/login";
 
-  private static final String CAS_VALIDATE = "https://cas-test.its.hawaii.edu/cas/serviceValidate";
+  private static final String CAS_VALIDATE = "https://cas-test.its.hawaii.edu/cas/samlValidate";
 
   private static final String CAS_LOGOUT = "https://cas-test.its.hawaii.edu/cas/logout";
   
@@ -42,7 +42,6 @@ public static Result login() throws Exception {
   Map<String, String[]> query = request().queryString();
 
   // service url is where you will handle validation after login
-
   // or getting the user attributes after validation
 
   String serviceURL = routes.Application.login().absoluteURL(request());
@@ -66,7 +65,7 @@ public static Result login() throws Exception {
   } else {
 
     // after successful login from CAS, you get the ticket parameter
-
+    
     String[] tickets = query.get("ticket");
 
     if(tickets.length > 0) {
@@ -104,13 +103,13 @@ public static Result login() throws Exception {
         session("username", username);
         
         UserInfoDB.addUserInfo(username, "", "", "");
-
+        System.out.println("success");
         return redirect(routes.Application.getResults());
 
       } else {
 
         // you could redirect to the CAS login here if you want to
-
+        System.out.println("failure");
       }
 
     }
