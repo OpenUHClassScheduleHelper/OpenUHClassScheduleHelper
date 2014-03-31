@@ -2,6 +2,7 @@ package models;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 
@@ -162,16 +163,16 @@ public class UserInfo {
    * Get the list of courses in the users schedule.
    * @return A list of courses in the users schedule.
    */
-  public static ArrayList<Course> getSchedule() {
-    return new ArrayList<Course>(schedule.values());
+  public List<Course> getSchedule() {
+    return new ArrayList<>(schedule.values());
   }
   
   /**
    * Get the list of courses in the users watch list.
    * @return A list of courses in the users watch list.
    */
-  public static ArrayList<Course> getWatchList() {
-    return new ArrayList<Course>(watchList.values());
+  public List<Course> getWatchList() {
+    return new ArrayList<>(watchList.values());
   }
   
   

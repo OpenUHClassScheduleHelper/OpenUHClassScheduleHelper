@@ -1,12 +1,15 @@
-@(page: String)
+@(page: String, user : UserInfo, schedule: List[Course], watchList: List[Course], comments: List[UserComment])
 
 @Main(page, true) {
   <h2>Information</h2>
   <p class="info">
-    <b>Name: </b>John Doe
+    <b>Name: </b>@user.getFullName()
   </p>
   <p class="info">
-    <b>Standing: </b>Sophomore
+    <b>UH Username: </b>@user.getUserName()
+  </p>
+  <p class="info">
+    <b>Role: </b>@user.getRole()
   </p>
   <!-- End Student Information Section -->
 
@@ -191,108 +194,44 @@
           </tbody>
         </table>
       </div>
-
-
-
     </div>
 
     <div class="tab-pane" id="WatchList">
       <h1>Watch List</h1>
-      <h3>Fall 2013</h3>
-      <div class="visible-sm visible-xs">
-        <a class="btn course-dropdown-button" id="myclassbutton1"> ICS 111 Intro to Computer Science I </a>
-        <div class="mobileresults" id="myclassinfo1">
-          <p>
-            <b>CRN: </b><br>84935
-          </p>
-          <hr></hr>
-          <p>
-            <b>Gen Ed./Focus: </b><br>
-          </p>
-          <hr></hr>
-          <p>
-            <b>Instructor: </b><br>Ravi Narayan
-          </p>
-          <hr></hr>
-          <p>
-            <b>Location: </b><br>POST 127<br>POST 319
-          </p>
-          <hr></hr>
-          <p>
-            <b>Time: </b><br>M 0530-0800p<br> W 0530-0645p
-          </p>
-          <hr></hr>
-          <p>
-            <button class="btn btn-danger btn-xs">
-              <div class="glyphicon glyphicon-remove"></div>
-              Remove
-            </button>
-          </p>
+      <h3>Sprint 2014</h3>
+      @for(course <- schedule) {
+        <div class="visible-sm visible-xs">
+          <a class="btn course-dropdown-button" id="myclassbutton1"> @course.getCourseName() @course.getCourseTitle() </a>
+          <div class="mobileresults" id="myclassinfo1">
+            <p>
+              <b>CRN: </b><br>@course.getCourseNumber()
+            </p>
+            <hr></hr>
+            <p>
+              <b>Gen Ed./Focus: </b>@course.getGenFocus()<br>
+            </p>
+            <hr></hr>
+            <p>
+              <b>Instructor: </b><br>@course.getInstructor()
+            </p>
+            <hr></hr>
+            <p>
+              <b>Location: </b><br>POST 127<br>POST 319
+            </p>
+            <hr></hr>
+            <p>
+              <b>Time: </b><br>M 0530-0800p<br> W 0530-0645p
+            </p>
+            <hr></hr>
+            <p>
+              <button class="btn btn-danger btn-xs">
+                <div class="glyphicon glyphicon-remove"></div>
+                Remove
+              </button>
+            </p>
+          </div>
         </div>
-      </div>
-
-      <div class="visible-sm visible-xs">
-        <a class="btn course-dropdown-button" id="myclassbutton2"> Machine-Lvl & Systems Programming </a>
-        <div class="mobileresults" id="myclassinfo2">
-          <p>
-            <b>CRN: </b><br>88611
-          </p>
-          <hr></hr>
-          <p>
-            <b>Gen Ed./Focus: </b><br>
-          </p>
-          <hr></hr>
-          <p>
-            <b>Instructor: </b><br>Henri Casanova
-          </p>
-          <hr></hr>
-          <p>
-            <b>Location: </b><br>HOLM 247
-          </p>
-          <hr></hr>
-          <p>
-            <b>Time: </b><br>TR 900-1015
-          </p>
-          <hr></hr>
-          <p>
-            <button class="btn btn-danger btn-xs">
-              <div class="glyphicon glyphicon-remove"></div>
-              Remove
-            </button>
-          </p>
-        </div>
-      </div>
-      <div class="visible-sm visible-xs">
-        <a class="btn course-dropdown-button" id="myclassbutton3"> Operating Systems </a>
-        <div class="mobileresults" id="myclassinfo3">
-          <p>
-            <b>CRN: </b><br>88612
-          </p>
-          <hr></hr>
-          <p>
-            <b>Gen Ed./Focus: </b><br>
-          </p>
-          <hr></hr>
-          <p>
-            <b>Instructor: </b><br>Henri Casanova
-          </p>
-          <hr></hr>
-          <p>
-            <b>Location: </b><br>HOLM 247
-          </p>
-          <hr></hr>
-          <p>
-            <b>Time: </b><br>TR 1030-1145
-          </p>
-          <hr></hr>
-          <p>
-            <button class="btn btn-danger btn-xs">
-              <div class="glyphicon glyphicon-remove"></div>
-              Remove
-            </button>
-          </p>
-        </div>
-      </div>
+      }
 
       <table class="my-courses-table table-striped hidden-sm hidden-xs">
         <tr>
@@ -306,52 +245,25 @@
           <th>Time</th>
           <th></th>
         </tr>
-
-        <tr>
-          <td>84935</td>
-          <td>ICS 111</td>
-          <td>Intro to Computer Science I</td>
-          <td>ICS</td>
-          <td>0</td>
-          <td>Ravi Narayan</td>
-          <td>POST 127, POST 319</td>
-          <td>M 0530-0800p, W 0530-0645p</td>
-          <td><button class="btn btn-danger btn-sm">
+        @for(course <- schedule) {
+          <tr>
+            <td>@course.getCourseNumber()</td>
+            <td>@course.getCourseName()</td>
+            <td>@course.getCourseTitle()</td>
+            <td>ICS</td>
+            <td>0</td>
+            <td>@course.getInstructor()</td>
+            <td>POST 127, POST 319</td>
+            <td>M 0530-0800p, W 0530-0645p</td>
+            <td><button class="btn btn-danger btn-sm">
               <div class="glyphicon glyphicon-remove"></div>
               Remove
             </button></td>
-        </tr>
-        <tr>
-          <td>88611</td>
-          <td>ICS 312</td>
-          <td>Machine-Lvl & Systems Programming</td>
-          <td>ICS</td>
-          <td>0</td>
-          <td>Henri Casanova</td>
-          <td>HOLM 247</td>
-          <td>TR 900-1015</td>
-          <td><button class="btn btn-danger btn-sm">
-              <div class="glyphicon glyphicon-remove"></div>
-              Remove
-            </button></td>
-        </tr>
-        <tr>
-          <td>88612</td>
-          <td>ICS 332</td>
-          <td>Operating Systems</td>
-          <td>ICS</td>
-          <td>0</td>
-          <td>Henri Casanova</td>
-          <td>HOLM 247</td>
-          <td>TR 1030-1145p</td>
-          <td><button class="btn btn-danger btn-sm">
-              <div class="glyphicon glyphicon-remove"></div>
-              Remove
-            </button></td>
-        </tr>
-      </table>
-
+          </tr>
+        }
+        </table>
     </div>
+    
     <div class="tab-pane" id="Comments">
       <h1>Comments</h1>
 
@@ -364,6 +276,9 @@
           <th></th>
           <th></th>
         </tr>
+        @for(comment <- comments) {
+        
+        }
         <tr>
           <td>1/17/12</td>
           <td>ICS111</td>
