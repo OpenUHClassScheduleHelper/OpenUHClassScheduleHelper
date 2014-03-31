@@ -26,7 +26,7 @@ public class Global extends GlobalSettings {
     
     // Add students to the database
     UserInfoDB.addUserInfo("rnamahoe", "Robert", "Namahoe", "student");
-    UserInfoDB.addUserInfo("ekomiyama", "Evan", "Komiyama", "student");
+    UserInfoDB.addUserInfo("ek26", "Evan", "Komiyama", "student");
     UserInfoDB.addUserInfo("jortal", "Jon", "Ortal", "student");
     
     // Add instructors to the database

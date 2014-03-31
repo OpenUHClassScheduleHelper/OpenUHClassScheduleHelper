@@ -104,7 +104,6 @@ public static Result login() throws Exception {
         String username = doc.getElementsByTagName("cas:user").item(0).getTextContent();
 
         session().clear();
-
         session("username", username);
         currentUser = username;
         UserInfoDB.addUserInfo(currentUser, "", "", "");
