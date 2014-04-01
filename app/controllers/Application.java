@@ -188,7 +188,7 @@ public static Result logout() throws Exception {
    * @return The instructor page.
    */
   public static Result instructor() {
-    return ok(Instructor.render("Instructor"));
+    return ok(Instructor.render());
   }
   
   public static Result classSearch() {
