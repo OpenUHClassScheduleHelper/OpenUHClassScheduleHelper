@@ -12,7 +12,7 @@ import views.formdata.CourseFormData;
 
 /**
  * Global settings for the Play application.
- * 
+ *  
  * @author Rob Namahoe
  */
 public class Global extends GlobalSettings {
