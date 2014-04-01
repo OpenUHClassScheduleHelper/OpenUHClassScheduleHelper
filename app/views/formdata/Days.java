@@ -10,7 +10,7 @@ import java.util.Map;
  */
 public class Days {
 
-  private static String[] days = {"M","T","W","Th","F","Sa","Su"};
+  private static String[] days = {"M","T","W","R","F","Sa","Su"};
 
   /**
    * Initializes list of surfers footstyle.

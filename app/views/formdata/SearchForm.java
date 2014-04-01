@@ -21,7 +21,7 @@ public class SearchForm {
   public String[] focus = null;
   
   /**Days field**/
-  public String[] days = null;
+  public String[] days = new String[7];
   
   /**StartTime field**/
   public String startTime = "";

@@ -84,7 +84,8 @@ public class CourseDB {
     List<Course> courseList = CourseDB.getCourses();
     List<Course> tempCourseList = new ArrayList<>();
     List<Course> finalCourseList = new ArrayList<>();
-    if(! department.equals("Any Department")) {
+    boolean passed = true;
+    if(! department.equals("")) {
        for(Course course : courseList) {
          String thisDept = course.getCourseName().split(" ")[0];
          if(thisDept.equals(department)) {
@@ -117,7 +118,47 @@ public class CourseDB {
          finalCourseList.remove(course);
        }
        
+    }else {
+      finalCourseList = courseList;
     }
+    
+    
+    /*tempCourseList = new ArrayList<>();
+    int failed = 0;
+    int daycheck = 0;
+    
+    if(days != null) {
+    for(String day : days) {
+      if(day == null) {
+        daycheck++;
+      }
+    }
+    }
+    
+    if(days != null && daycheck != 7) {
+      for(Course course : finalCourseList) {
+        passed = true;
+        failed = 0;
+        for(String day : days) {
+          for(int i = 0; i < course.getMeeting().size(); i++) {
+            if(day != null && ! day.equals(course.getMeeting().get(i).getDay())) {
+              failed++;
+            }
+          }
+          if(failed == course.getMeeting().size()-1) {
+            passed = false;
+          }
+        }
+        if(! passed && (finalCourseList.contains(course))) {
+           tempCourseList.add(course);
+        }
+      }
+      
+    }
+    
+    for(Course course : tempCourseList) {
+      finalCourseList.remove(course);
+    }*/
     
     return finalCourseList;
     
