@@ -300,6 +300,13 @@ width: 100%;
 height: 100%;
 }
 /************* End Maps CSS *************/
+/************* Begin FullCalendar CSS *************/
+#calendar {
+  margin-top:80px;
+  width: 900px;
+  margin: 0 auto;
+}
+/************* End FullCalendar CSS *************/
 /************* Begin On Boarding CSS *************/
 .login-header {
   margin-top: 45px;

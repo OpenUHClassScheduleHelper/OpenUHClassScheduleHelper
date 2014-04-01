@@ -155,5 +155,9 @@ public class Course {
     }
     return rooms;
   }
+  
+  public String getCrn() {
+    return this.courseNumber;
+  }
 
 }

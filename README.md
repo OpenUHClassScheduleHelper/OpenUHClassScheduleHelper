@@ -12,3 +12,5 @@ Wiki Pages:
  - [Use Cases](https://github.com/OpenUHClassScheduleHelper/OpenUHClassScheduleHelper/wiki/Use-Cases)
  - [Stakeholder Requirements](https://github.com/OpenUHClassScheduleHelper/OpenUHClassScheduleHelper/wiki/Stakeholder-Requirements)
  - [Mockup Evaluations](https://github.com/OpenUHClassScheduleHelper/OpenUHClassScheduleHelper/wiki/Mockup-Evaluations)
+
+ - [Use Cases 2](https://github.com/OpenUHClassScheduleHelper/OpenUHClassScheduleHelper/wiki/Use-Cases-2.0)

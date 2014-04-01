@@ -12,7 +12,7 @@ import views.formdata.CourseFormData;
 
 /**
  * Global settings for the Play application.
- * 
+ *  
  * @author Rob Namahoe
  */
 public class Global extends GlobalSettings {
@@ -26,7 +26,7 @@ public class Global extends GlobalSettings {
     
     // Add students to the database
     UserInfoDB.addUserInfo("rnamahoe", "Robert", "Namahoe", "student");
-    UserInfoDB.addUserInfo("ekomiyama", "Evan", "Komiyama", "student");
+    UserInfoDB.addUserInfo("ek26", "Evan", "Komiyama", "student");
     UserInfoDB.addUserInfo("jortal", "Jon", "Ortal", "student");
     
     // Add instructors to the database
@@ -114,8 +114,8 @@ public class Global extends GlobalSettings {
     // Create schedules and watch lists for users
     UserInfo user = UserInfoDB.getUser("rnamahoe");
     user.addToSchedule(CourseDB.getCourse("85248"));
-    user.addToSchedule(CourseDB.getCourse("86041"));
-    user.addToWatchList(CourseDB.getCourse("84095"));
+    user.addToWatchList(CourseDB.getCourse("86041"));
+    user.addToSchedule(CourseDB.getCourse("84095"));
 
   }
 }

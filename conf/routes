@@ -19,6 +19,10 @@ GET     /populateInstructors        controllers.Application.populateInstructorLi
 GET     /populateCourses            controllers.Application.populateCourseList(dept: String)
 
 GET     /myaccount                  controllers.Application.myAccount()
+GET     /deleteComment              controllers.Application.deleteComment(id: Long)
+GET     /deleteCourse               controllers.Application.deleteCourseFromWatchlist(crn: String)
+
+GET     /instructor                 controllers.Application.instructor()
 
 
 # Map static resources from the /public folder to the /assets URL path

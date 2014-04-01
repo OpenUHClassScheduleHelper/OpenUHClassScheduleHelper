@@ -11,6 +11,7 @@ import play.Routes;
 import play.data.Form;
 import play.mvc.Controller;
 import play.mvc.Result;
+import play.mvc.Security;
 import views.formdata.Days;
 import views.formdata.Departments;
 import views.formdata.FocusTypes;
@@ -25,8 +26,10 @@ import views.html.Account;
 import models.Course;
 import models.CourseDB;
 import models.Meeting;
+import models.UserComment;
 import models.UserCommentDB;
 import models.UserInfo;
+import views.html.Instructor;
 
 public class Application extends Controller {
 
@@ -104,11 +107,8 @@ public static Result login() throws Exception {
         String username = doc.getElementsByTagName("cas:user").item(0).getTextContent();
 
         session().clear();
-
         session("username", username);
         currentUser = username;
-        UserInfoDB.addUserInfo(currentUser, "", "", "");
-        
         return redirect(routes.Application.getResults());
 
       } else {
@@ -164,10 +164,14 @@ public static Result logout() throws Exception {
     Form<SearchForm> formData = searchForm.bindFromRequest();
     SearchForm data = formData.get();
     List<Course> resultsList = new ArrayList<>();
+    
+    // Lists to print the users schedule
+    List<Course> schedule = UserInfoDB.getUser(currentUser).getSchedule();
+    
     if(data != null) {
       resultsList = CourseDB.courseSearchList(data.days, data.focus, data.department, data.course, data.instructor, data.startTime, data.endTime);
     }
-    return ok(Results.render("Results", FocusTypes.getFocusTypes(), Days.getDays(), Departments.getDepartments(), resultsList, searchForm));
+    return ok(Results.render("Results", FocusTypes.getFocusTypes(), Days.getDays(), Departments.getDepartments(), resultsList, searchForm, schedule));
   }
   
   /**
@@ -180,6 +184,35 @@ public static Result logout() throws Exception {
                               UserCommentDB.getCommentsByUserName(currentUser)));
   }
 
+  /**
+   * Return the instructor page.
+   * @return The instructor page.
+   */
+  public static Result instructor() {
+    return ok(Instructor.render());
+  }
+  
+  /**
+   * Handles the deleting of a comment from the database.
+   * @param id The id of the comment to delete.
+   * @return The resulting My Account page.
+   */
+  public static Result deleteComment(long id) {
+    UserCommentDB.removeComment(id);
+    return redirect(routes.Application.myAccount());
+  }
+  
+  
+  /**
+   * Handles the deleting of a course from the users watch list.
+   * @param crn The crn of the course to delete.
+   * @return The resulting My Accoutn page.
+   */
+  public static Result deleteCourseFromWatchlist(String crn) {
+    UserInfoDB.getUser(currentUser).removeFromWatchList(crn);
+    return redirect(routes.Application.myAccount());
+  }
+ 
   
   public static Result classSearch() {
     Form<SearchForm> formData = searchForm.bindFromRequest();
