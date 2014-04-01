@@ -106,8 +106,6 @@ public static Result login() throws Exception {
         session().clear();
         session("username", username);
         currentUser = username;
-        UserInfoDB.addUserInfo(currentUser, "", "", "");
-        
         return redirect(routes.Application.getResults());
 
       } else {
