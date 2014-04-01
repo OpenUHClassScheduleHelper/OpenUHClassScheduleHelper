@@ -21,7 +21,7 @@ public class UserCommentDB {
    */
   public static void addComment(String crn, String user, String theComment) {
     long id = getNextId();
-    UserComment comment = new UserComment(crn, user, theComment);
+    UserComment comment = new UserComment(id, crn, user, theComment);
     comments.put(id, comment);
   }
   

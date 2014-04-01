@@ -141,6 +141,16 @@ public class UserInfo {
   }
   
   /**
+   * Remove a course from the current users schedule by CRN.
+   * @param crn The crn of the course to remove.
+   */
+  public void removeFromSchedule(String crn) {
+    if (schedule.containsKey(crn)) {
+      schedule.remove(crn);
+    }
+  }
+  
+  /**
    * Add a course to the current users watch list.
    * @param course The course to watch.
    */
@@ -156,6 +166,16 @@ public class UserInfo {
     // If the course exists in the watch list, then remove it.
     if (watchList.containsKey(course.getCourseNumber())) {
       watchList.remove(course.getCourseNumber());
+    }
+  }
+  
+  /**
+   * Remove a course from the current users watchlist by CRN.
+   * @param crn The crn of the course to remove.
+   */
+  public void removeFromWatchList(String crn) {
+    if (watchList.containsKey(crn)) {
+       watchList.remove(crn);
     }
   }
   

@@ -11,6 +11,7 @@ import play.Routes;
 import play.data.Form;
 import play.mvc.Controller;
 import play.mvc.Result;
+import play.mvc.Security;
 import views.formdata.Days;
 import views.formdata.Departments;
 import views.formdata.FocusTypes;
@@ -179,10 +180,6 @@ public static Result logout() throws Exception {
    */
   public static Result myAccount() {
     UserInfo user = UserInfoDB.getUser(currentUser);
-    List<UserComment> comments = UserCommentDB.getCommentsByCrn("84935");
-    for (UserComment comment : comments) {
-      System.out.println(comment.getComment());
-    }
     return ok(Account.render("My Account", user, user.getSchedule(), user.getWatchList(),
                               UserCommentDB.getCommentsByUserName(currentUser)));
   }
@@ -194,6 +191,28 @@ public static Result logout() throws Exception {
   public static Result instructor() {
     return ok(Instructor.render());
   }
+  
+  /**
+   * Handles the deleting of a comment from the database.
+   * @param id The id of the comment to delete.
+   * @return The resulting My Account page.
+   */
+  public static Result deleteComment(long id) {
+    UserCommentDB.removeComment(id);
+    return redirect(routes.Application.myAccount());
+  }
+  
+  
+  /**
+   * Handles the deleting of a course from the users watch list.
+   * @param crn The crn of the course to delete.
+   * @return The resulting My Accoutn page.
+   */
+  public static Result deleteCourseFromWatchlist(String crn) {
+    UserInfoDB.getUser(currentUser).removeFromWatchList(crn);
+    return redirect(routes.Application.myAccount());
+  }
+ 
   
   public static Result classSearch() {
     Form<SearchForm> formData = searchForm.bindFromRequest();

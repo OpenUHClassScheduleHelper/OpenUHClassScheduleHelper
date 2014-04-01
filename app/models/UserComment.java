@@ -9,6 +9,7 @@ import java.util.Date;
  */
 public class UserComment {
 
+  private long id;
   private String crn;
   private String userName;
   private String fullName;
@@ -23,7 +24,8 @@ public class UserComment {
    * @param user The user adding the comment
    * @param comment The comment
    */
-  public UserComment(String crn, String userName, String comment) {
+  public UserComment(long id, String crn, String userName, String comment) {
+    this.id = id;
     this.crn = crn;
     this.setUserName(userName);
     this.comment = comment;
@@ -142,6 +144,20 @@ public class UserComment {
    */
   public String getCourseNumber() {
     return CourseDB.getCourse(this.crn).getCourseName();
+  }
+
+  /**
+   * @return the id
+   */
+  public long getId() {
+    return id;
+  }
+
+  /**
+   * @param id the id to set
+   */
+  public void setId(long id) {
+    this.id = id;
   }
   
   
