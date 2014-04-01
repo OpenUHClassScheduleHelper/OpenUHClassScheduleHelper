@@ -114,8 +114,8 @@ public class Global extends GlobalSettings {
     // Create schedules and watch lists for users
     UserInfo user = UserInfoDB.getUser("rnamahoe");
     user.addToSchedule(CourseDB.getCourse("85248"));
-    user.addToSchedule(CourseDB.getCourse("86041"));
-    user.addToWatchList(CourseDB.getCourse("84095"));
+    user.addToWatchList(CourseDB.getCourse("86041"));
+    user.addToSchedule(CourseDB.getCourse("84095"));
 
   }
 }

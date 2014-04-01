@@ -1,6 +1,8 @@
 package models;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 public class Meeting {
@@ -67,5 +69,75 @@ public class Meeting {
   public String getMeetingString() {
      return this.day + " " + this.start + "-" + this.end + " " + this.room;
   }
+  
+  /**
+   * Get the date and time the given class meets - formatted as a Unix timestamp.
+   * @return An long value representing the day and time the class meets formatted as a Unix timestamp.
+   */
+  public long getFullCalendarStartTime() {
+    return getFullCalendarEntry("start");
+  }
+  
+  /**
+   * Get the date and time the given class ends - formatted as a Unix timestamp.
+   * @return An long value representing the day and time the class ends formatted as a Unix timestamp.
+   */
+  public long getFullCalendarEndTime() {
+    return getFullCalendarEntry("end");
+  }
+  
+  /**
+   * A private method that calculates the Unix timestamp for the beginning or ending time of a course.
+   * @param whichEntry "start" if the start time is needed, "end" if the end time is needed.
+   * @return The specified time formatted as a Unix timestamp.
+   */
+  private long getFullCalendarEntry(String whichEntry) {
+    
+    Calendar c = Calendar.getInstance();
+    
+    // Set the date of the calendar object.
+    c.setFirstDayOfWeek(Calendar.SUNDAY);
+    switch (this.day.toUpperCase()) {
+      case "M":   // Monday
+        c.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
+      break;
+      case "T":   // Tuesday
+        c.set(Calendar.DAY_OF_WEEK, Calendar.TUESDAY);
+      break;
+      case "W":   // Wednesday
+        c.set(Calendar.DAY_OF_WEEK, Calendar.WEDNESDAY);
+      break;
+      case "R":   // Thursday
+        c.set(Calendar.DAY_OF_WEEK, Calendar.THURSDAY);
+      break;
+      case "F":   // Friday
+        c.set(Calendar.DAY_OF_WEEK, Calendar.FRIDAY);
+      break;
+      case "S":  // Saturday
+        c.set(Calendar.DAY_OF_WEEK, Calendar.SATURDAY);
+      break;
+    }
 
+    // Set the time depending on the entry needed - start or end
+    String tempTime = (whichEntry.equals("start")) ? this.start : this.end;
+
+    // Parse hour from tempTime and convert to military time.
+    int hour = Integer.parseInt(tempTime.substring(0,2));
+    hour += (tempTime.indexOf("p") > 0 && hour < 12) ? 12 : 0;
+
+    // Parse minute from tempTime
+    int minute = Integer.parseInt(tempTime.substring(2,4));
+    
+    // Set the time of the calendar object.
+    c.set(Calendar.HOUR_OF_DAY, hour);
+    c.set(Calendar.MINUTE, minute);
+    c.set(Calendar.SECOND, 0);
+    
+    // Convert to unix timestamp for use in the FullCalendar object.
+    // To convert java date to unix timestamp, divide by 1000 since java 
+    // uses milliseconds and unix uses seconds.
+    return c.getTimeInMillis() / 1000L;
+    
+  }
+ 
 }

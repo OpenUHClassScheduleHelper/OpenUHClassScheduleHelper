@@ -8,35 +8,60 @@
 <script src="@routes.Assets.at("lib/jquery.min.js")"></script>
 <script src="@routes.Assets.at("lib/jquery-ui.custom.min.js")"></script>
 <script src="@routes.Assets.at("fullcalendar/fullcalendar.min.js")"></script>
-<script type='text/javascript'>
-    $(document).ready(function() {
-    
-        var date = new Date();
-        var d = date.getDate();
-        var m = date.getMonth();
-        var y = date.getFullYear();
-        
-        $('#calendar').fullCalendar({
-            editable: true,
-            header: false,           // remove header 
-            allDaySlot: false,       // remove allday slot from top of calendar 
-            slotEventOverlap: false, // prevent overlapping events 
-            defaultView: 'agendaWeek',
-            events: [
-              @for((course, index) <- schedule.zipWithIndex) {
-                {
-                   title: '@course.getCourseTitle()',
-                   start: new Date(y, m, d, 10, 30),
-                   allDay: false
+
+<script>
+$(document).ready(function() {
+
+    var date = new Date();
+    var d = date.getDate();
+    var m = date.getMonth();
+    var y = date.getFullYear();
+
+    $('#calendar').fullCalendar({
+        editable: true,
+        header: false,           // remove header 
+        allDaySlot: false,       // remove allday slot from top of calendar 
+        slotEventOverlap: false, // prevent overlapping events 
+        defaultView: 'agendaWeek',
+        events: [
+          @for((course, courseIndex) <- schedule.zipWithIndex) {
+        	  @for((meeting, meetingIndex) <- course.getMeeting().zipWithIndex) {
+        		{
+                  title: '@course.getCourseName()',
+                  start: @meeting.getFullCalendarStartTime(),
+                  end: @meeting.getFullCalendarEndTime(),
+                  allDay: false
                 }
-                @if(index < schedule.length-1) {,}
-              }
-            ]
-        });
-        
+                @if(courseIndex == schedule.length-1 && meetingIndex == course.getMeeting().length-1) {} else {,}
+        	  }
+          }       
+
+        ]
     });
 
+});
 </script>
+
+<script>
+var calendar = $('#calendar');
+calendar.fullCalendar({
+    dayClick: function(date, allDay, jsEvent, view) {
+        calendar.fullCalendar('renderEvent', { title: 'YOUR TITLE', start: date, allDay: true }, true );
+    }
+});
+</script>
+
+<script>
+$(document).ready(function(){
+  $("p").hover(function(){
+    alert("You entered p1!");
+    },
+    function(){
+    alert("Bye! You now leave p1!");
+  }); 
+});
+</script>
+
 <!-- / FullCalendar Scripts and Style -->
 
 
