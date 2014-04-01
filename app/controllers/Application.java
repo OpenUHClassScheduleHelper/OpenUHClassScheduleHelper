@@ -25,6 +25,7 @@ import views.html.Account;
 import models.Course;
 import models.CourseDB;
 import models.Meeting;
+import models.UserComment;
 import models.UserCommentDB;
 import models.UserInfo;
 
@@ -173,6 +174,10 @@ public static Result logout() throws Exception {
    */
   public static Result myAccount() {
     UserInfo user = UserInfoDB.getUser(currentUser);
+    List<UserComment> comments = UserCommentDB.getCommentsByCrn("84935");
+    for (UserComment comment : comments) {
+      System.out.println(comment.getComment());
+    }
     return ok(Account.render("My Account", user, user.getSchedule(), user.getWatchList(),
                               UserCommentDB.getCommentsByUserName(currentUser)));
   }
