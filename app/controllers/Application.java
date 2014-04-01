@@ -28,6 +28,7 @@ import models.Meeting;
 import models.UserComment;
 import models.UserCommentDB;
 import models.UserInfo;
+import views.html.Instructor;
 
 public class Application extends Controller {
 
@@ -182,6 +183,13 @@ public static Result logout() throws Exception {
                               UserCommentDB.getCommentsByUserName(currentUser)));
   }
 
+  /**
+   * Return the instructor page.
+   * @return The instructor page.
+   */
+  public static Result instructor() {
+    return ok(Instructor.render("Instructor"));
+  }
   
   public static Result classSearch() {
     Form<SearchForm> formData = searchForm.bindFromRequest();
