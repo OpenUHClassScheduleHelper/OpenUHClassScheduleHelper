@@ -163,10 +163,14 @@ public static Result logout() throws Exception {
     Form<SearchForm> formData = searchForm.bindFromRequest();
     SearchForm data = formData.get();
     List<Course> resultsList = new ArrayList<>();
+    
+    // Lists to print the users schedule
+    List<Course> schedule = UserInfoDB.getUser(currentUser).getSchedule();
+    
     if(data != null) {
       resultsList = CourseDB.courseSearchList(data.days, data.focus, data.department, data.course, data.instructor, data.startTime, data.endTime);
     }
-    return ok(Results.render("Results", FocusTypes.getFocusTypes(), Days.getDays(), Departments.getDepartments(), resultsList, searchForm));
+    return ok(Results.render("Results", FocusTypes.getFocusTypes(), Days.getDays(), Departments.getDepartments(), resultsList, searchForm, schedule));
   }
   
   /**
