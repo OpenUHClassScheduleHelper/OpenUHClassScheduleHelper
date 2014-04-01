@@ -1,4 +1,5 @@
-@(page: String, focusList: Map[String, Boolean], dayList: Map[String, Boolean], departmentList: Map[String, Boolean], resultsList: List[Course], searchForm : Form[views.formdata.SearchForm])
+@(page: String, focusList: Map[String, Boolean], dayList: Map[String, Boolean], departmentList: Map[String, Boolean], 
+  resultsList: List[Course], searchForm : Form[views.formdata.SearchForm], schedule: List[Course])
 @import helper.form 
 @import bootstrap3._
 
@@ -108,6 +109,46 @@ function getCourseList() {
 
 </script>
 
+<!-- FullCalendar Scripts and Style -->
+<link rel="stylesheet" href="@routes.Assets.at("fullcalendar/fullcalendar.css")">
+<link rel="stylesheet" media="print" href="@routes.Assets.at("fullcalendar/fullcalendar.print.css")">
+<script src="@routes.Assets.at("lib/jquery.min.js")"></script>
+<script src="@routes.Assets.at("lib/jquery-ui.custom.min.js")"></script>
+<script src="@routes.Assets.at("fullcalendar/fullcalendar.min.js")"></script>
+
+<script>
+$(document).ready(function() {
+
+    var date = new Date();
+    var d = date.getDate();
+    var m = date.getMonth();
+    var y = date.getFullYear();
+
+    $('#calendar').fullCalendar({
+        editable: true,
+        header: false,           // remove header 
+        allDaySlot: false,       // remove allday slot from top of calendar 
+        slotEventOverlap: false, // prevent overlapping events 
+        defaultView: 'agendaWeek',
+        events: [
+          @for((course, courseIndex) <- schedule.zipWithIndex) {
+              @for((meeting, meetingIndex) <- course.getMeeting().zipWithIndex) {
+                {
+                  title: '@course.getCourseName()',
+                  start: @meeting.getFullCalendarStartTime(),
+                  end: @meeting.getFullCalendarEndTime(),
+                  allDay: false
+                }
+                @if(courseIndex == schedule.length-1 && meetingIndex == course.getMeeting().length-1) {} else {,}
+              }
+          }       
+
+        ]
+    });
+
+});
+</script>
+<!-- / FullCalendar Scripts and Style -->
 
  <!-- search form -->
   <div id="searchFormWrapper">
@@ -274,165 +315,11 @@ function getCourseList() {
 
   </div>
   <h2 id="schedule-header"><b>My Schedule</b></h2>
+  <div id='calendar'></div>
 
-  <div class="table-responsive" style="margin-left: 10px; margin-right: 10px;">
-    <table class="table table-bordered table-striped">
-      <thead>
-        <tr id="conflict-alert" style="display: none; background-color: #F58E9D;">
-          <td colspan="6">Conflict Exists</td>
-        </tr>
-        <tr>
-          <th>Time</th>
-          <th>Monday</th>
-          <th>Tuesday</th>
-          <th>Wednesday</th>
-          <th>Thursday</th>
-          <th>Friday</th>
-        </tr>
-      </thead>
-
-      <tbody>
-        <tr>
-          <td>7:30-8:20</td>
-          <td id="tempCell" name="84935">ICS111</td>
-          <!-- Monday -->
-          <td></td>
-          <!-- Tuesday -->
-          <td id="tempCell" name="84935">ICS111</td>
-          <!-- Wednesday -->
-          <td></td>
-          <!-- Thursday -->
-          <td></td>
-          <!-- Friday -->
-        </tr>
-        <tr>
-          <td>8:30-9:20</td>
-          <td></td>
-          <!-- Monday -->
-          <td></td>
-          <!-- Tuesday -->
-          <td></td>
-          <!-- Wednesday -->
-          <td></td>
-          <!-- Thursday -->
-          <td></td>
-          <!-- Friday -->
-        </tr>
-        <tr>
-          <td>9:30-10:20</td>
-          <td>ICS211</td>
-          <!-- Monday -->
-          <td></td>
-          <!-- Tuesday -->
-          <td>ICS211</td>
-          <!-- Wednesday -->
-          <td></td>
-          <!-- Thursday -->
-          <td></td>
-          <!-- Friday -->
-        </tr>
-        <tr>
-          <td>10:30-11:20</td>
-          <td></td>
-          <!-- Monday -->
-          <td>ENG111</td>
-          <!-- Tuesday -->
-          <td></td>
-          <!-- Wednesday -->
-          <td>ENG111</td>
-          <!-- Thursday -->
-          <td></td>
-          <!-- Friday -->
-        </tr>
-        <tr>
-          <td>11:30-12:20</td>
-          <td name="84494">MATH242</td>
-          <!-- Monday -->
-          <td></td>
-          <!-- Tuesday -->
-          <td name="84494">MATH242</td>
-          <!-- Wednesday -->
-          <td></td>
-          <!-- Thursday -->
-          <td></td>
-          <!-- Friday -->
-        </tr>
-        <tr>
-          <td>12:30-1:20</td>
-          <td></td>
-          <!-- Monday -->
-          <td></td>
-          <!-- Tuesday -->
-          <td></td>
-          <!-- Wednesday -->
-          <td></td>
-          <!-- Thursday -->
-          <td></td>
-          <!-- Friday -->
-        </tr>
-        <tr>
-          <td>1:30-2:20</td>
-          <td></td>
-          <!-- Monday -->
-          <td id="tempCell" name="84095">ICS141</td>
-          <!-- Tuesday -->
-          <td></td>
-          <!-- Wednesday -->
-          <td id="tempCell" name="84095">ICS141</td>
-          <!-- Thursday -->
-          <td></td>
-          <!-- Friday -->
-        </tr>
-        <tr>
-          <td>2:30-3:20</td>
-          <td></td>
-          <!-- Monday -->
-          <td></td>
-          <!-- Tuesday -->
-          <td></td>
-          <!-- Wednesday -->
-          <td></td>
-          <!-- Thursday -->
-          <td></td>
-          <!-- Friday -->
-        </tr>
-        <tr>
-          <td>3:30-4:20</td>
-          <td></td>
-          <!-- Monday -->
-          <td></td>
-          <!-- Tuesday -->
-          <td></td>
-          <!-- Wednesday -->
-          <td></td>
-          <!-- Thursday -->
-          <td></td>
-          <!-- Friday -->
-        </tr>
-        <tr>
-          <td>4:30-5:20</td>
-          <td></td>
-          <!-- Monday -->
-          <td></td>
-          <!-- Tuesday -->
-          <td></td>
-          <!-- Wednesday -->
-          <td></td>
-          <!-- Thursday -->
-          <td></td>
-          <!-- Friday -->
-        </tr>
-      </tbody>
-    </table>
-
-  </div>
   <!-- /main -->
   <div class="bottom-spacing"></div>
-  </div>
-  </div>
-
-  </div>
-
+  
   <div class="modal fade" id="infomodal1">
     <div class="modal-dialog">
       <div class="modal-content">
