@@ -121,14 +121,16 @@ calendar.fullCalendar({
               <b>Instructor: </b><br>@course.getInstructor()
             </p>
             <hr></hr>
-            <p>
-              <b>Location: </b><br>POST 127<br>POST 319
-            </p>
-            <hr></hr>
-            <p>
-              <b>Time: </b><br>M 0530-0800p<br> W 0530-0645p
-            </p>
-            <hr></hr>
+            @for(meeting <- course.getMeeting()) {
+              <p>
+                <b>Location: </b><br>POST 127<br>POST 319
+              </p>
+              <hr></hr>
+              <p>
+                <b>Time: </b><br>M 0530-0800p<br> W 0530-0645p
+              </p>
+              <hr></hr>
+            }
             <p>
               <button class="btn btn-danger btn-xs">
                 <div class="glyphicon glyphicon-remove"></div>
@@ -183,27 +185,10 @@ calendar.fullCalendar({
           <th></th>
         </tr>
         @for(comment <- comments) {
-        
-        }
         <tr>
-          <td>1/17/12</td>
-          <td>ICS111</td>
-          <td>Tough class but you sure do learn a lot!</td>
-          <td></td>
-          <td>
-            <button id="edit1" type="button" class="btn btn-primary btn-xs" onclick="cmt.show1()">Edit</button>
-            <button id="save1" type="button" style="display: none;" class="btn btn-success btn-xs" onclick="cmt.hide1()">Save</button>
-          </td>
-          <td><button type="button" class="btn btn-danger btn-xs" data-toggle="modal" data-target="#myModal">Delete</button></td>
-        </tr>
-        <tr id="cmt1" style="display: none;">
-          <td colspan="6"><textarea class="form-control" rows="3">Tough class but you sure do learn a lot!
-                      </textarea></td>
-        </tr>
-        <tr>
-          <td>9/12/13</td>
-          <td>ICS311</td>
-          <td>I thought ICS111 was hard...this class is impossible!</td>
+          <td>@comment.getPostDate()</td>
+          <td>@comment.getCourseNumber()</td>
+          <td>@comment.getComment()</td>
           <td></td>
           <td>
             <button id="edit2" type="button" class="btn btn-primary btn-xs" onclick="cmt.show2()">Edit</button>
@@ -212,13 +197,16 @@ calendar.fullCalendar({
           <td><button type="button" class="btn btn-danger btn-xs" data-toggle="modal" data-target="#myModal">Delete</button></td>
         </tr>
         <tr id="cmt2" style="display: none;">
-          <td colspan="6"><textarea class="form-control" rows="3">I thought ICS111 was hard...this class is impossible!
+          <td colspan="6"><textarea class="form-control" rows="3">
                       </textarea></td>
         </tr>
-      </table>
+        }
+        </table>
 
+
+        @for(comment <- comments) {
       <div class="visible-sm visible-xs">
-        <a class="btn course-dropdown-button" id="myclassbutton7"> ICS111: Tough class but you sure do learn a lot!
+        <a class="btn course-dropdown-button" id="myclassbutton7"> @comment.getCourseNumber(): @comment.getComment()
         </a>
         <div class="mobileresults" id="myclassinfo7">
           <p>
@@ -233,23 +221,11 @@ calendar.fullCalendar({
           </p>
         </div>
       </div>
-      <div class="visible-sm visible-xs">
-        <a class="btn course-dropdown-button" id="myclassbutton8"> ICS311: I thought ICS111 was hard...this class is
-          impossible! </a>
-        <div class="mobileresults" id="myclassinfo8">
-          <p>
-            <button class="btn btn-primary btn-sm">
-              <div class="glyphicon glyphicon-pencil"></div>
-              Edit
-            </button>
-            <button class="btn btn-danger btn-sm">
-              <div class="glyphicon glyphicon-remove"></div>
-              Delete
-            </button>
-          </p>
-        </div>
-      </div>
+        }
+      
     </div>
+    
+    
     <div class="tab-pane" id="ScheduleHistory">
       <h1>Schedule History</h1>
       <h3>Spring 2014</h3>

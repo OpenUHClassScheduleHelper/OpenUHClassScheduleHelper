@@ -2,10 +2,8 @@ package models;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 
 /**
  * An in-memory repo to store user comments
@@ -13,7 +11,6 @@ import java.util.Map.Entry;
  */
 public class UserCommentDB { 
   
-  //private static ArrayList<UserComment> comments = new ArrayList<UserComment>();
   private static Map<Long, UserComment> comments = new HashMap<Long, UserComment>();
   
   /**

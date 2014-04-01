@@ -136,4 +136,13 @@ public class UserComment {
     this.instructorPost = instructorPost;
   }
   
+  /**
+   * Get the course number.
+   * @return The course number.
+   */
+  public String getCourseNumber() {
+    return CourseDB.getCourse(this.crn).getCourseName();
+  }
+  
+  
 }
