@@ -136,5 +136,4 @@ public class UserComment {
     this.instructorPost = instructorPost;
   }
   
-  
 }
