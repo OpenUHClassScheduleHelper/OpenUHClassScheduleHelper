@@ -10,6 +10,8 @@ GET     /searchresults              controllers.Application.searchResults()
 GET     /login                      controllers.Application.login()
 GET     /logout                     controllers.Application.logout()
 
+GET     /map                        controllers.Application.map()
+
 GET     /register                   controllers.Application.register()
 
 GET     /results                    controllers.Application.getResults()

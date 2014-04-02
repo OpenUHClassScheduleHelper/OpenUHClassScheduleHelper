@@ -48,12 +48,12 @@
           @if(isLoggedIn) {
           <ul class="nav navbar-nav navbar-right">
             <li>
-              <a href="@routes.Application.index()" 
+              <a href="@routes.Application.getResults()" 
                  style="color: @if(page=="Results"){black}else{white};">Search
               </a>
             </li>
             <li>
-              <a href="@routes.Application.index()" 
+              <a href="@routes.Application.map()" 
                  style="color: @if(page=="Campus Map"){black}else{white};">View Map
               </a>
             </li>
@@ -63,7 +63,7 @@
               </a>
             </li>
             <li>
-              <a href="@routes.Application.index()" 
+              <a href="@routes.Application.logout()" 
                  style="color: white">Sign Out
               </a>
             </li>

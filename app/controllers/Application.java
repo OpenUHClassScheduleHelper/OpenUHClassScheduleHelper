@@ -23,6 +23,7 @@ import views.html.Register;
 import views.html.Results;
 import views.html.Search;
 import views.html.Account;
+import views.html.MapRoute;
 import models.Course;
 import models.CourseDB;
 import models.Meeting;
@@ -48,6 +49,14 @@ public class Application extends Controller {
     return ok(Index.render("Home"));
   }
  
+  
+  /**
+   * Returns the map page.
+   * @return the map page
+   */
+  public static Result map() {
+    return ok(MapRoute.render("Campus Map"));
+  }
 
 public static Result login() throws Exception {
 
