@@ -19,11 +19,11 @@ $(document).ready(function() {
 
     $('#calendar').fullCalendar({
         editable: true,
-        header: false,           // remove header 
-        allDaySlot: false,       // remove allday slot from top of calendar 
-        slotEventOverlap: false, // prevent overlapping events 
-        minTime: 7,
-        maxTime: 21,
+        header: false,              // remove header 
+        allDaySlot: false,          // remove allday slot from top of calendar 
+        slotEventOverlap: false,    // prevent overlapping events 
+        minTime: 7,                 // Calendar starts at 7am
+        maxTime: 21,                // Calendar ends at 9pm
         defaultView: 'agendaWeek',
         events: [
           @for((course, courseIndex) <- schedule.zipWithIndex) {
