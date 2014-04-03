@@ -1,6 +1,7 @@
 package models;
 
 import java.util.Calendar;
+import java.util.Date;
 import java.util.TimeZone;
 
 public class Meeting {
@@ -69,6 +70,17 @@ public class Meeting {
   }
   
   /**
+   * Checks if two meetings overlap.
+   * @param meeting The other meeting.
+   * @return true if the two overlap, false otherwise.
+   */
+  public boolean isOverlapping(Meeting meeting) {
+    Date start = meeting.getFullCalendarStartTimeAsDate();
+    Date end = meeting.getFullCalendarEndTimeAsDate();
+    return getFullCalendarStartTimeAsDate().before(end) && start.before(getFullCalendarEndTimeAsDate());
+}
+  
+  /**
    * Get the date and time the given class meets - formatted as a Unix timestamp.
    * @return An long value representing the day and time the class meets formatted as a Unix timestamp.
    */
@@ -85,34 +97,68 @@ public class Meeting {
   }
   
   /**
-   * A private method that calculates the Unix timestamp for the beginning or ending time of a course.
+   * A private method that retrieves the Unix timestamp for the beginning or ending time of a course.
    * @param whichEntry "start" if the start time is needed, "end" if the end time is needed.
    * @return The specified time formatted as a Unix timestamp.
    */
   private long getFullCalendarEntry(String whichEntry) {
+    return calculateFullCalendarTime(whichEntry).getTimeInMillis() / 1000L;
+  }
+ 
+  /**
+   * Get the date and time the given class meets - formatted as a java Date object.
+   * @return The beginning time of the course as a java date object.
+   */
+  public Date getFullCalendarStartTimeAsDate() {
+    return getFullCalendarEntryAsDate("start");
+  }
+  
+  /**
+   * Get the date and time the given class ends - formatted as a java Date object.
+   * @return The end time of the course as a java date object.
+   */
+  public Date getFullCalendarEndTimeAsDate() {
+    return getFullCalendarEntryAsDate("end");
+  }
+  
+  /**
+   * A private method that returns the java date object representing the start or end of a course.
+   * @param whichEntry "start" if the start time is needed, "end" if the end time is needed.
+   * @return The specified time as a java date object.
+   */
+  private Date getFullCalendarEntryAsDate(String whichEntry) {
+      return calculateFullCalendarTime(whichEntry).getTime();
+  }
+  
+  /**
+   * A private method that calculates the Unix timestamp for the beginning or ending time of a course.
+   * @param whichEntry "start" if the start time is needed, "end" if the end time is needed.
+   * @return The specified time formatted as a Unix timestamp.
+   */
+  private Calendar calculateFullCalendarTime(String whichEntry) {
     TimeZone tz = TimeZone.getTimeZone("HST");
-    Calendar c = Calendar.getInstance();
+    Calendar cal = Calendar.getInstance();
     
     // Set the date of the calendar object.
-    c.setFirstDayOfWeek(Calendar.SUNDAY);
+    cal.setFirstDayOfWeek(Calendar.SUNDAY);
     switch (this.day.toUpperCase()) {
       case "M":   // Monday
-        c.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
+        cal.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
       break;
       case "T":   // Tuesday
-        c.set(Calendar.DAY_OF_WEEK, Calendar.TUESDAY);
+        cal.set(Calendar.DAY_OF_WEEK, Calendar.TUESDAY);
       break;
       case "W":   // Wednesday
-        c.set(Calendar.DAY_OF_WEEK, Calendar.WEDNESDAY);
+        cal.set(Calendar.DAY_OF_WEEK, Calendar.WEDNESDAY);
       break;
       case "R":   // Thursday
-        c.set(Calendar.DAY_OF_WEEK, Calendar.THURSDAY);
+        cal.set(Calendar.DAY_OF_WEEK, Calendar.THURSDAY);
       break;
       case "F":   // Friday
-        c.set(Calendar.DAY_OF_WEEK, Calendar.FRIDAY);
+        cal.set(Calendar.DAY_OF_WEEK, Calendar.FRIDAY);
       break;
       case "S":  // Saturday
-        c.set(Calendar.DAY_OF_WEEK, Calendar.SATURDAY);
+        cal.set(Calendar.DAY_OF_WEEK, Calendar.SATURDAY);
       break;
     }
 
@@ -127,16 +173,15 @@ public class Meeting {
     int minute = Integer.parseInt(tempTime.substring(2,4));
     
     // Set the time of the calendar object.
-    c.setTimeZone(tz);
-    c.set(Calendar.HOUR_OF_DAY, hour);
-    c.set(Calendar.MINUTE, minute);
-    c.set(Calendar.SECOND, 0);
+    cal.setTimeZone(tz);
+    cal.set(Calendar.HOUR_OF_DAY, hour);
+    cal.set(Calendar.MINUTE, minute);
+    cal.set(Calendar.SECOND, 0);
     
     // Convert to unix timestamp for use in the FullCalendar object.
     // To convert java date to unix timestamp, divide by 1000 since java 
     // uses milliseconds and unix uses seconds.
-    return c.getTimeInMillis() / 1000L;
-    
+    return cal;
   }
- 
+  
 }
