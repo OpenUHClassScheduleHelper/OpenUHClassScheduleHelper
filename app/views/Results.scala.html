@@ -1,9 +1,14 @@
 @(page: String, focusList: Map[String, Boolean], dayList: Map[String, Boolean], departmentList: Map[String, Boolean], 
-  resultsList: List[Course], searchForm : Form[views.formdata.SearchForm], schedule: List[Course])
+  resultsList: List[Course], searchForm : Form[views.formdata.SearchForm], schedule: List[Course], events: List[ScheduleEvent])
 @import helper.form 
 @import bootstrap3._
 
 @Main(page, true) {
+
+
+
+
+
 
  <script type='text/javascript'>
             $(document).ready(function() { 
@@ -119,19 +124,13 @@ function getCourseList() {
 
 <script>
 $(document).ready(function() {
-
-    var date = new Date();
-    var d = date.getDate();
-    var m = date.getMonth();
-    var y = date.getFullYear();
-
     $('#calendar').fullCalendar({
-        editable: true,
+        editable: false,            // prevent the user from editing events 
         header: false,              // remove header 
         allDaySlot: false,          // remove allday slot from top of calendar 
         slotEventOverlap: false,    // prevent overlapping events 
-        minTime: 7,                 // Calendar starts at 7am
-        maxTime: 21,                // Calendar ends at 9pm
+        minTime: 7,                 // Calendar starts at 7am 
+        maxTime: 21,                // Calendar ends at 9pm 
         defaultView: 'agendaWeek',
         events: [
           @for((course, courseIndex) <- schedule.zipWithIndex) {
@@ -145,12 +144,49 @@ $(document).ready(function() {
                 @if(courseIndex == schedule.length-1 && meetingIndex == course.getMeeting().length-1) {} else {,}
               }
           }       
-
         ]
     });
-
 });
 </script>
+
+<script>
+function AddEvent(crn) {
+  @for(event<- events) {
+    if (crn=='@event.getId()') {
+        $('#calendar').fullCalendar('renderEvent', {
+            id: '@event.getId()',
+            title: '@event.getTitle',
+            start: @event.getStart(),
+            end: @event.getEnd(),
+            allDay: false,
+            textColor: 'black',
+            borderColor: 'black',
+            backgroundColor: '@event.getBackgroundColor()'
+        }, true);
+    }
+  }
+}
+</script>
+
+
+<script>
+function RemoveEvent(id) {
+	if (id !== undefined)  {
+      $('#calendar').fullCalendar('removeEvents', id);
+	}
+}
+</script>
+
+<script>
+$(document).ready(function(){
+  $("tr").hover(function(){
+      AddEvent( $(this).attr('id') );
+    },function(){
+      RemoveEvent($(this).attr('id'));
+  });
+});
+</script>
+
 <!-- / FullCalendar Scripts and Style -->
 
  <!-- search form -->

@@ -27,6 +27,7 @@ import views.html.MapRoute;
 import models.Course;
 import models.CourseDB;
 import models.Meeting;
+import models.ScheduleEvent;
 import models.UserComment;
 import models.UserCommentDB;
 import models.UserInfo;
@@ -180,7 +181,37 @@ public static Result logout() throws Exception {
     if(data != null) {
       resultsList = CourseDB.courseSearchList(data.days, data.focus, data.department, data.course, data.instructor, data.startTime, data.endTime);
     }
-    return ok(Results.render("Results", FocusTypes.getFocusTypes(), Days.getDays(), Departments.getDepartments(), resultsList, searchForm, schedule));
+    
+    // Create Schedule Events
+    Boolean conflictExists = false;
+    List<ScheduleEvent> events = new ArrayList<>();
+    
+    if (resultsList.size() > 0 && schedule.size() > 0) {
+      for (Course result : resultsList) {
+        for (Meeting rMeeting : result.getMeeting()) {
+          
+          // compare each result meeting with those on the schedule.
+          for (Course course : schedule) {
+            for (Meeting cMeeting : course.getMeeting()) {
+              if (!conflictExists) {
+                conflictExists = rMeeting.isOverlapping(cMeeting);
+              }
+            }  // end of schedule meeting loop
+          } // end of schedule loop
+          
+          // Create a new schedule event object with appropriate attributes.
+          ScheduleEvent event = new ScheduleEvent(result.getCrn(),result.getCourseName(), 
+                                rMeeting.getFullCalendarStartTime(), rMeeting.getFullCalendarEndTime(), 
+                                conflictExists);
+          // Add it to the list of events
+          events.add(event);
+          conflictExists = false;
+        } // end of result meeting loop
+      } // end of result loop
+    }
+
+    return ok(Results.render("Results", FocusTypes.getFocusTypes(), Days.getDays(), Departments.getDepartments(), 
+              resultsList, searchForm, schedule, events));
   }
   
   /**

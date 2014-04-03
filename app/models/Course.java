@@ -1,6 +1,7 @@
 package models;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import models.Meeting;
 
@@ -156,8 +157,11 @@ public class Course {
     return rooms;
   }
   
+  /**
+   * Get the CRN for the current course.
+   * @return The crn of the current course.
+   */
   public String getCrn() {
     return this.courseNumber;
   }
-
 }
