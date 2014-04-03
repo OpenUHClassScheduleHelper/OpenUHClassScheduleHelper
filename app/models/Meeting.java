@@ -1,9 +1,12 @@
 package models;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 
 public class Meeting {
 
@@ -71,27 +74,33 @@ public class Meeting {
   }
   
   /**
-   * Get the date and time the given class meets - formatted as a Unix timestamp.
-   * @return An long value representing the day and time the class meets formatted as a Unix timestamp.
+   * Get the date and time the given class meets in ISO8601 format.
+   * @return An long value representing the day and time the class meets in ISO8601 format.
    */
-  public long getFullCalendarStartTime() {
+  public String getFullCalendarStartTime() {
+    System.out.println(getFullCalendarEntry("start"));
     return getFullCalendarEntry("start");
   }
   
   /**
-   * Get the date and time the given class ends - formatted as a Unix timestamp.
-   * @return An long value representing the day and time the class ends formatted as a Unix timestamp.
+   * Get the date and time the given class ends in ISO8601 format.
+   * @return An long value representing the day and time the class ends in ISO8601 format.
    */
-  public long getFullCalendarEndTime() {
+  public String getFullCalendarEndTime() {
+    System.out.println(getFullCalendarEntry("end"));
     return getFullCalendarEntry("end");
   }
   
   /**
-   * A private method that calculates the Unix timestamp for the beginning or ending time of a course.
+   * A private method that calculates times formatted as ISO8601 for the beginning or ending time of a course.
    * @param whichEntry "start" if the start time is needed, "end" if the end time is needed.
    * @return The specified time formatted as a Unix timestamp.
    */
-  private long getFullCalendarEntry(String whichEntry) {
+  private String getFullCalendarEntry(String whichEntry) {
+    
+    TimeZone tz = TimeZone.getTimeZone("HST");
+    DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm'Z'");
+    df.setTimeZone(tz);
     
     Calendar c = Calendar.getInstance();
     
@@ -133,10 +142,8 @@ public class Meeting {
     c.set(Calendar.MINUTE, minute);
     c.set(Calendar.SECOND, 0);
     
-    // Convert to unix timestamp for use in the FullCalendar object.
-    // To convert java date to unix timestamp, divide by 1000 since java 
-    // uses milliseconds and unix uses seconds.
-    return c.getTimeInMillis() / 1000L;
+    // Format as ISO8601 for use in the FullCalendar object.
+    return df.format(c.getTime());
     
   }
  

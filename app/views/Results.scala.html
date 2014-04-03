@@ -130,6 +130,7 @@ $(document).ready(function() {
         header: false,           // remove header 
         allDaySlot: false,       // remove allday slot from top of calendar 
         slotEventOverlap: false, // prevent overlapping events 
+        handleWindowResize: false,
         defaultView: 'agendaWeek',
         events: [
           @for((course, courseIndex) <- schedule.zipWithIndex) {

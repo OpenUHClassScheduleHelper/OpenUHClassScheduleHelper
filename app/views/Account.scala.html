@@ -22,14 +22,16 @@ $(document).ready(function() {
         header: false,           // remove header 
         allDaySlot: false,       // remove allday slot from top of calendar 
         slotEventOverlap: false, // prevent overlapping events 
+        minTime: 7,
+        maxTime: 21,
         defaultView: 'agendaWeek',
         events: [
           @for((course, courseIndex) <- schedule.zipWithIndex) {
         	  @for((meeting, meetingIndex) <- course.getMeeting().zipWithIndex) {
         		{
                   title: '@course.getCourseName()',
-                  start: @meeting.getFullCalendarStartTime(),
-                  end: @meeting.getFullCalendarEndTime(),
+                  start: '@meeting.getFullCalendarStartTime()',
+                  end: '@meeting.getFullCalendarEndTime()',
                   allDay: false
                 }
                 @if(courseIndex == schedule.length-1 && meetingIndex == course.getMeeting().length-1) {} else {,}
