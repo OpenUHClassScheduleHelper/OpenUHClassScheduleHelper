@@ -10,6 +10,10 @@
   margin-left: 5px;
 }
 
+.glyphicon-plus {
+  color: white;
+}
+
 /** instructor table **/
 .ins-table {
     font-family: verdana,arial,sans-serif;

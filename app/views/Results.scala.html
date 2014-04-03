@@ -42,7 +42,7 @@
                                     range : true,
                                     min : 0,
                                     max : 1439,
-                                    values : [ 540, 1020 ],
+                                    values : [ 420, 1200 ],
                                     slide : slideTime
                                 });
 
@@ -344,8 +344,9 @@ $(document).ready(function(){
           <button class="btn btn-success btn-sm added" title="Already Added">
             <div class="glyphicon glyphicon-plus" title="Already Added"></div>
           } else {
-            <a href="@routes.Application.addCourseToSchedule(course.getCourseNumber())"><button class="btn btn-success btn-sm" title="Add to Schedule">
-            <div class="glyphicon glyphicon-plus" title="Already Add to Schedule"></div></a>
+            <a href="@routes.Application.addCourseToSchedule(course.getCourseNumber())">
+            <button class="btn btn-success btn-sm" title="Add to Schedule">
+            <div class="glyphicon glyphicon-plus" title="Add to Schedule"></div></button></a>
           }
           </button> <img class="infoicon" id="infoicon@course.getCourseNumber()" src="@routes.Assets.at("images/more_information_icon.jpg")" data-toggle="modal"
           data-target="#infomodal@course.getCourseNumber()" title="Late Breaking News"></img>
