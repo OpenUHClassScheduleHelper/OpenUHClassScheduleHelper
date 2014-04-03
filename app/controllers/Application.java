@@ -174,9 +174,12 @@ public static Result logout() throws Exception {
     Form<SearchForm> formData = searchForm.bindFromRequest();
     SearchForm data = formData.get();
     List<Course> resultsList = new ArrayList<>();
+    List<Course> schedule = new ArrayList<>();
     
-    // Lists to print the users schedule
-    List<Course> schedule = UserInfoDB.getUser(currentUser).getSchedule();
+    if(UserInfoDB.getUser(currentUser) != null) {
+      // Lists to print the users schedule
+      schedule = UserInfoDB.getUser(currentUser).getSchedule();
+    }
     
     if(data != null) {
       resultsList = CourseDB.courseSearchList(data.days, data.focus, data.department, data.course, data.instructor, data.startTime, data.endTime);
@@ -251,6 +254,17 @@ public static Result logout() throws Exception {
   public static Result deleteCourseFromWatchlist(String crn) {
     UserInfoDB.getUser(currentUser).removeFromWatchList(crn);
     return redirect(routes.Application.myAccount());
+  }
+  
+  
+  public static Result addCourseToWatchlist(String crn) {
+    UserInfoDB.getUser(currentUser).addToWatchList(CourseDB.getCourse(crn));
+    return redirect(routes.Application.getResults());
+  }
+  
+  public static Result addCourseToSchedule(String crn) {
+    UserInfoDB.getUser(currentUser).addToSchedule(CourseDB.getCourse(crn));
+    return redirect(routes.Application.getResults());
   }
  
   

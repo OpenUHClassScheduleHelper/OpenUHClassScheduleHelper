@@ -118,8 +118,6 @@ function getCourseList() {
 <!-- FullCalendar Scripts and Style -->
 <link rel="stylesheet" href="@routes.Assets.at("fullcalendar/fullcalendar.css")">
 <link rel="stylesheet" media="print" href="@routes.Assets.at("fullcalendar/fullcalendar.print.css")">
-<script src="@routes.Assets.at("lib/jquery.min.js")"></script>
-<script src="@routes.Assets.at("lib/jquery-ui.custom.min.js")"></script>
 <script src="@routes.Assets.at("fullcalendar/fullcalendar.min.js")"></script>
 
 <script>
@@ -341,11 +339,17 @@ $(document).ready(function(){
                @meeting.getDay() @meeting.getStart()-@meeting.getEnd()<br>
                }</td>
           <td class="buttoncolumn">
+          
+          @if(schedule.contains(course)) {
           <button class="btn btn-success btn-sm added" title="Already Added">
             <div class="glyphicon glyphicon-plus" title="Already Added"></div>
-          </button> <img class="infoicon" id="infoicon1" src="@routes.Assets.at("images/more_information_icon.jpg")" data-toggle="modal"
-          data-target="#infomodal1" title="Late Breaking News"></img>
-          <img class="watchicon" src="@routes.Assets.at("images/eye.svg")" data-toggle="modal" data-target="#watchmodal"></img>
+          } else {
+            <a href="@routes.Application.addCourseToSchedule(course.getCourseNumber())"><button class="btn btn-success btn-sm" title="Add to Schedule">
+            <div class="glyphicon glyphicon-plus" title="Already Add to Schedule"></div></a>
+          }
+          </button> <img class="infoicon" id="infoicon@course.getCourseNumber()" src="@routes.Assets.at("images/more_information_icon.jpg")" data-toggle="modal"
+          data-target="#infomodal@course.getCourseNumber()" title="Late Breaking News"></img>
+          <img class="watchicon" src="@routes.Assets.at("images/eye.svg")" data-toggle="modal" data-target="#watchmodal@course.getCourseNumber()"></img>
         </td>
         </tr>
       }
@@ -359,7 +363,8 @@ $(document).ready(function(){
   <!-- /main -->
   <div class="bottom-spacing"></div>
   
-  <div class="modal fade" id="infomodal1">
+  @for(course <- resultsList) {
+  <div class="modal fade" id="infomodal@course.getCourseNumber()">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
@@ -375,14 +380,23 @@ $(document).ready(function(){
           <h4>
             <b>Late Breaking Information</b>
           </h4>
-          <p class="professor-new-info">2/28/14 Ravi Narayan: This class will now be available with a WI credit.</p>
+          @for(comment <- UserCommentDB.getCommentsByCrn(course.getCourseNumber())) {
+            @if(comment.isInstructorPost()) {
+              <p class="professor-new-info">@comment.getPostDate() @comment.getFullName: @comment.getComment()</p>
+            }
+          }
+          
+          @for(comment <- UserCommentDB.getCommentsByCrn(course.getCourseNumber())) {
+            @if(! comment.isInstructorPost()) {
+              <p>@comment.getPostDate() @comment.getFullName: @comment.getComment()</p>
+            }
+          }
           <div id="messagebox" class="add-comment-area">
             <p>
               <b>New Message:</b>
             </p>
             <textarea rows="4" cols="50"></textarea>
           </div>
-          <p>12/15/13 Jonathan Ortal: Professor Narayan is in the process of trying to make ICS 111 a WI credit.</p>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -394,6 +408,34 @@ $(document).ready(function(){
     <!-- /.modal-dialog -->
   </div>
   <!-- /.modal -->
+  }
+  
+  
+  @for(course <- resultsList) {
+  <div class="modal fade" id="watchmodal@course.getCourseNumber()">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">X</button>
+          <h4 class="modal-title"></h4>
+        </div>
+        <div class="modal-body">
+          <h4><b>Add this class to your watch list?</b></h4>
+
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          <a href="@routes.Application.addCourseToWatchlist(course.getCourseNumber())"><button type="button" class="btn btn-primary">Add</button></a>
+        </div>
+      </div>
+      <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+  </div>
+  <!-- /.modal --> 
+  
+  }
+  
 
   <div class="modal fade" id="infomodal2">
     <div class="modal-dialog">

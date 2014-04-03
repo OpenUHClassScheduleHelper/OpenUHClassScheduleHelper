@@ -23,6 +23,8 @@ GET     /populateCourses            controllers.Application.populateCourseList(d
 GET     /myaccount                  controllers.Application.myAccount()
 GET     /deleteComment              controllers.Application.deleteComment(id: Long)
 GET     /deleteCourse               controllers.Application.deleteCourseFromWatchlist(crn: String)
+GET     /addCourseToWatchlist       controllers.Application.addCourseToWatchlist(crn: String)
+GET     /addCourseToSchedule        controllers.Application.addCourseToSchedule(crn: String)
 
 GET     /instructor                 controllers.Application.instructor()
 

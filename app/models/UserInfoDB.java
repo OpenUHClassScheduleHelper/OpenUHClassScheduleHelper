@@ -31,6 +31,13 @@ public class UserInfoDB {
   public static boolean isUser(String userName) {
     return userinfos.containsKey(userName);
   }
+  
+  public static boolean isProfessor(String userName) {
+    if(UserInfoDB.getUser(userName).getRole().equals("Faculty")) {
+      return true;
+    }
+    return false;
+  }
 
   /**
    * Returns the UserInfo associated with the userName, or null if not found.
