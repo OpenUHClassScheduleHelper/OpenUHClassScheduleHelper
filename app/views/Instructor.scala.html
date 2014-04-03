@@ -5,95 +5,120 @@
 <head>
 <title>Instructor Page</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link rel="stylesheet" href="http:////netdna.bootstrapcdn.com/bootswatch/3.0.0/spacelab/bootstrap.min.css">
-<link rel="stylesheet" href="http://code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css">
+<link rel="stylesheet"
+    href="http:////netdna.bootstrapcdn.com/bootswatch/3.0.0/spacelab/bootstrap.min.css">
+<link rel="stylesheet"
+    href="http://code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css">
 
 <!--  Load site-specific customizations after bootstrap. -->
 <link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/main.css")">
 <link rel="shortcut icon" type="image/png" href="@routes.Assets.at("images/favicon.png")">
 
 <!-- Load Google Fonts -->
-<link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Abel|Ubuntu">
+<link rel="stylesheet" type="text/css"
+    href="http://fonts.googleapis.com/css?family=Abel|Ubuntu">
 
 <!-- social glyphicons -->
-<link href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+<link
+    href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css"
+    rel="stylesheet">
 
 <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
 <!--[if lt IE 9]>
           <script src="http://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.6.2/html5shiv.js"></script>
           <script src="http://cdnjs.cloudflare.com/ajax/libs/respond.js/1.2.0/respond.js"></script>
         <![endif]-->
-        
+
 <!-- Load Bootstrap JavaScript components. HTMLUnit (used in testing) requires JQuery 1.8.3 or below). -->
-  <script src="http://code.jquery.com/jquery-1.8.3.min.js"></script>
-  <script src="http://code.jquery.com/ui/1.10.4/jquery-ui.min.js"></script>
-  <script src="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
-  <script src="@controllers.routes.Application.jsRoutes()" type="text/javascript"></script>        
+<script src="http://code.jquery.com/jquery-1.8.3.min.js"></script>
+<script src="http://code.jquery.com/ui/1.10.4/jquery-ui.min.js"></script>
+<script
+    src="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
+<script src="@controllers.routes.Application.jsRoutes()"
+    type="text/javascript"></script>
 </head>
 
 <body>
-  <!-- Responsive navbar -->
-  <div class="navbar navbar-inverse" role="navigation">
-    <div class="navbar-inner">
-      <div class="container">
-        <div class="navbar-header">
-          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-            <!--  Display three horizontal lines when navbar collapsed. -->
-            <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span>
-          </button>
-          <a class="navbar-brand" href="index.html"></a>
+    <!-- Responsive navbar -->
+    <div class="navbar navbar-inverse" role="navigation">
+        <div class="navbar-inner">
+            <div class="container">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle"
+                        data-toggle="collapse"
+                        data-target=".navbar-collapse">
+                        <!--  Display three horizontal lines when navbar collapsed. -->
+                        <span class="icon-bar"></span> <span
+                            class="icon-bar"></span> <span
+                            class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="index.html"></a>
+                </div>
+                <div class="collapse navbar-collapse">
+                    <ul class="nav navbar-nav navbar-right">
+                        <li><a href="@routes.Application.logout()"
+                            style="color: white;">Sign Out</a></li>
+                    </ul>
+                </div>
+            </div>
         </div>
-        <div class="collapse navbar-collapse">
-          <ul class="nav navbar-nav navbar-right">
-            <li><a href="@routes.Application.logout()" style="color: white;">Sign Out</a></li>
-          </ul>
-        </div>
-      </div>
     </div>
-  </div>  
-  <!-- End Navbar -->
-  
-  <!-- /top nav -->
-  <h2>My Courses</h2>
-  <!-- desktop/laptop view -->
-  <div class="hidden-xs">
-    <table class="ins-table">
-      <tr>
-        <th>CRN</th>
-        <th>Section</th>
-        <th>Course Title</th>
-        <th>Time</th>
-        <th>Late Breaking News</th>
-      </tr>
-      <tr>
-        <td>84935</td>
-        <td>001</td>
-        <td>ICS 111 Intro to CS I</td>
-        <td>0900-01015a</td>
-        <td><img class="infoicon" id="infoicon1" src="@routes.Assets.at("images/more_information_icon.jpg")" data-toggle="modal"
-          data-target="#infomodal1" title="Late Breaking News"></img></td>
-      <tr>
-        <td>84095</td>
-        <td>001</td>
-        <td>ICS 141 Discrete Math for CS I</td>
-        <td>1100-1215a</td>
-        <td><img class="infoicon" id="infoicon1" src="@routes.Assets.at("images/more_information_icon.jpg")" data-toggle="modal"
-          data-target="#infomodal1" title="Late Breaking News"></img></td>
-      </tr>
-      <tr>
-        <td>84494</td>
-        <td>001</td>
-        <td>ICS 212 Program Structure</td>
-        <td>0100-0150p</td>
-        <td><img class="infoicon" id="infoicon1" src="@routes.Assets.at("images/more_information_icon.jpg")" data-toggle="modal"
-          data-target="#infomodal1" title="Late Breaking News"></img></td>
-      </tr>
+    <!-- End Navbar -->
+    <h2>Welcome</h2>
+    <div class="hidden-xs">
+        <div id="profilePicture">
+            <img
+                src="http://www.ics.hawaii.edu/images/Kimberly_Binsted.jpg"
+                style="width: 115px; height: auto; float: left">
+        </div>
+        <div id="profileInfo"
+            style="float: left; margin-left: 15px; margin-bottom: 30px">
+            <b>Name</b>: Kimberly Binsted<br> <b>Title</b>:
+            Associate Professor (ICS)<br> <b>Department</b>:
+            Information and Computer Sciences<br> <b>Office</b>:
+            POST 303D<br> <b>E-mail</b>: binsted@@hawaii.edu<br>
+        </div>
 
-    </table>
-  </div>
+        <br>
+        <div id="instructorTabs" style="clear: both;">
+            <div id="instructorTabsInner" style="margin-top: 30px">
+                <ul class="nav nav-tabs" data-tabs="tabs"
+                    style="margin-left: 10px; margin-right: 10px; margin-top: 10px;">
+                    <li class="active"><a data-toggle="tab"
+                        href="#Schedule">Schedule</a></li>
+                    <li><a data-toggle="tab"
+                        href="#CommentHistory">Comment History</a></li>
+                </ul>
+                <div class="tab-content"
+                    style="margin-left: 10px; margin-right: 10px;">
+                    <div class="tab-pane active" id="Schedule">
 
-  <h2>Late breaking comments from previous semesters</h2>
-  <div class="hidden-xs">
+                        <h3>Current Schedule</h3>
+                        <table class="ins-table">
+                            <tr>
+                                <th>CRN</th>
+                                <th>Section</th>
+                                <th>Course Title</th>
+                                <th>Time</th>
+                                <th>Late Breaking News</th>
+                            </tr>
+                            @for(professor <- CourseDB.getCourses()) {
+                            <tr>
+                                @if(professor.getInstructor == "K Binsted") {                              
+                                <td>@professor.getCourseNumber()</td>
+                                <td>@professor.getSection()</td>
+                                <td>@professor.getCourseTitle()</td>
+                                <td>time (TODO)</td>
+                                <td><img class="infoicon" id="infoicon1" src="@routes.Assets.at("images/more_information_icon.jpg")" data-toggle="modal"
+          data-target="#infomodal1" title="Late Breaking News"></img></td>
+                                }                              
+                            </tr>
+                            }
+                        </table>
+                    </div>
+                    <div class="tab-pane active" id="CommentHistory">
+                      <h3>Late breaking news from previous semesters</h3>
+                        <div class="hidden-xs">
     <table class="ins-table" style="max-width: 80%">
       <tr>
         <th>Semester</th>
@@ -126,97 +151,107 @@
         <td>Please e-mail me for your Photoshop license.</td>
       <tr>
     </table>
-  </div>
-
-  <!-- mobile view -->
-  <div class="visible-xs">
-    <div class="instructor-course">
-      <a class="btn course-dropdown-button" id="resultbutton1"> ICS 111 Intro to Computer Science I </a>
-      <div class="mobileresults" id="resultinfo1">
-        <p>
-          <b>CRN: </b><br>84935
-        </p>
-        <hr></hr>
-        <p>
-          <b>Course Description: </b>
-        </p>
-        <br>
-        <textarea class="course-desc-mobile">Insert course description here.</textarea>
-        <hr></hr>
-        <p>
-          <button class="btn btn-success btn-sm">
-            <div class="glyphicon glyphicon-saved"></div>
-            Save changes
-          </button>
-        </p>
-      </div>
-    </div>
-    <div class="instructor-course">
-      <a class="btn course-dropdown-button" id="resultbutton2"> ICS 141 Discrete Math for CS I </a>
-      <div class="mobileresults" id="resultinfo2">
-        <p>
-          <b>CRN: </b><br>84095
-        </p>
-        <hr></hr>
-        <p>
-          <b>Course Description: </b>
-        </p>
-        <br>
-        <textarea class="course-desc-mobile">Insert course description here.</textarea>
-        <hr></hr>
-        <p>
-          <button class="btn btn-success btn-sm">
-            <div class="glyphicon glyphicon-saved"></div>
-            Save changes
-          </button>
-        </p>
-      </div>
-    </div>
-    <div class="instructor-course">
-      <a class="btn course-dropdown-button" id="resultbutton3"> ICS 212 Program Structure </a>
-      <div class="mobileresults" id="resultinfo3">
-        <p>
-          <b>CRN: </b><br>84494
-        </p>
-        <hr></hr>
-        <p>
-          <b>Course Description: </b>
-        </p>
-        <br>
-        <textarea class="course-desc-mobile">Insert course description here.</textarea>
-        <hr></hr>
-        <p>
-          <button class="btn btn-success btn-sm">
-            <div class="glyphicon glyphicon-saved"></div>
-            Save changes
-          </button>
-        </p>
-      </div>
-    </div>
-
-  </div>
-
-  <div class="modal fade" id="infomodal1">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">X</button>
-          <h4 class="modal-title"></h4>
+                      
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="modal-body" style="width: 97%">
-          <h4>
-            <b>Late Breaking Information</b>
-          </h4>
-          <textarea class="form-control" rows="4">This is some editable textarea that allows the instructor to create/edit any comments for this particular course.</textarea>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-default" data-dismiss="modal">Dismiss Changes</button>
-          <button type="button" class="btn btn-primary" data-dismiss="modal">Save</button>
-        </div>
-      </div>
-      <!-- /.modal-content -->
     </div>
-    <!-- /.modal-dialog -->
-  </div>
-  <!-- /.modal -->
+    <!-- mobile view -->
+    <div class="visible-xs">
+        <div class="instructor-course">
+            <a class="btn course-dropdown-button" id="resultbutton1">
+                ICS 111 Intro to Computer Science I </a>
+            <div class="mobileresults" id="resultinfo1">
+                <p>
+                    <b>CRN: </b><br>84935
+                </p>
+                <hr></hr>
+                <p>
+                    <b>Course Description: </b>
+                </p>
+                <br>
+                <textarea class="course-desc-mobile">Insert course description here.</textarea>
+                <hr></hr>
+                <p>
+                    <button class="btn btn-success btn-sm">
+                        <div class="glyphicon glyphicon-saved"></div>
+                        Save changes
+                    </button>
+                </p>
+            </div>
+        </div>
+        <div class="instructor-course">
+            <a class="btn course-dropdown-button" id="resultbutton2">
+                ICS 141 Discrete Math for CS I </a>
+            <div class="mobileresults" id="resultinfo2">
+                <p>
+                    <b>CRN: </b><br>84095
+                </p>
+                <hr></hr>
+                <p>
+                    <b>Course Description: </b>
+                </p>
+                <br>
+                <textarea class="course-desc-mobile">Insert course description here.</textarea>
+                <hr></hr>
+                <p>
+                    <button class="btn btn-success btn-sm">
+                        <div class="glyphicon glyphicon-saved"></div>
+                        Save changes
+                    </button>
+                </p>
+            </div>
+        </div>
+        <div class="instructor-course">
+            <a class="btn course-dropdown-button" id="resultbutton3">
+                ICS 212 Program Structure </a>
+            <div class="mobileresults" id="resultinfo3">
+                <p>
+                    <b>CRN: </b><br>84494
+                </p>
+                <hr></hr>
+                <p>
+                    <b>Course Description: </b>
+                </p>
+                <br>
+                <textarea class="course-desc-mobile">Insert course description here.</textarea>
+                <hr></hr>
+                <p>
+                    <button class="btn btn-success btn-sm">
+                        <div class="glyphicon glyphicon-saved"></div>
+                        Save changes
+                    </button>
+                </p>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="modal fade" id="infomodal1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close"
+                        data-dismiss="modal" aria-hidden="true">X</button>
+                    <h4 class="modal-title"></h4>
+                </div>
+                <div class="modal-body" style="width: 97%">
+                    <h4>
+                        <b>Late Breaking Information</b>
+                    </h4>
+                    <textarea class="form-control" rows="4">This is some editable textarea that allows the instructor to create/edit any comments for this particular course.</textarea>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default"
+                        data-dismiss="modal">Dismiss Changes</button>
+                    <button type="button" class="btn btn-primary"
+                        data-dismiss="modal">Save</button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+    <!-- /.modal -->
 </body>
