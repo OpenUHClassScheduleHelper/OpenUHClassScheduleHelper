@@ -28,6 +28,8 @@ GET     /addCourseToSchedule        controllers.Application.addCourseToSchedule(
 
 GET     /instructor                 controllers.Application.instructor()
 
+GET    /editComment                controllers.Application.editComment()
+
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/js/routes           controllers.Application.jsRoutes()

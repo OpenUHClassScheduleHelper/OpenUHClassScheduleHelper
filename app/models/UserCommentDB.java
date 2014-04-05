@@ -33,6 +33,15 @@ public class UserCommentDB {
     comments.remove(id);
   }
   
+  
+  /**
+   * Remove a comment from the comment database.
+   * @param id The comment of the id to remove.
+   */
+  public static void removeComment(String id) {
+    comments.remove(Long.parseLong(id));
+  }
+  
   /**
    * Get a list of all comments associated with a CRN.
    * @param crn The CRN of the course.
@@ -49,6 +58,23 @@ public class UserCommentDB {
     return results;
   }
   
+  /**
+   * Get the comment with the specified id number.
+   * @param id The id of the comment to retrieve.
+   * @return The comment.
+   */
+  public static UserComment getCommentById(long id) {
+    return comments.get(id);
+  }
+  
+  /**
+   * Get the comment with the specified id.
+   * @param id The id of the comment to retrieve.
+   * @return The comment.
+   */
+  public static UserComment getCommentById(String id) {
+    return comments.get(Long.parseLong(id));
+  }
   
   /**
    * Get a list of all comments associated with a user.

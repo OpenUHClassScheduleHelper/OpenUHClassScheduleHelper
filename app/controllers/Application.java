@@ -12,6 +12,7 @@ import play.data.Form;
 import play.mvc.Controller;
 import play.mvc.Result;
 import play.mvc.Security;
+import views.formdata.CommentFormData;
 import views.formdata.Days;
 import views.formdata.Departments;
 import views.formdata.FocusTypes;
@@ -223,8 +224,9 @@ public static Result logout() throws Exception {
    */
   public static Result myAccount() {
     UserInfo user = UserInfoDB.getUser(currentUser);
+    Form<CommentFormData> commentForm = Form.form(CommentFormData.class);
     return ok(Account.render("My Account", user, user.getSchedule(), user.getWatchList(),
-                              UserCommentDB.getCommentsByUserName(currentUser)));
+                              UserCommentDB.getCommentsByUserName(currentUser), commentForm));
   }
 
   /**
@@ -256,6 +258,31 @@ public static Result logout() throws Exception {
     return redirect(routes.Application.myAccount());
   }
   
+  /**
+   * Edit a comment in the users CommentDB. Called from the MyAccount page.
+   */
+  public static Result editComment() {
+    Form<CommentFormData> commentForm = Form.form(CommentFormData.class).bindFromRequest();
+    if (commentForm.hasErrors()) {
+      // This wont actually work since theres no validate method.
+      // Do nothing, just reload My account page.
+    }
+    else {
+      CommentFormData commentFormData = commentForm.get();
+      
+      String id = commentFormData.id;
+      String newComment = commentFormData.comment;
+      
+      // Get the old comment and use it to create the new comment.
+      UserComment oldComment = UserCommentDB.getCommentById(id);
+      UserCommentDB.addComment(oldComment.getCrn(), oldComment.getUserName(), newComment);
+      
+      // Remove the old comment.
+      UserCommentDB.removeComment(id);
+      
+    }
+    return redirect(routes.Application.myAccount());
+  }
   
   public static Result addCourseToWatchlist(String crn) {
     UserInfoDB.getUser(currentUser).addToWatchList(CourseDB.getCourse(crn));
