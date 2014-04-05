@@ -7,7 +7,7 @@ import models.Meeting;
 
 public class Course {
 
-  private String genFocus;
+  private List<String> genFocus;
   private String courseNumber;
   private String courseName;
   private String section;
@@ -40,7 +40,7 @@ public class Course {
    * @param department
    * @param room TODO: add new parameters, get/set them
    */
-  public Course(String genFocus, String courseNumber, String courseName, String section, String courseTitle,
+  public Course(List<String> genFocus, String courseNumber, String courseName, String section, String courseTitle,
       String credits, String instructor, String seats, List<Meeting> meeting, String room) {
 
     this.setGenFocus(genFocus);
@@ -56,11 +56,27 @@ public class Course {
 
   }
 
-  public String getGenFocus() {
+  public List<String> getGenFocus() {
     return genFocus;
   }
+  
+  public String printGenFocusList() {
+    String list = "";
+    if(this.genFocus == null) {
+      return list;
+    }
+    
+    for(int i = 0; i < this.genFocus.size(); i++) {
+      if(i < this.genFocus.size() - 1) {
+        list += this.genFocus.get(i) + ", ";
+      }else {
+        list += this.genFocus.get(i);
+      }
+    }
+    return list;
+  }
 
-  public void setGenFocus(String genFocus) {
+  public void setGenFocus(List<String> genFocus) {
     this.genFocus = genFocus;
   }
 

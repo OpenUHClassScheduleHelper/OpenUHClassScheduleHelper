@@ -1,6 +1,7 @@
 package views.formdata;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
@@ -17,7 +18,7 @@ public class Days {
    * @return typeMap
    */
   public static Map<String, Boolean> getDays() {
-    Map<String, Boolean> dayMap = new HashMap<>();
+    Map<String, Boolean> dayMap = new LinkedHashMap<>();
     for (int i=0; i<days.length;i++) {
         dayMap.put(days[i], false);
     }

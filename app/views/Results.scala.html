@@ -330,7 +330,7 @@ $(document).ready(function(){
           <td>@course.getCourseName()</td>
           <td>@course.getCourseTitle</td>
           <td>@course.getCourseDept()</td>
-          <td>@course.getGenFocus()</td>
+          <td>@course.printGenFocusList()</td>
           <td>@course.getInstructor()</td>
           <td>@for(meeting <- course.getMeeting()) {
               @meeting.getRoom()<br>

@@ -84,7 +84,7 @@ public class CourseDB {
     List<Course> courseList = CourseDB.getCourses();
     List<Course> tempCourseList = new ArrayList<>();
     List<Course> finalCourseList = new ArrayList<>();
-    boolean passed = true;
+    boolean passed = false;
     if(! department.equals("")) {
        for(Course course : courseList) {
          String thisDept = course.getCourseName().split(" ")[0];
@@ -123,9 +123,10 @@ public class CourseDB {
     }
     
     
-    /*tempCourseList = new ArrayList<>();
+    tempCourseList = new ArrayList<>();
     int failed = 0;
     int daycheck = 0;
+    int focuscheck = 0;
     
     if(days != null) {
     for(String day : days) {
@@ -135,7 +136,58 @@ public class CourseDB {
     }
     }
     
-    if(days != null && daycheck != 7) {
+    if(genFocus != null) {
+      for(String focus : genFocus) {
+        if(focus == null) {
+          focuscheck++;
+        }
+      }
+    }
+    
+    if(daycheck != 7) {
+      for(Course course : finalCourseList) {
+        passed = false;
+        for(String day : days) {
+          for(int i = 0; i < course.getMeeting().size(); i++) {
+             if(day != null && day.equals(course.getMeeting().get(i).getDay())) {
+               passed = true;
+               i = course.getMeeting().size();
+             }
+          }
+        }
+        if(! passed) {
+          if(! tempCourseList.contains(course)) {
+            tempCourseList.add(course);
+            }
+        }
+      }
+      
+    }
+    
+    
+    if(focuscheck != 4) {
+      for(Course course : finalCourseList) {
+        passed = false;
+        for(String focus : genFocus) {
+          if(course.getGenFocus() != null) {
+          for(int i = 0; i < course.getGenFocus().size(); i++) {
+             if(focus != null && focus.equals(course.getGenFocus().get(i))) {
+               passed = true;
+               i = course.getGenFocus().size();
+             }
+          }
+          }
+        }
+        if(! passed) {
+           if(! tempCourseList.contains(course)) {
+           tempCourseList.add(course);
+           }
+        }
+      }
+      
+    }
+    
+    /*if(days != null && daycheck != 7) {
       for(Course course : finalCourseList) {
         passed = true;
         failed = 0;
@@ -154,11 +206,11 @@ public class CourseDB {
         }
       }
       
-    }
+    }*/
     
     for(Course course : tempCourseList) {
       finalCourseList.remove(course);
-    }*/
+    }
     
     return finalCourseList;
     

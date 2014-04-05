@@ -18,7 +18,7 @@ public class SearchForm {
   public String course = "";
   
   /**Focus field**/
-  public String[] focus = null;
+  public String[] focus = new String[4];
   
   /**Days field**/
   public String[] days = new String[7];

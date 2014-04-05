@@ -11,7 +11,7 @@ import models.Meeting;
 public class CourseFormData {
 
   /** gen/focus. */
-  public String genFocus = "";
+  public List<String> genFocus = null;
   /** course number. */
   public String courseNumber = "";
   /** course name. */
@@ -52,7 +52,7 @@ public class CourseFormData {
    * @param meeting - meeting times
    * @param room - the room the course is in TODO: remove room from constructor as room will be in the meeting object
    */
-  public CourseFormData(String genFocus, String courseNumber, String courseName, String section, String courseTitle,
+  public CourseFormData(List<String> genFocus, String courseNumber, String courseName, String section, String courseTitle,
       String credits, String instructor, String seats, List<Meeting> meeting, String room) {
 
     this.genFocus = genFocus;
