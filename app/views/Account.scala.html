@@ -1,4 +1,12 @@
-@(page: String, user : UserInfo, schedule: List[Course], watchList: List[Course], comments: List[UserComment])
+@(page: String, 
+  user : UserInfo, 
+  schedule: List[Course], 
+  watchList: List[Course], 
+  comments: List[UserComment],  
+  commentForm: Form[views.formdata.CommentFormData])
+
+@import helper._
+@import bootstrap3._
 
 @Main(page, true) {
 
@@ -11,11 +19,6 @@
 
 <script>
 $(document).ready(function() {
-
-    var date = new Date();
-    var d = date.getDate();
-    var m = date.getMonth();
-    var y = date.getFullYear();
 
     $('#calendar').fullCalendar({
         editable: true,
@@ -40,7 +43,6 @@ $(document).ready(function() {
 
         ]
     });
-
 });
 </script>
 
@@ -52,9 +54,16 @@ calendar.fullCalendar({
     }
 });
 </script>
-
 <!-- / FullCalendar Scripts and Style -->
 
+<script>
+function submitComment(id)
+{
+  document.getElementById('id').value=id;
+  document.getElementById('comment').value=$('#text' + id).val();
+  document.getElementById('hiddenCommentForm').submit();
+}
+</script>
 
 <h2>Information</h2>
 <p class="info">
@@ -193,15 +202,20 @@ calendar.fullCalendar({
         <td>@comment.getComment()</td>
         <td></td>
         <td>
-          <button id="edit2" type="button" class="btn btn-primary btn-xs" onclick="cmt.show2()">Edit</button>
+          <td><a type="button" class="btn btn-primary btn-xs" data-toggle="modal" href="#editComment@comment.getId()">Edit</a></td>
         </td>
-        <td><a type="button" class="btn btn-danger btn-xs" data-toggle="modal" href="#Comment@comment.getId()">Delete</a></td>
+        <td><a type="button" class="btn btn-danger btn-xs" data-toggle="modal" href="#deleteComment@comment.getId()">Delete</a></td>
       </tr>
       }
     </table>
   </div>
 
-
+  <!-- Hidden form to edit comment -->
+  @form(routes.Application.editComment(), 'id -> "hiddenCommentForm") {
+    @hidden(commentForm("id"))
+    @hidden(commentForm("comment"))
+  }
+  
   <div class="tab-pane" id="ScheduleHistory">
     <h1>Schedule History</h1>
     <h3>Spring 2014</h3>
@@ -393,7 +407,35 @@ calendar.fullCalendar({
 
 <!-- Comment Modals -->
 @for(comment <- comments) {
-<div class="modal fade" id="Comment@comment.getId()" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+
+<!-- Edit Modal -->
+<div class="modal fade" id="editComment@comment.getId()" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" id="myModalLabel">Edit Your Comment</h4>
+      </div>
+      <div class="modal-body">
+        <table>
+          <tbody>
+            <tr>
+              <td><textarea id="text@comment.getId()" style="width:500px;height:150px">@comment.getComment()</textarea></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="modal-footer">
+        <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+        <button id="submit" onclick="submitComment(@comment.getId())" class="btn btn-primary" data-dismiss="modal">Save changes</button>
+      </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Delete Modal -->
+<div class="modal fade" id="deleteComment@comment.getId()" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
@@ -413,6 +455,8 @@ calendar.fullCalendar({
     </div>
   </div>
 </div>
+
+
 }
 
 }
