@@ -4,22 +4,39 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import play.db.ebean.Model;
 
 /**
  * Represents users of the application.
  * @author Rob Namahoe
  */
-public class UserInfo {
+@Entity
+public class UserInfo extends Model {
  
+  private static final long serialVersionUID = 1L;
+  
+  @Id
+  private long id;
+  
   private String userName;   
   private String firstName; 
   private String lastName;
   private String role;    
   private String telephone;
   
-  private static Map<String, Course> schedule = new HashMap<String, Course>();
-  private static Map<String, Course> watchList = new HashMap<String, Course>();
+  // One of me (user) maps to many of the following (courses) in the schedule.
+  @OneToMany
+  private List<Course> schedule = new ArrayList<>();
+  
+  // One of me (user) maps to many of the following (courses) in the watchlist.
+  @OneToMany
+  private List<Course> watchList = new ArrayList<>();
+  
+  private static Map<String, Course> scheduleMap = new HashMap<String, Course>();
+  private static Map<String, Course> watchListMap = new HashMap<String, Course>();
   
   /**
    * Creates a new UserInfo instance.
@@ -35,6 +52,16 @@ public class UserInfo {
     this.role = role;
   }
 
+  
+  /**
+   * The EBean ORM finder method for database queries.
+   * @return The finder method for users.
+   */
+  public static Finder<Long, UserInfo> find() {
+    return new Finder<Long, UserInfo>(Long.class, UserInfo.class);
+  }
+  
+  
   /**
    * @return the userName
    */
@@ -126,7 +153,7 @@ public class UserInfo {
    * @param course The course to add.
    */
   public void addToSchedule(Course course) {
-    schedule.put(course.getCourseNumber(), course);
+    this.schedule.add(course);
   }
   
   /**
@@ -155,7 +182,7 @@ public class UserInfo {
    * @param course The course to watch.
    */
   public void addToWatchList(Course course) {
-    watchList.put(course.getCourseNumber(), course);
+    this.watchList.add(course);
   }
   
   /**
@@ -184,7 +211,7 @@ public class UserInfo {
    * @return A list of courses in the users schedule.
    */
   public List<Course> getSchedule() {
-    return new ArrayList<>(schedule.values());
+    return this.schedule;
   }
   
   /**
@@ -192,7 +219,7 @@ public class UserInfo {
    * @return A list of courses in the users watch list.
    */
   public List<Course> getWatchList() {
-    return new ArrayList<>(watchList.values());
+    return this.watchList;
   }
   
   

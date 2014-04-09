@@ -1,12 +1,24 @@
 package models;
 
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import models.Meeting;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import play.db.ebean.Model;
 
-public class Course {
+@Entity
+public class Course extends Model {
 
+  private static final long serialVersionUID = 1L;
+  
+  @Id
+  private long id;
+  
+  // Many of me (courses) maps to One of the following (userinfo)
+  @ManyToOne
+  private UserInfo userInfo;
+  
   private List<String> genFocus;
   private String courseNumber;
   private String courseName;
@@ -180,4 +192,20 @@ public class Course {
   public String getCrn() {
     return this.courseNumber;
   }
+  
+  /**
+   * @return The userInfo
+   */
+  public UserInfo getUserInfo() {
+    return userInfo;
+  }
+  
+  /**
+   * Set the userInfo object.
+   * @param userInfo the userInfo to set.
+   */
+  public void setUserInfo(UserInfo userInfo) {
+    this.userInfo = userInfo;
+  }
+  
 }
