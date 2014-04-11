@@ -47,7 +47,7 @@ public class Application extends Controller {
    * Returns the home page.
    * @return The home page.
    */
-  public static Result index() {
+  public static Result index() { 
     return ok(Index.render("Home"));
   }
  
