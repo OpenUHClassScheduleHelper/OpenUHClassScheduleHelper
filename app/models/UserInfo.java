@@ -1,40 +1,64 @@
 package models;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-
+import java.util.Iterator;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import play.db.ebean.Model;
 
 /**
  * Represents users of the application.
  * @author Rob Namahoe
  */
-public class UserInfo {
+@Entity
+public class UserInfo extends Model {
  
+  private static final long serialVersionUID = 1L;
+  
+  @Id
+  private long id;
+  
   private String userName;   
   private String firstName; 
   private String lastName;
-  private String role;    
   private String telephone;
   
-  private static Map<String, Course> schedule = new HashMap<String, Course>();
-  private static Map<String, Course> watchList = new HashMap<String, Course>();
+  // One of me (user) maps to many of the following (courses) in the schedule.
+  @OneToMany(mappedBy="userInfo")
+  private List<Course> schedule = new ArrayList<>();
   
   /**
    * Creates a new UserInfo instance.
    * @param userName The UH username of the user.
    * @param firstName The users first name.
    * @param lastName The users last name.
-   * @param role The users eduPersonAffiliation - student, faculty, etc.
    */
-  public UserInfo(String userName, String firstName, String lastName, String role) {
+  public UserInfo(String userName, String firstName, String lastName) {
     this.userName = userName;
     this.firstName = firstName;
     this.lastName = lastName;
-    this.role = role;
   }
 
+  /**
+   * Creates a new UserInfo instance.
+   * @param userName The UH username of the current user.
+   */
+  public UserInfo(String userName) {
+    this.userName = userName;
+  }
+  
+  
+  /**
+   * The EBean ORM finder method for database queries.
+   * @return The finder method for users.
+   */
+  public static Finder<Long, UserInfo> find() {
+    return new Finder<Long, UserInfo>(Long.class, UserInfo.class);
+  }
+  
+  
   /**
    * @return the userName
    */
@@ -78,20 +102,6 @@ public class UserInfo {
   }
 
   /**
-   * @return the role
-   */
-  public String getRole() {
-    return role;
-  }
-
-  /**
-   * @param role the role to set
-   */
-  public void setRole(String role) {
-    this.role = role;
-  }
-
-  /**
    * @return the telephone
    */
   public String getTelephone() {
@@ -114,19 +124,13 @@ public class UserInfo {
   }
   
   /**
-   * Determines if the current user is faculty.
-   * @return true if the current user is a faculty member, false otherwise.
-   */
-  public boolean isInstructor() {
-    return role.equals("faculty");
-  }
-  
-  /**
    * Add a course to the current users schedule.
    * @param course The course to add.
    */
   public void addToSchedule(Course course) {
-    schedule.put(course.getCourseNumber(), course);
+    course.setUserInfo(UserInfoDB.getUser(this.userName));
+    course.save();
+    this.schedule.add(course);
   }
   
   /**
@@ -135,8 +139,12 @@ public class UserInfo {
    */
   public void removeFromSchedule(Course course) {
     // If the course is in the schedule, then remove it.
-    if (schedule.containsKey(course.getCourseNumber())) {
-      schedule.remove(course.getCourseNumber());
+    Iterator<Course> it = this.schedule.iterator();
+    while (it.hasNext()) {
+      Course scheduledCourse = it.next();
+      if (scheduledCourse.getCrn().equals(course.getCrn())) {
+        it.remove();
+      }
     }
   }
   
@@ -145,9 +153,8 @@ public class UserInfo {
    * @param crn The crn of the course to remove.
    */
   public void removeFromSchedule(String crn) {
-    if (schedule.containsKey(crn)) {
-      schedule.remove(crn);
-    }
+    Course course = CourseDB.getCourse(crn);
+    removeFromSchedule(course);
   }
   
   /**
@@ -155,7 +162,8 @@ public class UserInfo {
    * @param course The course to watch.
    */
   public void addToWatchList(Course course) {
-    watchList.put(course.getCourseNumber(), course);
+    course.setWatching(true);
+    addToSchedule(course);
   }
   
   /**
@@ -164,9 +172,7 @@ public class UserInfo {
    */
   public void removeFromWatchList(Course course) {
     // If the course exists in the watch list, then remove it.
-    if (watchList.containsKey(course.getCourseNumber())) {
-      watchList.remove(course.getCourseNumber());
-    }
+    removeFromSchedule(course);
   }
   
   /**
@@ -174,9 +180,8 @@ public class UserInfo {
    * @param crn The crn of the course to remove.
    */
   public void removeFromWatchList(String crn) {
-    if (watchList.containsKey(crn)) {
-       watchList.remove(crn);
-    }
+    Course watchedCourse = CourseDB.getCourse(crn);
+    removeFromWatchList(watchedCourse);
   }
   
   /**
@@ -184,7 +189,7 @@ public class UserInfo {
    * @return A list of courses in the users schedule.
    */
   public List<Course> getSchedule() {
-    return new ArrayList<>(schedule.values());
+    return getList(false);
   }
   
   /**
@@ -192,9 +197,24 @@ public class UserInfo {
    * @return A list of courses in the users watch list.
    */
   public List<Course> getWatchList() {
-    return new ArrayList<>(watchList.values());
+    return getList(true);
   }
   
-  
+  /**
+   * A private method to retrieve the required course list.
+   * @param isWatching true to retrieve the watchlist, false to retrieve the schedule.
+   * @return A list of courses.
+   */
+  private List<Course> getList(boolean isWatching) {
+    List<Course> results = new ArrayList<Course>();
+    Iterator<Course> it = this.schedule.iterator();
+    while (it.hasNext()) {
+      Course scheduledCourse = it.next();
+      if (scheduledCourse.isWatching() == isWatching) {
+        results.add(scheduledCourse);
+      }
+    }
+    return results;
+  }
   
 }

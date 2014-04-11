@@ -72,9 +72,7 @@ function submitComment(id)
 <p class="info">
   <b>UH Username: </b>@user.getUserName()
 </p>
-<p class="info">
-  <b>Role: </b>@user.getRole()
-</p>
+
 <!-- End Student Information Section -->
 
 <!-- Begin Preferences Section -->
@@ -98,6 +96,12 @@ function submitComment(id)
 </form>
 <!-- End Preferences Section -->
 
+<!-- Hidden form to edit comment -->
+@form(routes.Application.editComment(), 'id -> "hiddenCommentForm") {
+  @hidden(commentForm("id"))
+  @hidden(commentForm("comment"))
+}
+  
 <br>
 <ul class="nav nav-tabs" data-tabs="tabs" style="margin-left: 10px; margin-right: 10px; margin-top: 10px;">
   <li class="active"><a data-toggle="tab" href="#Schedule">Schedule</a></li>
@@ -209,12 +213,6 @@ function submitComment(id)
       }
     </table>
   </div>
-
-  <!-- Hidden form to edit comment -->
-  @form(routes.Application.editComment(), 'id -> "hiddenCommentForm") {
-    @hidden(commentForm("id"))
-    @hidden(commentForm("comment"))
-  }
   
   <div class="tab-pane" id="ScheduleHistory">
     <h1>Schedule History</h1>
@@ -293,8 +291,6 @@ function submitComment(id)
         </p>
         <hr></hr>
       </div>
-
-
     </div>
 
     <table class="my-courses-table table-striped hidden-sm hidden-xs">

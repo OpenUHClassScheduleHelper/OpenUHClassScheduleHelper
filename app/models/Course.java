@@ -1,23 +1,34 @@
 package models;
 
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import models.Meeting;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import play.db.ebean.Model;
 
-public class Course {
+@Entity
+public class Course extends Model {
 
-  private List<String> genFocus;
-  private String courseNumber;
+  private static final long serialVersionUID = 1L;
+  
+  @Id
+  private long id;
+  
+  // Many of me (courses) maps to One of the following (userinfo)
+  @ManyToOne
+  private UserInfo userInfo;
+  
+  private String genFocus;
+  private String crn;  // CRN
   private String courseName;
   private String section;
   private String courseTitle;
   private String credits;
   private String instructor;
-  private String seats;
-  private List<Meeting> meeting;
-  private String room;
-
+  private String department;
+  
+  private boolean watching = false;
+  
   /**
    * default constructor.
    */
@@ -28,55 +39,44 @@ public class Course {
   /**
    * Constructor.
    * 
-   * @param genFocus
-   * @param courseNumber
-   * @param courseName
-   * @param section
-   * @param courseTitle
-   * @param credits
-   * @param instructor
-   * @param seats
-   * @param meeting object (todo)
-   * @param department
-   * @param room TODO: add new parameters, get/set them
+   * @param genFocus The General focus attributes, if applicable.
+   * @param crn The crn of the course.
+   * @param courseName The name of the course, i.e. 'ICS 311'.
+   * @param section The section of the course.
+   * @param courseTitle The title of the course, i.e. 'Algorithms'.
+   * @param credits The number of credits.
+   * @param instructor The instructor.
    */
-  public Course(List<String> genFocus, String courseNumber, String courseName, String section, String courseTitle,
-      String credits, String instructor, String seats, List<Meeting> meeting, String room) {
+  public Course(String genFocus, String crn, String courseName, String section, String courseTitle,
+      String credits, String instructor) {
 
     this.setGenFocus(genFocus);
-    this.setCourseNumber(courseNumber);
+    this.setCourseNumber(crn);
     this.setCourseName(courseName);
     this.setSection(section);
     this.setCourseTitle(courseTitle);
     this.setCredits(credits);
     this.setInstructor(instructor);
-    this.setSeats(seats);
-    this.setRoom(room);
-    this.setMeeting(meeting);
-
+    
+    // parse department from course name.
+    if(courseName.contains(" ")){
+      this.department = courseName.substring(0, courseName.indexOf(" ")).trim(); 
+   }
   }
 
-  public List<String> getGenFocus() {
+  /**
+   * The EBean ORM finder method for database queries.
+   * @return The finder method for courses.
+   */
+  public static Finder<Long, Course> find() {
+    return new Finder<Long, Course>(Long.class, Course.class);
+  }
+  
+  public String getGenFocus() {
     return genFocus;
   }
   
-  public String printGenFocusList() {
-    String list = "";
-    if(this.genFocus == null) {
-      return list;
-    }
-    
-    for(int i = 0; i < this.genFocus.size(); i++) {
-      if(i < this.genFocus.size() - 1) {
-        list += this.genFocus.get(i) + ", ";
-      }else {
-        list += this.genFocus.get(i);
-      }
-    }
-    return list;
-  }
-
-  public void setGenFocus(List<String> genFocus) {
+  public void setGenFocus(String genFocus) {
     this.genFocus = genFocus;
   }
 
@@ -86,22 +86,6 @@ public class Course {
 
   public void setCredits(String credits) {
     this.credits = credits;
-  }
-
-  public String getSeats() {
-    return seats;
-  }
-
-  public void setSeats(String seats) {
-    this.seats = seats;
-  }
-
-  public String getRoom() {
-    return room;
-  }
-
-  public void setRoom(String room) {
-    this.room = room;
   }
 
   public String getInstructor() {
@@ -137,23 +121,11 @@ public class Course {
   }
 
   public String getCourseNumber() {
-    return courseNumber;
+    return this.crn;
   }
 
   public void setCourseNumber(String courseNumber) {
-    this.courseNumber = courseNumber;
-  }
-
-  public List<Meeting> getMeeting() {
-    return meeting;
-  }
-
-  public void setMeeting(List<Meeting> meeting) {
-    this.meeting = meeting;
-  }
-  
-  public String getCourseDept() {
-    return this.courseName.split(" ")[0];
+    this.crn = courseNumber;
   }
   
   public String printMeeting() {
@@ -162,15 +134,11 @@ public class Course {
   }
   
   public String printRooms() {
-    String rooms = "";
-    for(Meeting newMeeting : meeting) {
-      if(rooms != "") {
-        rooms = rooms + ", " + newMeeting.getRoom();
-      }else {
-        rooms = newMeeting.getRoom();
-      }
-    }
-    return rooms;
+    return "todo";
+  }
+  
+  public String printGenFocusList() {
+    return this.genFocus;
   }
   
   /**
@@ -178,6 +146,59 @@ public class Course {
    * @return The crn of the current course.
    */
   public String getCrn() {
-    return this.courseNumber;
+    return this.crn;
   }
+  
+  /**
+   * @return The userInfo
+   */
+  public UserInfo getUserInfo() {
+    return userInfo;
+  }
+  
+  /**
+   * Set the userInfo object.
+   * @param userInfo the userInfo to set.
+   */
+  public void setUserInfo(UserInfo userInfo) {
+    this.userInfo = userInfo;
+  }
+
+  /**
+   * @return the watching
+   */
+  public boolean isWatching() {
+    return watching;
+  }
+
+  /**
+   * @param watching the watching to set
+   */
+  public void setWatching(boolean watching) {
+    this.watching = watching;
+  }
+
+  /**
+   * @return the department
+   */
+  public String getDepartment() {
+    return department;
+  }
+
+  /**
+   * @param department the department to set
+   */
+  public void setDepartment(String department) {
+    this.department = department;
+  }
+  
+  /**
+   * Get a list of meetings for this course.
+   * @return A list of meeting objects for this course.
+   */
+  public List<Meeting> getMeeting() {
+    return Meeting.find().where().eq("crn", this.crn).findList();
+  }
+  
+  
 }

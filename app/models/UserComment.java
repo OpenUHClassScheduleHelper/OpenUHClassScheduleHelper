@@ -2,21 +2,27 @@ package models;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import play.db.ebean.Model;
 
 /**
- * An object to store comment information.
- * @author rckndn
+ * A repository to store User Comment information.
+ * @author Rob Namahoe.
  */
-public class UserComment {
+@Entity
+public class UserComment extends Model {
 
+  private static final long serialVersionUID = 1L;
+  
+  @Id
   private long id;
+  
   private String crn;
   private String userName;
   private String fullName;
   private String comment;
-  private long currentTime;
-  
-  private boolean instructorPost;
+  private long postTime;
   
   /**
    * The constructor method.
@@ -24,17 +30,23 @@ public class UserComment {
    * @param user The user adding the comment
    * @param comment The comment
    */
-  public UserComment(long id, String crn, String userName, String comment) {
-    this.id = id;
+  public UserComment(String crn, String userName, String comment) {
     this.crn = crn;
-    this.setUserName(userName);
+    this.userName = userName;
     this.comment = comment;
-    this.currentTime = System.currentTimeMillis();
-
-    setFullName(UserInfoDB.getUser(userName).getFullName());
-    setInstructorPost(UserInfoDB.getUser(userName).isInstructor());
+    this.postTime = System.currentTimeMillis();
+    this.fullName = UserInfoDB.getUser(userName).getFullName();
     
   }
+  
+  /**
+   * The EBean ORM finder method for database queries.
+   * @return The finder method for user comments.
+   */
+  public static Finder<Long, UserComment> find() {
+    return new Finder<Long, UserComment>(Long.class, UserComment.class);
+  }
+  
   
   /**
    * @return the crn
@@ -69,7 +81,7 @@ public class UserComment {
    */
   public String getPostDate() {
     SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yy");
-    Date resultdate = new Date(this.currentTime);
+    Date resultdate = new Date(this.postTime);
     
     // fudging return results - remove when before deploying app
     if (this.crn.equals("84935") && this.userName.equals("jortal")) {
@@ -84,7 +96,6 @@ public class UserComment {
     else {
       return sdf.format(resultdate);   
     }
-    
   }
   
   /**
@@ -92,7 +103,7 @@ public class UserComment {
    */
   public String getPostTime() {
     SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
-    Date resultdate = new Date(this.currentTime);
+    Date resultdate = new Date(this.postTime);
     return sdf.format(resultdate);
   }
 
@@ -123,20 +134,6 @@ public class UserComment {
   public void setFullName(String fullName) {
     this.fullName = fullName;
   }
-
-  /**
-   * @return the instructorPost
-   */
-  public boolean isInstructorPost() {
-    return instructorPost;
-  }
-
-  /**
-   * @param instructorPost the instructorPost to set
-   */
-  public void setInstructorPost(boolean instructorPost) {
-    this.instructorPost = instructorPost;
-  }
   
   /**
    * Get the course number.
@@ -159,6 +156,5 @@ public class UserComment {
   public void setId(long id) {
     this.id = id;
   }
-  
   
 }

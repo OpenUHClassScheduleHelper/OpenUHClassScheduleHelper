@@ -5,11 +5,6 @@
 
 @Main(page, true) {
 
-
-
-
-
-
  <script type='text/javascript'>
             $(document).ready(function() { 
 
@@ -329,7 +324,7 @@ $(document).ready(function(){
           <td>@course.getCourseNumber()</td>
           <td>@course.getCourseName()</td>
           <td>@course.getCourseTitle</td>
-          <td>@course.getCourseDept()</td>
+          <td>@course.getDepartment()</td>
           <td>@course.printGenFocusList()</td>
           <td>@course.getInstructor()</td>
           <td>@for(meeting <- course.getMeeting()) {
@@ -382,15 +377,7 @@ $(document).ready(function(){
             <b>Late Breaking Information</b>
           </h4>
           @for(comment <- UserCommentDB.getCommentsByCrn(course.getCourseNumber())) {
-            @if(comment.isInstructorPost()) {
-              <p class="professor-new-info">@comment.getPostDate() @comment.getFullName: @comment.getComment()</p>
-            }
-          }
-          
-          @for(comment <- UserCommentDB.getCommentsByCrn(course.getCourseNumber())) {
-            @if(! comment.isInstructorPost()) {
               <p>@comment.getPostDate() @comment.getFullName: @comment.getComment()</p>
-            }
           }
           <div id="messagebox" class="add-comment-area">
             <p>

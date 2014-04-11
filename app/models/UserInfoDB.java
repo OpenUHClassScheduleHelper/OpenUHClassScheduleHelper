@@ -1,26 +1,33 @@
 package models;
 
-import java.util.HashMap;
-import java.util.Map;
-
 /**
- * An in-memory repo for storing user info.
- * Will be implemented using MySQL at a later time.
+ * A repository to store user information.
  * @author Rob Namahoe
  */
 public class UserInfoDB { 
   
-  private static Map<String, UserInfo> userinfos = new HashMap<String, UserInfo>();
+  /**
+   * Adds the specified user to the UserInfoDB.
+   * @param userName The UH userName of the user.
+   */
+  public static void addUserInfo(String userName) {
+    if (!isUser(userName)) {
+      UserInfo user = new UserInfo(userName);
+      user.save();
+    }
+  }
   
   /**
    * Adds the specified user to the UserInfoDB.
    * @param userName The UH userName of the user.
    * @param firstName The users first name.
-   * @param lastName The users last name.
-   * @param role The users role - student, instructor.
+   * @param lastName the users last name.
    */
-  public static void addUserInfo(String userName, String firstName, String lastName, String role) {
-    userinfos.put(userName, new UserInfo(userName, firstName, lastName, role));
+  public static void addUserInfo(String userName, String firstName, String lastName) {
+    if (!isUser(userName)) {
+      UserInfo user = new UserInfo(userName, firstName, lastName);
+      user.save();
+    }
   }
   
   /**
@@ -29,15 +36,9 @@ public class UserInfoDB {
    * @return True if the user exists in the database.
    */
   public static boolean isUser(String userName) {
-    return userinfos.containsKey(userName);
+    return UserInfo.find().where().eq("userName", userName).findUnique() != null;
   }
   
-  public static boolean isProfessor(String userName) {
-    if(UserInfoDB.getUser(userName).getRole().equals("Faculty")) {
-      return true;
-    }
-    return false;
-  }
 
   /**
    * Returns the UserInfo associated with the userName, or null if not found.
@@ -45,7 +46,7 @@ public class UserInfoDB {
    * @return The UserInfo.
    */
   public static UserInfo getUser(String userName) {
-    return userinfos.get((userName == null) ? "" : userName);
+    return UserInfo.find().where().eq("userName", userName).findUnique();
   }
-
+  
 }
