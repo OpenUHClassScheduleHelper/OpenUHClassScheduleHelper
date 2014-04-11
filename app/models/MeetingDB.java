@@ -18,7 +18,9 @@ public class MeetingDB {
    */
   public static void addMeeting(String crn, String day, String start, String end, String room) {
     Meeting meeting = new Meeting(crn, day, start, end, room);
-    meeting.save();
+    if (!duplicateExists(meeting)) {
+      meeting.save();
+    }
   }
   
   /**
@@ -30,6 +32,28 @@ public class MeetingDB {
     for (Meeting meeting : meetings) {
       meeting.delete();
     }
+  }
+  
+  /**
+   * Checks for an existing meeting entry in the Meeting table.
+   * @param newMeeting The new meeting time.
+   * @return true if the meeting already exists, false otherwise.
+   */
+  private static boolean duplicateExists(Meeting newMeeting) {
+    String crn = newMeeting.getCrn();
+    List<Meeting> meetings = Meeting.find().where().eq("crn", crn).findList();
+    if (meetings.size() > 0) {
+      for (Meeting meeting : meetings) {
+        if (meeting.getStart().equals(newMeeting.getStart()) && 
+            meeting.getEnd().equals(newMeeting.getEnd()) &&
+            meeting.getDay().equals(newMeeting.getDay()) &&
+            meeting.getRoom().equals(newMeeting.getRoom())) {
+            // This meeting already exists in the database, therefore, do not add the duplicate
+          return true;
+        }
+      }
+    }
+    return false;
   }
   
 }

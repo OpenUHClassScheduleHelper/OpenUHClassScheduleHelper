@@ -1,7 +1,11 @@
 package models;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
+
 
 /**
  * Class that stores a DB of the courses.
@@ -81,12 +85,16 @@ public class CourseDB {
    * @return A list of courses offered by department formatted for the Search Form.
    */
   public static List<String> getCourses(String dept) {
-    List<String> courseDeptList = new ArrayList<>();
-    List<Course> courseList = getCoursesByDept(dept);
-    for (Course course : courseList) {
-      courseDeptList.add(course.getCourseTitle() + " (" + course.getCourseName() + ")"); 
+    List<String> results = new ArrayList<>();
+    HashSet<String> hs = new HashSet<String>();
+    // Add courses to a hash set to remove duplicates.
+    for (Course course : getCoursesByDept(dept)) {
+      hs.add(course.getCourseName() + ": " + course.getCourseTitle());
     }
-    return courseDeptList;
+    results.addAll(hs);
+    // Sort with a custom comparator.
+    Collections.sort(results, new CourseComparator());
+    return results;
   }
   
   /**
@@ -95,14 +103,40 @@ public class CourseDB {
    * @return A list of instructors from a specified department.
    */
   public static List<String> getInstructors(String dept) {
-    List<String> instructorMap = new ArrayList<>();
-    List<Course> courseList = Course.find().setDistinct(true).where().eq("department", dept).findList();
-    for (Course course : courseList) {
-      instructorMap.add(course.getInstructor());
+    List<String> results = new ArrayList<String>();
+    HashSet<String> hs = new HashSet<String>();
+    // Add instructor names to a hash set to remove duplicates.
+    for (Course course : Course.find().where().eq("department", dept).findList()) {
+      hs.add(course.getInstructor());
     }
-    return instructorMap;
+    results.addAll(hs);
+    // Sort the results list with a custom comparator that will product a list
+    // sorted by last name.
+    Collections.sort(results, new InstructorComparator());
+    return results;
   }
   
+  /**
+   * A custom comparator to sort instructor names (i.e. H Casanova) by last name.
+   * @author Rob Namahoe
+   */
+  static class InstructorComparator implements Comparator<String> {
+    public int compare(String s1, String s2) {
+      return s1.substring(2, 3).compareTo(s2.substring(2,3));
+    }
+  } 
+
+  /**
+   * A custom comparator to sort course names/title by course number.
+   * @author Rob Namahoe
+   */
+  static class CourseComparator implements Comparator<String> {
+    public int compare(String str1, String str2) {
+      String s1 = str1.substring(str1.indexOf(" ") + 1, str1.indexOf(" ") + 4).trim();
+      String s2 = str2.substring(str2.indexOf(" ") + 1, str2.indexOf(" ") + 4).trim();
+      return s1.compareTo(s2);
+    }
+  } 
   
   public static List<Course> courseSearchList(String[] days, String[] genFocus, String department, String courseTitleandName, String instructor, String startTime, String endTime) {
     return getCourses();

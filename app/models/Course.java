@@ -60,7 +60,7 @@ public class Course extends Model {
     
     // parse department from course name.
     if(courseName.contains(" ")){
-      this.department = courseName.substring(0, courseName.indexOf(" ")); 
+      this.department = courseName.substring(0, courseName.indexOf(" ")).trim(); 
    }
   }
 
@@ -126,10 +126,6 @@ public class Course extends Model {
 
   public void setCourseNumber(String courseNumber) {
     this.crn = courseNumber;
-  }
-  
-  public String getCourseDept() {
-    return this.courseName.split(" ")[0];
   }
   
   public String printMeeting() {
