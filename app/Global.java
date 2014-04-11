@@ -34,6 +34,7 @@ public class Global extends GlobalSettings {
     UserInfoDB.addUserInfo("julia4", "Julia", "Patriarche");
     
     // Add User Comments to the database
+    UserCommentDB.removeAllComments();
     UserCommentDB.addComment("84935", "jortal", "Professor Narayan is in the process of trying to make ICS 111 a WI credit.");
     UserCommentDB.addComment("84935", "rnamahoe", "Tough class but you sure do learn a lot!");
     UserCommentDB.addComment("86041", "rnamahoe", "I thought ICS111 was hard...this class is impossible!");
@@ -81,7 +82,7 @@ public class Global extends GlobalSettings {
   }
   
   private void populateTables() {
-    String url="https://www.sis.hawaii.edu/uhdad/avail.classes?i=MAN&t=201430&s=ICS";
+    String url="https://www.sis.hawaii.edu/uhdad/avail.classes?i=MAN&t=201430&s=ENG";
     JauntObj jaunt = new JauntObj(url);
     ArrayList<JauntRowItem> results = JauntObj.getResults();
     for (JauntRowItem item : results) {

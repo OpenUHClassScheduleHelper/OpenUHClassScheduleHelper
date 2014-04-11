@@ -48,15 +48,17 @@ public class JauntObj {
 					temp = tr.getElement(1).innerText();
 					if (isCrn(temp)) {
 						JauntRowItem item = new JauntRowItem();
-						item.setFocus(getFocus(tr.getElement(0).innerText())); // Focus
-						item.setCrn(tr.getElement(1).innerText()); // CRN
-						item.setCourse(tr.getElement(2).innerText()); // Course
-						item.setSection(tr.getElement(3).innerText()); // Section
-						item.setTitle(getTitle(tr.getElement(4).innerText())); // Title
-						item.setInstructor(tr.getElement(6).innerText()); // Instructor
-						item.setDays(tr.getElement(8).innerText()); // Day
-						item.setTime(tr.getElement(9).innerText()); // Time
-						item.setLocation(tr.getElement(10).innerText()); // Location
+						item.setFocus(getFocus(tr.getElement(0).innerText()));    // Focus
+						item.setCrn(tr.getElement(1).innerText());                // CRN
+						item.setCourse(tr.getElement(2).innerText());             // Course
+						item.setSection(tr.getElement(3).innerText());            // Section
+						item.setTitle(getTitle(tr.getElement(4).innerText()));    // Title
+						item.setCredits(tr.getElement(5).innerText());            // Credits
+						item.setInstructor(tr.getElement(6).innerText());         // Instructor
+						
+						item.setDays(tr.getElement(8).innerText());               // Day
+						item.setTime(tr.getElement(9).innerText());               // Time
+						item.setLocation(tr.getElement(10).innerText());          // Location
 						rowItems.add(item);
 						meetingTimes.add(item);
 					} else {

@@ -1,5 +1,6 @@
 package models;
 
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -35,6 +36,19 @@ public class UserCommentDB {
   public static void removeComment(String id) {
     removeComment(Long.parseLong(id));
   }
+  
+  /**
+   * Remove all comments from the database.
+   */
+  public static void removeAllComments() {
+    List<UserComment> comments = UserComment.find().all();
+    Iterator<UserComment> it = comments.iterator();
+    while (it.hasNext()) {
+      UserComment comment = it.next();
+      comment.delete();
+    }
+  }
+  
   
   /**
    * Get a list of all comments associated with a CRN.

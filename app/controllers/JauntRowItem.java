@@ -10,6 +10,7 @@ public class JauntRowItem {
     private String course;
     private String section;
     private String title;
+    private String credits;
     private String instructor;
     private String days;
     private String time;
@@ -164,5 +165,19 @@ public class JauntRowItem {
 	public void setLocation(String location) {
 		this.location = location;
 	}
+
+  /**
+   * @return the credits
+   */
+  public String getCredits() {
+    return credits;
+  }
+
+  /**
+   * @param credits the credits to set
+   */
+  public void setCredits(String credits) {
+    this.credits = credits;
+  }
 
 }
