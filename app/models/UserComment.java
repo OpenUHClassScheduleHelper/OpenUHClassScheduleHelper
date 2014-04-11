@@ -7,8 +7,8 @@ import javax.persistence.Id;
 import play.db.ebean.Model;
 
 /**
- * An object to store comment information.
- * @author rckndn
+ * A repository to store User Comment information.
+ * @author Rob Namahoe.
  */
 @Entity
 public class UserComment extends Model {
@@ -17,11 +17,12 @@ public class UserComment extends Model {
   
   @Id
   private long id;
+  
   private String crn;
   private String userName;
   private String fullName;
   private String comment;
-  private long currentTime;
+  private long postTime;
   
   /**
    * The constructor method.
@@ -33,7 +34,7 @@ public class UserComment extends Model {
     this.crn = crn;
     this.userName = userName;
     this.comment = comment;
-    this.currentTime = System.currentTimeMillis();
+    this.postTime = System.currentTimeMillis();
     this.fullName = UserInfoDB.getUser(userName).getFullName();
     
   }
@@ -80,7 +81,7 @@ public class UserComment extends Model {
    */
   public String getPostDate() {
     SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yy");
-    Date resultdate = new Date(this.currentTime);
+    Date resultdate = new Date(this.postTime);
     
     // fudging return results - remove when before deploying app
     if (this.crn.equals("84935") && this.userName.equals("jortal")) {
@@ -102,7 +103,7 @@ public class UserComment extends Model {
    */
   public String getPostTime() {
     SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
-    Date resultdate = new Date(this.currentTime);
+    Date resultdate = new Date(this.postTime);
     return sdf.format(resultdate);
   }
 
@@ -155,6 +156,5 @@ public class UserComment extends Model {
   public void setId(long id) {
     this.id = id;
   }
-  
   
 }

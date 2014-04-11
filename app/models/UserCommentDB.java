@@ -3,8 +3,8 @@ package models;
 import java.util.List;
 
 /**
- * An in-memory repo to store user comments
- * @author Rob Namahoe
+ * A repository to store user comment information.
+ * @author Rob Namahoe.
  */
 public class UserCommentDB { 
   

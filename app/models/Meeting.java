@@ -3,9 +3,19 @@ package models;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import play.db.ebean.Model;
 
-public class Meeting {
+@Entity
+public class Meeting extends Model {
 
+  private static final long serialVersionUID = 1L;
+  
+  @Id
+  private long Id;
+  
+  private String crn;
   private String day;
   private String start;
   private String end;
@@ -20,19 +30,56 @@ public class Meeting {
 
   /**
    * Constructor for the object to be placed in the meeting list. The list will be used to construct the Course object.
-   * 
+   * @param crn The crn of the course.
    * @param day The day of the week
    * @param start The class start time
    * @param end The class end time
    * @param room The location of the class (for that day)
    */
-  public Meeting(String day, String start, String end, String room) {
+  public Meeting(String crn, String day, String start, String end, String room) {
+    this.crn = crn;
     this.setDay(day);
     this.setStart(start);
     this.setEnd(end);
     this.setRoom(room);
   }
 
+  /**
+   * The EBean ORM finder method for database queries.
+   * @return The finder method for courses.
+   */
+  public static Finder<Long, Meeting> find() {
+    return new Finder<Long, Meeting>(Long.class, Meeting.class);
+  }
+  
+  /**
+   * @return the id
+   */
+  public long getId() {
+    return Id;
+  }
+
+  /**
+   * @param id the id to set
+   */
+  public void setId(long id) {
+    Id = id;
+  }
+
+  /**
+   * @return the crn
+   */
+  public String getCrn() {
+    return crn;
+  }
+
+  /**
+   * @param crn the crn to set
+   */
+  public void setCrn(String crn) {
+    this.crn = crn;
+  }
+  
   public String getDay() {
     return day;
   }

@@ -23,19 +23,11 @@ public class UserInfo extends Model {
   private String userName;   
   private String firstName; 
   private String lastName;
-  private String role;    
   private String telephone;
   
   // One of me (user) maps to many of the following (courses) in the schedule.
   @OneToMany(mappedBy="userInfo")
   private List<Course> schedule = new ArrayList<>();
-  
-  // One of me (user) maps to many of the following (courses) in the watchlist.
-  @OneToMany(mappedBy="userInfoWatch")
-  private List<Course> watchList = new ArrayList<>();
-  
-  //private static Map<String, Course> scheduleMap = new HashMap<String, Course>();
-  //private static Map<String, Course> watchListMap = new HashMap<String, Course>();
   
   /**
    * Creates a new UserInfo instance.
@@ -110,20 +102,6 @@ public class UserInfo extends Model {
   }
 
   /**
-   * @return the role
-   */
-  public String getRole() {
-    return role;
-  }
-
-  /**
-   * @param role the role to set
-   */
-  public void setRole(String role) {
-    this.role = role;
-  }
-
-  /**
    * @return the telephone
    */
   public String getTelephone() {
@@ -146,18 +124,12 @@ public class UserInfo extends Model {
   }
   
   /**
-   * Determines if the current user is faculty.
-   * @return true if the current user is a faculty member, false otherwise.
-   */
-  public boolean isInstructor() {
-    return role.equals("faculty");
-  }
-  
-  /**
    * Add a course to the current users schedule.
    * @param course The course to add.
    */
   public void addToSchedule(Course course) {
+    course.setUserInfo(UserInfoDB.getUser(this.userName));
+    course.save();
     this.schedule.add(course);
   }
   
@@ -190,7 +162,8 @@ public class UserInfo extends Model {
    * @param course The course to watch.
    */
   public void addToWatchList(Course course) {
-    this.watchList.add(course);
+    course.setWatching(true);
+    addToSchedule(course);
   }
   
   /**
@@ -199,13 +172,7 @@ public class UserInfo extends Model {
    */
   public void removeFromWatchList(Course course) {
     // If the course exists in the watch list, then remove it.
-    Iterator<Course> it = this.watchList.iterator();
-    while (it.hasNext()) {
-      Course watchedCourse = it.next();
-      if (watchedCourse.getCrn().equals(course.getCrn())) {
-        it.remove();
-      }
-    }
+    removeFromSchedule(course);
   }
   
   /**
@@ -222,7 +189,7 @@ public class UserInfo extends Model {
    * @return A list of courses in the users schedule.
    */
   public List<Course> getSchedule() {
-    return this.schedule;
+    return getList(false);
   }
   
   /**
@@ -230,9 +197,24 @@ public class UserInfo extends Model {
    * @return A list of courses in the users watch list.
    */
   public List<Course> getWatchList() {
-    return this.watchList;
+    return getList(true);
   }
   
-  
+  /**
+   * A private method to retrieve the required course list.
+   * @param isWatching true to retrieve the watchlist, false to retrieve the schedule.
+   * @return A list of courses.
+   */
+  private List<Course> getList(boolean isWatching) {
+    List<Course> results = new ArrayList<Course>();
+    Iterator<Course> it = this.schedule.iterator();
+    while (it.hasNext()) {
+      Course scheduledCourse = it.next();
+      if (scheduledCourse.isWatching() == isWatching) {
+        results.add(scheduledCourse);
+      }
+    }
+    return results;
+  }
   
 }

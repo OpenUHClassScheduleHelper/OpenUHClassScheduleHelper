@@ -6,15 +6,26 @@
 create table course (
   id                        bigint auto_increment not null,
   user_info_id              bigint,
-  user_info_watch_id        bigint,
-  course_number             varchar(255),
+  gen_focus                 varchar(255),
+  crn                       varchar(255),
   course_name               varchar(255),
   section                   varchar(255),
   course_title              varchar(255),
   credits                   varchar(255),
   instructor                varchar(255),
-  room                      varchar(255),
+  department                varchar(255),
+  watching                  tinyint(1) default 0,
   constraint pk_course primary key (id))
+;
+
+create table meeting (
+  id                        bigint auto_increment not null,
+  crn                       varchar(255),
+  day                       varchar(255),
+  start                     varchar(255),
+  end                       varchar(255),
+  room                      varchar(255),
+  constraint pk_meeting primary key (id))
 ;
 
 create table user_comment (
@@ -23,7 +34,7 @@ create table user_comment (
   user_name                 varchar(255),
   full_name                 varchar(255),
   comment                   varchar(255),
-  current_time              bigint,
+  post_time                 bigint,
   constraint pk_user_comment primary key (id))
 ;
 
@@ -32,15 +43,12 @@ create table user_info (
   user_name                 varchar(255),
   first_name                varchar(255),
   last_name                 varchar(255),
-  role                      varchar(255),
   telephone                 varchar(255),
   constraint pk_user_info primary key (id))
 ;
 
 alter table course add constraint fk_course_userInfo_1 foreign key (user_info_id) references user_info (id) on delete restrict on update restrict;
 create index ix_course_userInfo_1 on course (user_info_id);
-alter table course add constraint fk_course_userInfoWatch_2 foreign key (user_info_watch_id) references user_info (id) on delete restrict on update restrict;
-create index ix_course_userInfoWatch_2 on course (user_info_watch_id);
 
 
 
@@ -49,6 +57,8 @@ create index ix_course_userInfoWatch_2 on course (user_info_watch_id);
 SET FOREIGN_KEY_CHECKS=0;
 
 drop table course;
+
+drop table meeting;
 
 drop table user_comment;
 
