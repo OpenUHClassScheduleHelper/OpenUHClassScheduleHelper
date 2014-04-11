@@ -120,6 +120,8 @@ public static Result login() throws Exception {
         session().clear();
         session("username", username);
         currentUser = username;
+        // add user to the database if they dont already exist
+        
         return redirect(routes.Application.getResults());
 
       } else {

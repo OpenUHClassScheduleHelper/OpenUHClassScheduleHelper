@@ -1,17 +1,12 @@
 package models;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * An in-memory repo to store user comments
  * @author Rob Namahoe
  */
 public class UserCommentDB { 
-  
-  private static Map<Long, UserComment> comments = new HashMap<Long, UserComment>();
   
   /**
    * Add a comment to the comment database.
@@ -20,9 +15,8 @@ public class UserCommentDB {
    * @param theComment The comment to add.
    */
   public static void addComment(String crn, String user, String theComment) {
-    long id = getNextId();
-    UserComment comment = new UserComment(id, crn, user, theComment);
-    comments.put(id, comment);
+    UserComment comment = new UserComment(crn, user, theComment);
+    comment.save(); 
   }
   
   /**
@@ -30,16 +24,16 @@ public class UserCommentDB {
    * @param id The id of the comment.
    */
   public static void removeComment(long id) {
-    comments.remove(id);
+    UserComment comment = getCommentById(id);
+    comment.delete();
   }
-  
   
   /**
    * Remove a comment from the comment database.
    * @param id The comment of the id to remove.
    */
   public static void removeComment(String id) {
-    comments.remove(Long.parseLong(id));
+    removeComment(Long.parseLong(id));
   }
   
   /**
@@ -48,14 +42,7 @@ public class UserCommentDB {
    * @return A list of UserComment objects associated with the given CRN.
    */
   public static List<UserComment> getCommentsByCrn(String crn) {
-    ArrayList<UserComment> results = new ArrayList<UserComment>();
-    for (Map.Entry<Long, UserComment> cursor : comments.entrySet()) {
-      UserComment comment = cursor.getValue();
-      if (comment.getCrn().equals(crn)) {
-        results.add(comment);
-      }
-    }
-    return results;
+    return UserComment.find().where().eq("crn", crn).findList();
   }
   
   /**
@@ -64,16 +51,16 @@ public class UserCommentDB {
    * @return The comment.
    */
   public static UserComment getCommentById(long id) {
-    return comments.get(id);
+    return UserComment.find().byId(id);
   }
   
   /**
-   * Get the comment with the specified id.
+   * Get the comment with the specified id (passed as a string).
    * @param id The id of the comment to retrieve.
    * @return The comment.
    */
   public static UserComment getCommentById(String id) {
-    return comments.get(Long.parseLong(id));
+    return getCommentById(Long.parseLong(id));
   }
   
   /**
@@ -81,31 +68,8 @@ public class UserCommentDB {
    * @param userName The users UH username.
    * @return A list of UserComment objects associated with the given user.
    */
-  public static ArrayList<UserComment> getCommentsByUserName(String userName) {
-    ArrayList<UserComment> results = new ArrayList<UserComment>();
-    for (Map.Entry<Long, UserComment> cursor : comments.entrySet()) {
-      UserComment comment = cursor.getValue();
-      if (comment.getUserName().equals(userName)) {
-        results.add(comment);
-      }
-    }
-    return results;
+  public static List<UserComment> getCommentsByUserName(String userName) {
+    return UserComment.find().where().eq("userName", userName).findList();
   }
  
-  /**
-   * Get the next available comment id.
-   * @return The next available id.
-   */
-  public static long getNextId() {
-    long nextId = 0;
-    
-    for (Long cursor : comments.keySet()) {
-      if (nextId <= cursor) {
-        nextId = cursor;
-      }
-    }
-    nextId++;
-    return nextId;
-  }
-  
 }

@@ -19,14 +19,18 @@ public class Course extends Model {
   @ManyToOne
   private UserInfo userInfo;
   
+  
+  // Many of me (courses) maps to One of the following (userinfo)
+  @ManyToOne
+  private UserInfo userInfoWatch;
+  
   private List<String> genFocus;
-  private String courseNumber;
+  private String courseNumber;  // CRN
   private String courseName;
   private String section;
   private String courseTitle;
   private String credits;
   private String instructor;
-  private String seats;
   private List<Meeting> meeting;
   private String room;
 
@@ -47,13 +51,12 @@ public class Course extends Model {
    * @param courseTitle
    * @param credits
    * @param instructor
-   * @param seats
    * @param meeting object (todo)
    * @param department
    * @param room TODO: add new parameters, get/set them
    */
   public Course(List<String> genFocus, String courseNumber, String courseName, String section, String courseTitle,
-      String credits, String instructor, String seats, List<Meeting> meeting, String room) {
+      String credits, String instructor, List<Meeting> meeting, String room) {
 
     this.setGenFocus(genFocus);
     this.setCourseNumber(courseNumber);
@@ -62,7 +65,6 @@ public class Course extends Model {
     this.setCourseTitle(courseTitle);
     this.setCredits(credits);
     this.setInstructor(instructor);
-    this.setSeats(seats);
     this.setRoom(room);
     this.setMeeting(meeting);
 
@@ -98,14 +100,6 @@ public class Course extends Model {
 
   public void setCredits(String credits) {
     this.credits = credits;
-  }
-
-  public String getSeats() {
-    return seats;
-  }
-
-  public void setSeats(String seats) {
-    this.seats = seats;
   }
 
   public String getRoom() {

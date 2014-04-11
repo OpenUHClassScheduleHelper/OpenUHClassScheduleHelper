@@ -25,14 +25,14 @@ public class Global extends GlobalSettings {
   public void onStart(Application app) {
     
     // Add students to the database
-    UserInfoDB.addUserInfo("rnamahoe", "Robert", "Namahoe", "student");
-    UserInfoDB.addUserInfo("ek26", "Evan", "Komiyama", "student");
-    UserInfoDB.addUserInfo("jortal", "Jon", "Ortal", "student");
+    UserInfoDB.addUserInfo("rnamahoe", "Robert", "Namahoe");
+    UserInfoDB.addUserInfo("ek26", "Evan", "Komiyama");
+    UserInfoDB.addUserInfo("jortal", "Jon", "Ortal");
     
     // Add instructors to the database
-    UserInfoDB.addUserInfo("rnarayan", "Ravi", "Narayan", "faculty");
-    UserInfoDB.addUserInfo("sugihara", "Kazuo", "Sugihara", "faculty");
-    UserInfoDB.addUserInfo("julia4", "Julia", "Patriarche", "faculty");
+    UserInfoDB.addUserInfo("rnarayan", "Ravi", "Narayan");
+    UserInfoDB.addUserInfo("sugihara", "Kazuo", "Sugihara");
+    UserInfoDB.addUserInfo("julia4", "Julia", "Patriarche");
     
     // Add User Comments to the database
     UserCommentDB.addComment("84935", "jortal", "Professor Narayan is in the process of trying to make ICS 111 a WI credit.");
@@ -55,7 +55,7 @@ public class Global extends GlobalSettings {
     meeting.add(new Meeting("T", "1030a", "1145a", "POST318A"));
     meeting.add(new Meeting("R", "1030a", "1145a", "POST318A"));
 
-    CourseDB.addCourse(new CourseFormData(null, "85248", "ICS 101B", "003", "Tools Inf Age: General", "4", "K Binsted",
+    CourseDB.addCourse(new CourseFormData(null, "85248", "ICS 101B", "003", "Tools Inf Age: General", "K Binsted",
         "4", meeting, "BIL152"));
 
     // ICS101B
@@ -67,7 +67,7 @@ public class Global extends GlobalSettings {
     meeting2.add(new Meeting("T", "1200p", "0115p", "POST318A"));
     meeting2.add(new Meeting("R", "1200p", "0115p", "POST318A"));
 
-    CourseDB.addCourse(new CourseFormData(null, "85251", "ICS 101B", "006", "Tools Inf Age: General", "4", "K Binsted",
+    CourseDB.addCourse(new CourseFormData(null, "85251", "ICS 101B", "006", "Tools Inf Age: General", "K Binsted",
         "0", meeting2, "BIL152"));
 
 
@@ -77,7 +77,7 @@ public class Global extends GlobalSettings {
     meeting3.add(new Meeting("T", "1030a", "1145a", "POST319"));
     meeting3.add(new Meeting("R", "1030a", "1145a", "POST319"));
 
-    CourseDB.addCourse(new CourseFormData(null, "86041", "ICS 110", "001", "Programming through Animations", "3",
+    CourseDB.addCourse(new CourseFormData(null, "86041", "ICS 110", "001", "Programming through Animations",
         "G Poisson", "12", meeting3, "POST319"));
 
     // ICS111
@@ -86,7 +86,7 @@ public class Global extends GlobalSettings {
     meeting4.add(new Meeting("M", "0530p", "0800p", "BIL152"));
     meeting4.add(new Meeting("W", "0530p", "0645p", "POST319"));
 
-    CourseDB.addCourse(new CourseFormData(null, "84935", "ICS 111", "003", "Intro to Computer Science I", "4",
+    CourseDB.addCourse(new CourseFormData(null, "84935", "ICS 111", "003", "Intro to Computer Science I",
         "R Narayan", "4", meeting4, "POST127"));
 
     // ICS141
@@ -96,7 +96,7 @@ public class Global extends GlobalSettings {
     meeting5.add(new Meeting("R", "0130p", "0245p", "BIL150"));
     meeting5.add(new Meeting("F", "1200p", "0115p", "MSB114"));
 
-    CourseDB.addCourse(new CourseFormData(null, "84095", "ICS 141", "002", "Discrete Math for CS I", "3", "K Sugihara",
+    CourseDB.addCourse(new CourseFormData(null, "84095", "ICS 141", "002", "Discrete Math for CS I", "K Sugihara",
         "7", meeting5, "BIL150"));
 
     // ICS211
@@ -109,7 +109,7 @@ public class Global extends GlobalSettings {
     meeting6.add(new Meeting("W", "0300p", "0415p", "POST319"));
     meeting6.add(new Meeting("F", "0300p", "0415p", "POST319"));
 
-    CourseDB.addCourse(new CourseFormData(focusList, "84095", "ICS 211", "001", "Intro to Computer Science II", "3",
+    CourseDB.addCourse(new CourseFormData(focusList, "84095", "ICS 211", "001", "Intro to Computer Science II",
         "C Moore", "3", meeting6, "MSB114"));
     
     

@@ -2,13 +2,20 @@ package models;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import play.db.ebean.Model;
 
 /**
  * An object to store comment information.
  * @author rckndn
  */
-public class UserComment {
+@Entity
+public class UserComment extends Model {
 
+  private static final long serialVersionUID = 1L;
+  
+  @Id
   private long id;
   private String crn;
   private String userName;
@@ -16,25 +23,29 @@ public class UserComment {
   private String comment;
   private long currentTime;
   
-  private boolean instructorPost;
-  
   /**
    * The constructor method.
    * @param crn The course CRN
    * @param user The user adding the comment
    * @param comment The comment
    */
-  public UserComment(long id, String crn, String userName, String comment) {
-    this.id = id;
+  public UserComment(String crn, String userName, String comment) {
     this.crn = crn;
-    this.setUserName(userName);
+    this.userName = userName;
     this.comment = comment;
     this.currentTime = System.currentTimeMillis();
-
-    setFullName(UserInfoDB.getUser(userName).getFullName());
-    setInstructorPost(UserInfoDB.getUser(userName).isInstructor());
+    this.fullName = UserInfoDB.getUser(userName).getFullName();
     
   }
+  
+  /**
+   * The EBean ORM finder method for database queries.
+   * @return The finder method for user comments.
+   */
+  public static Finder<Long, UserComment> find() {
+    return new Finder<Long, UserComment>(Long.class, UserComment.class);
+  }
+  
   
   /**
    * @return the crn
@@ -84,7 +95,6 @@ public class UserComment {
     else {
       return sdf.format(resultdate);   
     }
-    
   }
   
   /**
@@ -122,20 +132,6 @@ public class UserComment {
    */
   public void setFullName(String fullName) {
     this.fullName = fullName;
-  }
-
-  /**
-   * @return the instructorPost
-   */
-  public boolean isInstructorPost() {
-    return instructorPost;
-  }
-
-  /**
-   * @param instructorPost the instructorPost to set
-   */
-  public void setInstructorPost(boolean instructorPost) {
-    this.instructorPost = instructorPost;
   }
   
   /**

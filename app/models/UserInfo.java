@@ -1,9 +1,8 @@
 package models;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.Iterator;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
@@ -28,30 +27,36 @@ public class UserInfo extends Model {
   private String telephone;
   
   // One of me (user) maps to many of the following (courses) in the schedule.
-  @OneToMany
+  @OneToMany(mappedBy="userInfo")
   private List<Course> schedule = new ArrayList<>();
   
   // One of me (user) maps to many of the following (courses) in the watchlist.
-  @OneToMany
+  @OneToMany(mappedBy="userInfoWatch")
   private List<Course> watchList = new ArrayList<>();
   
-  private static Map<String, Course> scheduleMap = new HashMap<String, Course>();
-  private static Map<String, Course> watchListMap = new HashMap<String, Course>();
+  //private static Map<String, Course> scheduleMap = new HashMap<String, Course>();
+  //private static Map<String, Course> watchListMap = new HashMap<String, Course>();
   
   /**
    * Creates a new UserInfo instance.
    * @param userName The UH username of the user.
    * @param firstName The users first name.
    * @param lastName The users last name.
-   * @param role The users eduPersonAffiliation - student, faculty, etc.
    */
-  public UserInfo(String userName, String firstName, String lastName, String role) {
+  public UserInfo(String userName, String firstName, String lastName) {
     this.userName = userName;
     this.firstName = firstName;
     this.lastName = lastName;
-    this.role = role;
   }
 
+  /**
+   * Creates a new UserInfo instance.
+   * @param userName The UH username of the current user.
+   */
+  public UserInfo(String userName) {
+    this.userName = userName;
+  }
+  
   
   /**
    * The EBean ORM finder method for database queries.
@@ -162,8 +167,12 @@ public class UserInfo extends Model {
    */
   public void removeFromSchedule(Course course) {
     // If the course is in the schedule, then remove it.
-    if (schedule.containsKey(course.getCourseNumber())) {
-      schedule.remove(course.getCourseNumber());
+    Iterator<Course> it = this.schedule.iterator();
+    while (it.hasNext()) {
+      Course scheduledCourse = it.next();
+      if (scheduledCourse.getCrn().equals(course.getCrn())) {
+        it.remove();
+      }
     }
   }
   
@@ -172,9 +181,8 @@ public class UserInfo extends Model {
    * @param crn The crn of the course to remove.
    */
   public void removeFromSchedule(String crn) {
-    if (schedule.containsKey(crn)) {
-      schedule.remove(crn);
-    }
+    Course course = CourseDB.getCourse(crn);
+    removeFromSchedule(course);
   }
   
   /**
@@ -191,8 +199,12 @@ public class UserInfo extends Model {
    */
   public void removeFromWatchList(Course course) {
     // If the course exists in the watch list, then remove it.
-    if (watchList.containsKey(course.getCourseNumber())) {
-      watchList.remove(course.getCourseNumber());
+    Iterator<Course> it = this.watchList.iterator();
+    while (it.hasNext()) {
+      Course watchedCourse = it.next();
+      if (watchedCourse.getCrn().equals(course.getCrn())) {
+        it.remove();
+      }
     }
   }
   
@@ -201,9 +213,8 @@ public class UserInfo extends Model {
    * @param crn The crn of the course to remove.
    */
   public void removeFromWatchList(String crn) {
-    if (watchList.containsKey(crn)) {
-       watchList.remove(crn);
-    }
+    Course watchedCourse = CourseDB.getCourse(crn);
+    removeFromWatchList(watchedCourse);
   }
   
   /**

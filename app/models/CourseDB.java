@@ -23,7 +23,7 @@ public class CourseDB {
     String crn = formData.courseNumber;
   
     Course course = new Course(formData.genFocus, formData.courseNumber, formData.courseName, formData.section,
-      formData.courseTitle, formData.credits, formData.instructor, formData.seats, formData.meeting, formData.room);
+      formData.courseTitle, formData.credits, formData.instructor, formData.meeting, formData.room);
     
     courses.put(crn, course);
     

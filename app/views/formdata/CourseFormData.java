@@ -24,8 +24,6 @@ public class CourseFormData {
   public String credits = "0";
   /** course instructor. */
   public String instructor = "";
-  /** seats. */
-  public String seats = "0";
   /** meeting times. */
   public List<Meeting> meeting = null;
   /** course room number. **/
@@ -48,12 +46,11 @@ public class CourseFormData {
    * @param courseTitle - the course title
    * @param credits - course credits
    * @param instructor - the course instructor
-   * @param seats - seats available
    * @param meeting - meeting times
    * @param room - the room the course is in TODO: remove room from constructor as room will be in the meeting object
    */
   public CourseFormData(List<String> genFocus, String courseNumber, String courseName, String section, String courseTitle,
-      String credits, String instructor, String seats, List<Meeting> meeting, String room) {
+      String credits, String instructor, List<Meeting> meeting, String room) {
 
     this.genFocus = genFocus;
     this.courseNumber = courseNumber;
@@ -62,7 +59,6 @@ public class CourseFormData {
     this.courseTitle = courseTitle;
     this.credits = credits;
     this.instructor = instructor;
-    this.seats = seats;
     this.meeting = meeting;
     this.room = room;        
   }
@@ -80,7 +76,6 @@ public class CourseFormData {
     this.courseTitle = course.getCourseTitle();
     this.credits = course.getCredits();
     this.instructor = course.getInstructor();
-    this.seats = course.getSeats();
     this.meeting = course.getMeeting();
     this.room = course.getRoom();
     

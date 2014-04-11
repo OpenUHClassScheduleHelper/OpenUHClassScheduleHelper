@@ -382,15 +382,7 @@ $(document).ready(function(){
             <b>Late Breaking Information</b>
           </h4>
           @for(comment <- UserCommentDB.getCommentsByCrn(course.getCourseNumber())) {
-            @if(comment.isInstructorPost()) {
-              <p class="professor-new-info">@comment.getPostDate() @comment.getFullName: @comment.getComment()</p>
-            }
-          }
-          
-          @for(comment <- UserCommentDB.getCommentsByCrn(course.getCourseNumber())) {
-            @if(! comment.isInstructorPost()) {
               <p>@comment.getPostDate() @comment.getFullName: @comment.getComment()</p>
-            }
           }
           <div id="messagebox" class="add-comment-area">
             <p>
