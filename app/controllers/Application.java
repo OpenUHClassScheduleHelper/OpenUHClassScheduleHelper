@@ -339,4 +339,6 @@ public static Result logout() throws Exception {
                                         routes.javascript.Application.populateCourseList()));
   }
   
+  
+  
 }
