@@ -76,13 +76,13 @@ public class Global extends GlobalSettings {
     // Create schedules and watch lists for users
     UserInfo user = UserInfoDB.getUser("rnamahoe");
     user.addToSchedule(CourseDB.getCourse("85248"));
-    user.addToWatchList(CourseDB.getCourse("86041"));
+    user.addToWatchList(CourseDB.getCourse("84935"));
     user.addToSchedule(CourseDB.getCourse("84095"));
 
   }
   
   private void populateTables() {
-    String url="https://www.sis.hawaii.edu/uhdad/avail.classes?i=MAN&t=201430&s=ENG";
+    String url="https://www.sis.hawaii.edu/uhdad/avail.classes?i=MAN&t=201430&s=ICS";
     JauntObj jaunt = new JauntObj(url);
     ArrayList<JauntRowItem> results = JauntObj.getResults();
     for (JauntRowItem item : results) {
