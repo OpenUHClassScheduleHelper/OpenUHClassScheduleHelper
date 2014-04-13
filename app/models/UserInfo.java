@@ -120,7 +120,8 @@ public class UserInfo extends Model {
    * @return The users first and last name.
    */
   public String getFullName() {
-    return this.firstName + " " + this.lastName;
+    String fullName = this.firstName + " " + this.lastName;
+    return (fullName.trim().length() == 0) ? "N/A" : fullName;
   }
   
   /**
@@ -134,6 +135,14 @@ public class UserInfo extends Model {
   }
   
   /**
+   * Add a course to the users schedule by crn.
+   * @param crn The crn of the course to add.
+   */
+  public void addToSchedule(String crn) {
+    addToSchedule(CourseDB.getCourseByCrn(crn));
+  }
+  
+  /**
    * Remove a course from the current users schedule.
    * @param course The course to remove.
    */
@@ -143,6 +152,8 @@ public class UserInfo extends Model {
     while (it.hasNext()) {
       Course scheduledCourse = it.next();
       if (scheduledCourse.getCrn().equals(course.getCrn())) {
+        scheduledCourse.setUserInfo(null);
+        scheduledCourse.save();
         it.remove();
       }
     }
@@ -164,6 +175,14 @@ public class UserInfo extends Model {
   public void addToWatchList(Course course) {
     course.setWatching(true);
     addToSchedule(course);
+  }
+  
+  /**
+   * Add a course to the users watchlist by crn.
+   * @param crn The crn of the course to add.
+   */
+  public void addToWatchList(String crn) {
+    addToWatchList(CourseDB.getCourseByCrn(crn));
   }
   
   /**

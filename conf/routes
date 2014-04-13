@@ -12,8 +12,6 @@ GET     /logout                     controllers.Application.logout()
 
 GET     /map                        controllers.Application.map()
 
-GET     /register                   controllers.Application.register()
-
 GET     /results                    controllers.Application.getResults()
 GET     /results                    controllers.Application.classSearch()
 
@@ -25,8 +23,6 @@ GET     /deleteComment              controllers.Application.deleteComment(id: Lo
 GET     /deleteCourse               controllers.Application.deleteCourseFromWatchlist(crn: String)
 GET     /addCourseToWatchlist       controllers.Application.addCourseToWatchlist(crn: String)
 GET     /addCourseToSchedule        controllers.Application.addCourseToSchedule(crn: String)
-
-GET     /instructor                 controllers.Application.instructor()
 
 GET    /editComment                controllers.Application.editComment()
 
