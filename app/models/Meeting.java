@@ -214,10 +214,8 @@ public class Meeting extends Model {
     int hour = 0; // initialize hour
 
     // Parse hour from tempTime and convert to military time.
-    if (!tempTime.equalsIgnoreCase("tba")) { // condition to handle tba for now
-      hour = Integer.parseInt(tempTime.substring(0,2));
-      hour += (tempTime.indexOf("p") > 0 && hour < 12) ? 12 : 0;
-    }
+    hour = Integer.parseInt(tempTime.substring(0,2));
+    hour += (tempTime.indexOf("p") > 0 && hour < 12) ? 12 : 0;
 
     // Parse minute from tempTime
     int minute = 0;
