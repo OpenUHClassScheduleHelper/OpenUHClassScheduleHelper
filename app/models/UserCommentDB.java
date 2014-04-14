@@ -1,5 +1,6 @@
 package models;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -57,6 +58,21 @@ public class UserCommentDB {
    */
   public static List<UserComment> getCommentsByCrn(String crn) {
     return UserComment.find().where().eq("crn", crn).findList();
+  }
+  
+  
+  /**
+   * Get a list of all comments associated with a CRN reverse chronological.
+   * @param crn The CRN of the course.
+   * @return A list of UserComment objects associated with the given CRN.
+   */
+  public static List<UserComment> getCommentsByCrnReverse(String crn) {
+    List<UserComment> tempList = UserComment.find().where().eq("crn", crn).findList();
+    List<UserComment> newList = new ArrayList<>();
+    for(int i = tempList.size()-1; i == 0; i--) {
+      newList.add(tempList.get(i));
+    }
+    return newList;
   }
   
   /**

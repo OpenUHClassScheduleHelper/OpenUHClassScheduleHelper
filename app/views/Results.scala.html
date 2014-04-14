@@ -376,7 +376,7 @@ $(document).ready(function(){
           <h4>
             <b>Late Breaking Information</b>
           </h4>
-          @for(comment <- UserCommentDB.getCommentsByCrn(course.getCourseNumber())) {
+          @for(comment <- UserCommentDB.getCommentsByCrnReverse(course.getCourseNumber())) {
               <p>@comment.getPostDate() @comment.getFullName: @comment.getComment()</p>
           }
           <div id="messagebox" class="add-comment-area">

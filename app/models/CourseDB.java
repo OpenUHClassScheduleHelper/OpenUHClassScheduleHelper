@@ -5,6 +5,9 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
+import com.avaje.ebean.Ebean;
+import com.avaje.ebean.Page;
+import com.avaje.ebean.Query;
 
 
 /**
@@ -138,8 +141,340 @@ public class CourseDB {
     }
   } 
   
+  public Page<Course> page(String[] days, String[] genFocus, String department, String courseTitleandName, String instructor, String startTime, String endTime) {
+    String queryString = "find course where ";
+    boolean noQueryCheck = true;
+    int daycheck = 0;
+    int focuscheck = 0;
+    if(! department.equals("")) {
+      noQueryCheck = false;
+      queryString += "department = :dept ";
+    }
+    
+    if(! instructor.equals("Any Instructor") && ! instructor.equals("")) {
+      noQueryCheck = false;
+      queryString += "and instructor = :inst ";
+    }
+    
+    if(! courseTitleandName.equals("Any Course") && ! courseTitleandName.equals("")) {
+      noQueryCheck = false;
+      queryString += "and courseTitle = :title ";
+    }
+    
+    if(days != null) {
+    for(String day : days) {
+      if(day == null) {
+        daycheck++;
+      }
+    }
+    }
+    
+    if(genFocus != null) {
+      for(String focus : genFocus) {
+        if(focus == null) {
+          focuscheck++;
+        }
+      }
+    }
+    
+    if(genFocus != null && genFocus.length > 0 && focuscheck != 4) {
+      noQueryCheck = false;
+      if(! department.equals("")) {
+        queryString += "and ";
+      }
+      int index = 0;
+      for(String focus : genFocus) {
+        if(focus != null) {
+          index++;
+          if(index > 1) {
+          queryString += "OR ";
+          }
+          if(focus.equals("ETH")) {
+            //queryString += "genFocus like :eth ";
+            queryString += "FIND_IN_SET(:eth, genFocus) > 0 ";
+          }
+          if(focus.equals("WI")) {
+            queryString += "FIND_IN_SET(:wi, genFocus) > 0 ";
+          }
+          if(focus.equals("OC")) {
+            queryString += "FIND_IN_SET(:oc, genFocus) > 0 ";
+          }
+          if(focus.equals("HAP")) {
+            queryString += "FIND_IN_SET(:hap, genFocus) > 0 ";
+          }
+        }
+      }
+    }
+    
+    
+    /*if(days != null && days.length > 0 && daycheck != 4) {
+      noQueryCheck = false;
+      if(! department.equals("") || focuscheck != 4) {
+        queryString += "and ";
+      }
+      int index = 0;
+      for(String day : days) {
+        if(day != null) {
+          index++;
+          if(index > 1) {
+          queryString += "and ";
+          }
+          if(day.equals("M")) {
+            queryString += "genFocus like :m ";
+          }
+          if(day.equals("T")) {
+            queryString += "genFocus like :t ";
+          }
+          if(day.equals("W")) {
+            queryString += "genFocus like :w ";
+          }
+          if(day.equals("R")) {
+            queryString += "genFocus like :r ";
+          }
+          if(day.equals("F")) {
+            queryString += "genFocus like :f ";
+          }
+          if(day.equals("Sa")) {
+            queryString += "genFocus like :sa ";
+          }
+          if(day.equals("Su")) {
+            queryString += "genFocus like :su ";
+          }
+        }
+      }
+    }*/
+    
+    if(noQueryCheck) {
+      queryString = "find course *";
+    }
+    
+    
+    
+    Query<Course> query = Ebean.createQuery(Course.class, queryString);  
+    if(! department.equals("")) {
+    query.setParameter("dept", department);
+    query.setParameter("w", "W");
+    }
+    
+    if(! instructor.equals("Any Instructor") && ! instructor.equals("")) {
+    String comparableInstName = instructor.split(", ")[1] + " " + instructor.split(", ")[0];
+    query.setParameter("inst", comparableInstName);
+    }
+    
+    if(! courseTitleandName.equals("Any Course") && ! courseTitleandName.equals("")) {
+      String comparableCourseName = "";
+      if(courseTitleandName.split(": ").length > 2) {
+        comparableCourseName = courseTitleandName.split(": ")[1] + ": " + courseTitleandName.split(": ")[2];
+      }else {
+        comparableCourseName = courseTitleandName.split(": ")[1];
+      }
+    query.setParameter("title", comparableCourseName);
+    }
+   
+    if(genFocus != null && genFocus.length > 0 && focuscheck != 4) {
+      for(String focus : genFocus) {
+        if(focus != null) {
+          if(focus.equals("ETH")) {
+            query.setParameter("eth", "ETH");
+          }
+          if(focus.equals("WI")) {
+            query.setParameter("wi", "WI");
+          }
+          if(focus.equals("OC")) {
+            query.setParameter("oc", "OC");
+          }
+          if(focus.equals("HAP")) {
+            query.setParameter("hap", "HAP");
+          }
+        }
+      }
+    }
+      List<Course> courseList = query.findList();
+      Page<Course> page = null;
+      return page;
+    
+    /*List<Course> courseList = CourseDB.getCourses();
+    List<Course> tempCourseList = new ArrayList<>();
+    List<Course> finalCourseList = new ArrayList<>();
+    boolean passed = false;
+    if(! department.equals("")) {
+       finalCourseList = getCoursesByDept(department);
+       
+       if(! instructor.equals("Any Instructor") && (! instructor.equals(""))) {
+         finalCourseList = Course.find().where().eq("department", department).eq("name", instructor).findList();
+       }
+       
+       
+       if(! courseTitleandName.equals("Any Course") && (! courseTitleandName.equals(""))) {
+         if(! instructor.equals("Any Instructor") && (! instructor.equals(""))) {
+           finalCourseList = Course.find().where().eq("department", department).eq("name", instructor).eq("courseTitle", courseTitleandName).findList();
+         }else {
+           finalCourseList = Course.find().where().eq("department", department).eq("courseTitle", courseTitleandName).findList();
+         }
+       }
+       
+       for(Course course : tempCourseList) {
+         finalCourseList.remove(course);
+       }
+       
+    }else {
+      finalCourseList = courseList;
+    }*/
+    
+  }
+  
   public static List<Course> courseSearchList(String[] days, String[] genFocus, String department, String courseTitleandName, String instructor, String startTime, String endTime) {
-    return getCourses();
+    String queryString = "find course where ";
+    boolean noQueryCheck = true;
+    int daycheck = 0;
+    int focuscheck = 0;
+    if(! department.equals("")) {
+      noQueryCheck = false;
+      queryString += "department = :dept ";
+    }
+    
+    if(! instructor.equals("Any Instructor") && ! instructor.equals("")) {
+      noQueryCheck = false;
+      queryString += "and instructor = :inst ";
+    }
+    
+    if(! courseTitleandName.equals("Any Course") && ! courseTitleandName.equals("")) {
+      noQueryCheck = false;
+      queryString += "and courseTitle = :title ";
+    }
+    
+    if(days != null) {
+    for(String day : days) {
+      if(day == null) {
+        daycheck++;
+      }
+    }
+    }
+    
+    if(genFocus != null) {
+      for(String focus : genFocus) {
+        if(focus == null) {
+          focuscheck++;
+        }
+      }
+    }
+    
+    if(genFocus != null && genFocus.length > 0 && focuscheck != 4) {
+      noQueryCheck = false;
+      if(! department.equals("")) {
+        queryString += "and ";
+      }
+      int index = 0;
+      for(String focus : genFocus) {
+        if(focus != null) {
+          index++;
+          if(index > 1) {
+          queryString += "OR ";
+          }
+          if(focus.equals("ETH")) {
+            //queryString += "genFocus like :eth ";
+            queryString += "FIND_IN_SET(:eth, genFocus) > 0 ";
+          }
+          if(focus.equals("WI")) {
+            queryString += "FIND_IN_SET(:wi, genFocus) > 0 ";
+          }
+          if(focus.equals("OC")) {
+            queryString += "FIND_IN_SET(:oc, genFocus) > 0 ";
+          }
+          if(focus.equals("HAP")) {
+            queryString += "FIND_IN_SET(:hap, genFocus) > 0 ";
+          }
+        }
+      }
+    }
+    
+    
+    /*if(days != null && days.length > 0 && daycheck != 4) {
+      noQueryCheck = false;
+      if(! department.equals("") || focuscheck != 4) {
+        queryString += "and ";
+      }
+      int index = 0;
+      for(String day : days) {
+        if(day != null) {
+          index++;
+          if(index > 1) {
+          queryString += "and ";
+          }
+          if(day.equals("M")) {
+            queryString += "genFocus like :m ";
+          }
+          if(day.equals("T")) {
+            queryString += "genFocus like :t ";
+          }
+          if(day.equals("W")) {
+            queryString += "genFocus like :w ";
+          }
+          if(day.equals("R")) {
+            queryString += "genFocus like :r ";
+          }
+          if(day.equals("F")) {
+            queryString += "genFocus like :f ";
+          }
+          if(day.equals("Sa")) {
+            queryString += "genFocus like :sa ";
+          }
+          if(day.equals("Su")) {
+            queryString += "genFocus like :su ";
+          }
+        }
+      }
+    }*/
+    
+    if(noQueryCheck) {
+      queryString = "find course *";
+    }
+    
+    
+    
+    Query<Course> query = Ebean.createQuery(Course.class, queryString);  
+    if(! department.equals("")) {
+    query.setParameter("dept", department);
+    query.setParameter("w", "W");
+    }
+    
+    if(! instructor.equals("Any Instructor") && ! instructor.equals("")) {
+    String comparableInstName = instructor.split(", ")[1] + " " + instructor.split(", ")[0];
+    query.setParameter("inst", comparableInstName);
+    }
+    
+    if(! courseTitleandName.equals("Any Course") && ! courseTitleandName.equals("")) {
+      String comparableCourseName = "";
+      if(courseTitleandName.split(": ").length > 2) {
+        comparableCourseName = courseTitleandName.split(": ")[1] + ": " + courseTitleandName.split(": ")[2];
+      }else {
+        comparableCourseName = courseTitleandName.split(": ")[1];
+      }
+    query.setParameter("title", comparableCourseName);
+    }
+   
+    if(genFocus != null && genFocus.length > 0 && focuscheck != 4) {
+      for(String focus : genFocus) {
+        if(focus != null) {
+          if(focus.equals("ETH")) {
+            query.setParameter("eth", "ETH");
+          }
+          if(focus.equals("WI")) {
+            query.setParameter("wi", "WI");
+          }
+          if(focus.equals("OC")) {
+            query.setParameter("oc", "OC");
+          }
+          if(focus.equals("HAP")) {
+            query.setParameter("hap", "HAP");
+          }
+        }
+      }
+    }
+    
+    List<Course> courseList = query.findList();
+    
+    return courseList;
     /*
     List<Course> courseList = CourseDB.getCourses();
     List<Course> tempCourseList = new ArrayList<>();
