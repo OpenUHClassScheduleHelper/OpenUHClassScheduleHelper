@@ -65,35 +65,75 @@ function submitComment(id)
 }
 </script>
 
-<h2>Information</h2>
-<p class="info">
-  <b>Name: </b>@user.getFullName()
-</p>
-<p class="info">
-  <b>UH Username: </b>@user.getUserName()
-</p>
-
-<!-- End Student Information Section -->
+<h2>User Information</h2>
+<p class="info"><b>Name: </b>@user.getFullName()</p>
+<p class="info"><b>UH Username: </b>@user.getUserName()</p>
+<!-- End User Information Section -->
 
 <!-- Begin Preferences Section -->
-<h2>Notification Preferences</h2>
-<form class="form-horizontal" role="form">
-  <div class="form-group">
-    <label class="col-sm-4 control-label">Receive updates by email:</label>
-    <div class="col-sm-5">
-      <select class="form-control">
-        <option>Sign me up!</option>
-        <option>Maybe next time.</option>
-      </select>
+  <h2>Notification Preferences</h2>
+  <div class="container">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        We can notify you by email and/or text message when new late breaking information is added to a course in your
+        schedule or watchlist<br>
+        <br>You have opted out.
+      </div>
+      <div class="panel-body">
+
+        <form class="form-horizontal" role="form">
+          <div class="form-group">
+            <label class="col-sm-3 control-label" style="text-align: left;">Preference:</label>
+            <div class="col-sm-9">
+              <select id="selPreference" class="form-control"> 
+                <option>Opt-in</option>
+                <option>Opt-out</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-3 control-label" style="text-align: left;">Email:</label>
+            <div class="col-sm-9">
+              <input id="userEmail" type="email" class="form-control" placeholder="user@@hawaii.edu">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-3 control-label" style="text-align: left;">Telephone:</label>
+            <div class="col-sm-9">
+              <input id="userPhone" type="text" class="form-control" placeholder="808-123-4567">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-3 control-label" style="text-align: left;">Service Provider: </label>
+            <div class="col-sm-9">
+              <select id="selCarrier" class="form-control">
+                <option></option>
+                <option>Alltel Wireless</option>
+                <option>AT&T Wireless</option>
+                <option>AT&T Mobility (formerly Cingular)</option>
+                <option>Boost Mobile</option>
+                <option>Cricket</option>
+                <option>Metro PCS</option>
+                <option>Sprint (PCS)</option>
+                <option>Sprint (Nextel)</option>
+                <option>Straight Talk</option>
+                <option>T-Mobile</option>
+                <option>U.S. Cellular</option>
+                <option>Verizon</option>
+                <option>Virgin Mobile</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="col-sm-offset-3 col-sm-10">
+              <button type="submit" class="btn btn-success">Save Changes</button>
+            </div>
+          </div>
+        </form>
+      </div>
     </div>
   </div>
-  <div class="form-group">
-    <label class="col-sm-4 control-label">Enter your phone number to receive updates by text:</label>
-    <div class="col-sm-5">
-      <input type="text" class="form-control" placeholder="Telephone Number">
-    </div>
-  </div>
-</form>
+  <!-- End Preferences Section -->
 <!-- End Preferences Section -->
 
 <!-- Hidden form to edit comment -->
@@ -161,7 +201,6 @@ function submitComment(id)
         <th>Course</th>
         <th>Title</th>
         <th>Department</th>
-        <th>Seats Avail</th>
         <th>Instructor</th>
         <th>Location</th>
         <th>Time</th>
@@ -173,7 +212,6 @@ function submitComment(id)
         <td>@course.getCourseName()</td>
         <td>@course.getCourseTitle()</td>
         <td>ICS</td>
-        <td>0</td>
         <td>@course.getInstructor()</td>
         <td>POST 127, POST 319</td>
         <td>M 0530-0800p, W 0530-0645p</td>
