@@ -54,6 +54,7 @@ public class Global extends GlobalSettings {
     */
     
     // Add Meetings
+    /**
     MeetingDB.addMeeting("85248", "T", "0900a", "1015a", "BIL152");
     MeetingDB.addMeeting("85248", "T", "1030a", "1145a", "POST318A");
     MeetingDB.addMeeting("85248", "R", "1030a", "1145a", "POST318A");
@@ -71,7 +72,7 @@ public class Global extends GlobalSettings {
     MeetingDB.addMeeting("84095", "W", "1030a", "1145a", "MSB114");
     MeetingDB.addMeeting("84095", "W", "0300p", "0415p", "POST319");
     MeetingDB.addMeeting("84095", "F", "0300p", "0415p", "POST319");
-
+    */
 
     // Create schedules and watch lists for users
     UserInfo user = UserInfoDB.getUser("rnamahoe");
@@ -85,9 +86,13 @@ public class Global extends GlobalSettings {
     String url="https://www.sis.hawaii.edu/uhdad/avail.classes?i=MAN&t=201430&s=ICS";
     JauntObj jaunt = new JauntObj(url);
     ArrayList<JauntRowItem> results = JauntObj.getResults();
+    ArrayList<JauntRowItem> meetings = JauntObj.getMeeting();
     for (JauntRowItem item : results) {
       CourseDB.addCourse(item.getFocus(), item.getCrn(), item.getCourse(), item.getSection(), item.getTitle(),
                           "", item.getInstructor());
+    }
+    for (JauntRowItem meet : meetings) {
+      MeetingDB.addMeeting(meet.getCrn(), meet.getDays(), meet.getStart(), meet.getEnd(), meet.getLocation());
     }
   }
   

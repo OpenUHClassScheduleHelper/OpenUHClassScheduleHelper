@@ -306,7 +306,11 @@ public class JauntObj {
    * @return The list of results.
    */
   public static ArrayList<JauntRowItem> getResults() {
-    return meetingTimes;
+    return rowItems;
+  }
+  
+  public static ArrayList<JauntRowItem> getMeeting() {
+    return meetingTimesIndividual;
   }
 
   /**
