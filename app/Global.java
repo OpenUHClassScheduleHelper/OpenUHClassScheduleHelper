@@ -1,6 +1,9 @@
 import java.util.ArrayList;
+import javax.mail.MessagingException;
+import javax.mail.internet.AddressException;
 import controllers.JauntObj;
 import controllers.JauntRowItem;
+import controllers.SendEmail;
 import play.Application;
 import play.GlobalSettings;
 import models.MeetingDB;
@@ -22,6 +25,20 @@ public class Global extends GlobalSettings {
    * @param app The Play application.
    */
   public void onStart(Application app) {
+    
+    /*
+    try {
+      SendEmail.Send("openuhschedulehelper", "Gm[2cFUiqV-#!CL", "8083432159@txt.att.net", "test", "did this work?");
+    }
+    catch (AddressException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
+    catch (MessagingException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
+    */
     
     // Add students to the database
     UserInfoDB.addUserInfo("rnamahoe", "Robert", "Namahoe");
