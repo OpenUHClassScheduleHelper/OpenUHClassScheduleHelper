@@ -1,67 +1,218 @@
-@(page: String)
-
+@(page: String, focusList: Map[String, Boolean], dayList: Map[String, Boolean], departmentList: Map[String, Boolean], 
+  resultsList: List[Course], searchForm : Form[views.formdata.SearchForm], schedule: List[Course], events: List[ScheduleEvent])
+@import helper.form 
+@import bootstrap3._
 
 @Main(page, true) {
+
+ <script type='text/javascript'>
+            $(document).ready(function() { 
+
+                $("#infoicon1").bind('fade-cycle', function() {
+                    $("#infoicon1").fadeIn('slow', function() {
+                        $("#infoicon1").fadeOut('slow', function() {
+                            $("#infoicon1").trigger('fade-cycle');
+                        });
+                    });
+                });
+
+                /*$("#infoicon1").bind('fade-cycle', function() {
+                 $("#infoicon1").fadeTo('slow',0.5, function() {
+                 $("#infoicon1").fadeTo('slow',1.0, function() {
+                 $("#infoicon1").trigger('fade-cycle');
+                 });
+                 });
+                 });*/
+
+                $('.infoicon').trigger('fade-cycle');
+            });
+        </script>
+
+
+ <script type="text/javascript">
+            $(document)
+                    .ready(
+                            function() {
+                                $("#slider-range").slider({
+                                    range : true,
+                                    min : 0,
+                                    max : 1439,
+                                    values : [ 420, 1200 ],
+                                    slide : slideTime
+                                });
+
+                                function slideTime(event, ui) {
+                                    var val0 = $("#slider-range").slider(
+                                            "values", 0), val1 = $(
+                                            "#slider-range")
+                                            .slider("values", 1), minutes0 = parseInt(
+                                            val0 % 60, 10), hours0 = parseInt(
+                                            val0 / 60 % 24, 10), minutes1 = parseInt(
+                                            val1 % 60, 10), hours1 = parseInt(
+                                            val1 / 60 % 24, 10);
+                                    startTime = getTime(hours0, minutes0);
+                                    endTime = getTime(hours1, minutes1);
+                                    $("#time")
+                                            .text(startTime + ' - ' + endTime);
+                                    document.getElementById('startTime').value = startTime;
+                                    document.getElementById('endTime').value = endTime;
+                                }
+
+                                function getTime(hours, minutes) {
+                                    var time = null;
+                                    minutes = minutes + "";
+                                    if (hours < 12) {
+                                        time = "AM";
+                                    } else {
+                                        time = "PM";
+                                    }
+                                    if (hours == 0) {
+                                        hours = 12;
+                                    }
+                                    if (hours > 12) {
+                                        hours = hours - 12;
+                                    }
+                                    if (minutes.length == 1) {
+                                        minutes = "0" + minutes;
+                                    }
+                                    return hours + ":" + minutes + " " + time;
+                                }
+
+                                slideTime();
+                            });
+        </script>
+        
+<script type="text/javascript">
+function getInstructorList() {
+	var deptIndex = document.getElementById("selDept").selectedIndex;
+	var departmentList = document.getElementById("selDept").options;
+	//alert(departmentList[deptIndex].text);
+	appRoutes.controllers.Application.populateInstructorList(departmentList[deptIndex].text).ajax({
+	  success: function(data) {
+	    //alert(data);
+	    document.getElementById("selInstructor").innerHTML="<option>Any Instructor</option>" + data;
+	  }
+	})
+}
+
+function getCourseList() {
+    var courseIndex = document.getElementById("selDept").selectedIndex;
+    var courseList = document.getElementById("selDept").options;
+    //alert(departmentList[deptIndex].text);
+    appRoutes.controllers.Application.populateCourseList(courseList[courseIndex].text).ajax({
+      success: function(data) {
+        //alert(data);
+        document.getElementById("selCourse").innerHTML="<option>Any Course</option>" + data;
+      }
+    })
+}
+
+
+</script>
+
+<!-- FullCalendar Scripts and Style -->
+<link rel="stylesheet" href="@routes.Assets.at("fullcalendar/fullcalendar.css")">
+<link rel="stylesheet" media="print" href="@routes.Assets.at("fullcalendar/fullcalendar.print.css")">
+<script src="@routes.Assets.at("fullcalendar/fullcalendar.min.js")"></script>
+
+<script>
+$(document).ready(function() {
+    $('#calendar').fullCalendar({
+        editable: false,            // prevent the user from editing events 
+        header: false,              // remove header 
+        allDaySlot: false,          // remove allday slot from top of calendar 
+        slotEventOverlap: false,    // prevent overlapping events 
+        minTime: 7,                 // Calendar starts at 7am 
+        maxTime: 21,                // Calendar ends at 9pm 
+        defaultView: 'agendaWeek',
+        events: [
+          @for((course, courseIndex) <- schedule.zipWithIndex) {
+              @for((meeting, meetingIndex) <- course.getMeeting().zipWithIndex) {
+                {
+                  title: '@course.getCourseName()',
+                  start: @meeting.getFullCalendarStartTime(),
+                  end: @meeting.getFullCalendarEndTime(),
+                  allDay: false
+                }
+                @if(courseIndex == schedule.length-1 && meetingIndex == course.getMeeting().length-1) {} else {,}
+              }
+          }       
+        ]
+    });
+});
+</script>
+
+<script>
+function AddEvent(crn) {
+  @for(event<- events) {
+    if (crn=='@event.getId()') {
+        $('#calendar').fullCalendar('renderEvent', {
+            id: '@event.getId()',
+            title: '@event.getTitle',
+            start: @event.getStart(),
+            end: @event.getEnd(),
+            allDay: false,
+            textColor: 'black',
+            borderColor: 'black',
+            backgroundColor: '@event.getBackgroundColor()'
+        }, true);
+    }
+  }
+}
+</script>
+
+
+<script>
+function RemoveEvent(id) {
+	if (id !== undefined)  {
+      $('#calendar').fullCalendar('removeEvents', id);
+	}
+}
+</script>
+
+<script>
+$(document).ready(function(){
+  $("tr").hover(function(){
+      AddEvent( $(this).attr('id') );
+    },function(){
+      RemoveEvent($(this).attr('id'));
+  });
+});
+</script>
+
+<!-- / FullCalendar Scripts and Style -->
 
  <!-- search form -->
   <div id="searchFormWrapper">
     <form class="form-inline" role="form">
+      @form(routes.Application.getResults(), 'class -> "form-group") {
       <div id="searchForm" class="form-group">
-          <select id="selDept" class="form-control" placeholder="Department">
-            <option>Department</option>
-            <option>Academy for Creative Media (ACM)</option>
-            <option>Accounting (ACC)</option>
-            <option>Aerospace Studies (AS)</option>
-            <option>...</option>
-            <option>Information & Computer Science (ICS)</option>
+          @searchselect(searchForm("department"), id = "selDept", searchType = "Any Department", optionMap = departmentList, isMultiple = false, "getInstructorList(); getCourseList();")
+          <select name="instructor" id="selInstructor" class="form-control" placeholder="Instructor" onchange="instructorsToCourses()">
+            <option>Any Instructor</option>
           </select>
-          <select id="selInstructor" class="form-control" placeholder="Instructor">
-            <option>Instructor</option>
-            <option>Baek, Kyungim</option>
-            <option>Binsted, Kimberly</option>
-            <option>Endicott, Barbara</option>
-            <option>Johnson, Philip</option>
-            <option>...</option>
-            <option>Sugihara, Kazuo</option>
-          </select>
-          <select id="selCourse" class="form-control" placeholder="Course Title">
-            <option>Course Title</option>
-            <option>Intro to CS I (ICS 111)</option>
-            <option>Discrete Math for CS I (ICS 141)</option>
-            <option>Intro to CS II (ICS 211)</option>
-            <option>...</option>
-            <option>Topics in Software (ICS 691)</option>
+          <select name="course" id="selCourse" class="form-control" placeholder="Course Title" onchange="coursesToInstructors()">
+            <option>Any Course</option>
           </select>               
       </div>
-      <div class="checkbox" style="margin-left:5px">
-          <label><b>Focus</b>: </label>
-          <label><input type="checkbox"> ETH </label>
-          <label><input type="checkbox"> HAP </label>
-          <label><input type="checkbox"> OC </label>
-          <label><input type="checkbox"> WI </label>
-      </div>
+      @checkboxes(searchForm("focus"), label = "Focus:", checkboxMap = focusList)
       <br>
-      <div class="checkbox" style="margin-top:5px">
-          <label><b>Days</b>: </label>
-          <label><input type="checkbox"> M </label>
-          <label><input type="checkbox"> Tu </label>
-          <label><input type="checkbox"> W </label>
-          <label><input type="checkbox"> Th </label>
-          <label><input type="checkbox"> F </label>
-          <label><input type="checkbox"> Sa </label>
-          <label><input type="checkbox"> Su </label>          
-      </div>
+      @checkboxes(searchForm("days"), label = "Days:", checkboxMap = dayList)
       <div class="checkbox" style="margin-left:10px;padding-top:10px">
         <div id="slider-range"></div>
         <b>Time Range:<span id="time"></span></b>       
       </div>
-      <button type="submit" class="btn btn-primary" style="margin-left:15px">Search</button>
+      <input type='hidden' id= 'startTime' name='startTime' value='' />
+      <input type='hidden' id= 'endTime' name='endTime' value='' />
+
+      <button type="submit" class="btn btn-primary" style="margin-left:15px" onClick="submitForm()">Search</button>
     </form>
+    }
   </div>
 
   <!-- results -->
   <div>
-    <h2 id="resultsHeader">Results</h2>
+    <h2 id="resultsHeader"><b>Results</b></h2>
 
     <div class="visible-sm visible-xs">
       <a class="btn course-dropdown-button" id="resultbutton1" onMouseOut="div.show('84935')"
@@ -153,7 +304,9 @@
       </div>
     </div>
 
-
+@if(resultsList.size() == 0) {
+<h3 id="resultsHeader">No Results</h3>
+}else {
     <table class="result-table hidden-sm hidden-xs">
       <tr class="tableheader">
         <th>CRN</th>
@@ -166,228 +319,48 @@
         <th>Time</th>
         <th></th>
       </tr>
-
-      <tr id="84935" onMouseOut="div.hide('84935')" onMouseOver="div.show('84935')">
-        <td><a id="classinfobutton1">84935</a></td>
-        <td>ICS 111</td>
-        <td>Intro to Computer Science I</td>
-        <td>ICS</td>
-        <td></td>
-        <td>Ravi Narayan</td>
-        <td>POST 127, POST 319</td>
-        <td>MW 0730-0820a</td>
-        <td class="buttoncolumn">
+      @for(course <- resultsList) {
+        <tr id="@course.getCourseNumber()">
+          <td>@course.getCourseNumber()</td>
+          <td>@course.getCourseName()</td>
+          <td>@course.getCourseTitle</td>
+          <td>@course.getDepartment()</td>
+          <td>@course.printGenFocusList()</td>
+          <td>@course.getInstructor()</td>
+          <td>@for(meeting <- course.getMeeting()) {
+              @meeting.getRoom()<br>
+              }</td>
+          <td>@for(meeting <- course.getMeeting()) {
+               @meeting.getDay() @meeting.getStart()-@meeting.getEnd()<br>
+               }</td>
+          <td class="buttoncolumn">
+          
+          @if(schedule.contains(course)) {
           <button class="btn btn-success btn-sm added" title="Already Added">
             <div class="glyphicon glyphicon-plus" title="Already Added"></div>
-          </button> <img class="infoicon" id="infoicon1" src="more_information_icon.jpg" data-toggle="modal"
-          data-target="#infomodal1" title="Late Breaking News"></img>
-          <img class="watchicon" src="eye.svg" data-toggle="modal" data-target="#watchmodal"></img>
+          } else {
+            <a href="@routes.Application.addCourseToSchedule(course.getCourseNumber())">
+            <button class="btn btn-success btn-sm" title="Add to Schedule">
+            <div class="glyphicon glyphicon-plus" title="Add to Schedule"></div></button></a>
+          }
+          </button> <img class="infoicon" id="infoicon@course.getCourseNumber()" src="@routes.Assets.at("images/more_information_icon.jpg")" data-toggle="modal"
+          data-target="#infomodal@course.getCourseNumber()" title="Late Breaking News"></img>
+          <img class="watchicon" src="@routes.Assets.at("images/eye.svg")" data-toggle="modal" data-target="#watchmodal@course.getCourseNumber()"></img>
         </td>
-      </tr>
-
-
-      <tr id="84095" onMouseOut="div.hide('84095')" onMouseOver="div.show('84095')">
-        <td><a id="classinfobutton2">84095</a></td>
-        <td>ICS 141</td>
-        <td>Discrete Math for CS I</td>
-        <td>ICS</td>
-        <td></td>
-        <td>Kazuo Sugihara</td>
-        <td>BIL 150, MSB 114</td>
-        <td>TR 0130-0220p</td>
-        <td class="buttoncolumn"><a href="addclassresults.html"><button class="btn btn-success btn-sm"
-              title="Add to Schedule">
-              <div class="glyphicon glyphicon-plus" title="Add to Schedule"></div>
-            </button></a> <img class="infoicon" src="more_information_icon.jpg" data-toggle="modal" data-target="#infomodal2"
-          title="Late Breaking News"></img>
-          <img class="watchicon" src="eye.svg" data-toggle="modal" data-target="#watchmodal"></img>
-          </td>
-      </tr>
-
-
-      <tr id="84494" onMouseOut="conflict.hide('84494')" onMouseOver="conflict.show('84494')">
-        <td><a id="classinfobutton3">84494</a></td>
-        <td>ICS 212</td>
-        <td>Program Structure</td>
-        <td>ICS</td>
-        <td></td>
-        <td>Julia Patriarche</td>
-        <td>TBA</td>
-        <td>MW 1130-1220p</td>
-        <td class="buttoncolumn"><a href="addclassresults.html"><button class="btn btn-success btn-sm"
-              title="Add to Schedule">
-              <div class="glyphicon glyphicon-plus" title="Add to Schedule"></div>
-            </button></a> <img class="infoicon" src="more_information_icon.jpg" data-toggle="modal" data-target="#infomodal3"
-          title="Late Breaking News"></img>
-          <img class="watchicon" src="eye.svg" data-toggle="modal" data-target="#watchmodal"></img>
-          </td>
-      </tr>
-
-
-    </table>
+        </tr>
+      }
+      </table>
+}
 
   </div>
-  <h2>My Schedule</h2>
+  <h2 id="schedule-header"><b>My Schedule</b></h2>
+  <div id='calendar'></div>
 
-  <div class="table-responsive" style="margin-left: 10px; margin-right: 10px;">
-    <table class="table table-bordered table-striped">
-      <thead>
-        <tr id="conflict-alert" style="display: none; background-color: #F58E9D;">
-          <td colspan="6">Conflict Exists</td>
-        </tr>
-        <tr>
-          <th>Time</th>
-          <th>Monday</th>
-          <th>Tuesday</th>
-          <th>Wednesday</th>
-          <th>Thursday</th>
-          <th>Friday</th>
-        </tr>
-      </thead>
-
-      <tbody>
-        <tr>
-          <td>7:30-8:20</td>
-          <td id="tempCell" name="84935">ICS111</td>
-          <!-- Monday -->
-          <td></td>
-          <!-- Tuesday -->
-          <td id="tempCell" name="84935">ICS111</td>
-          <!-- Wednesday -->
-          <td></td>
-          <!-- Thursday -->
-          <td></td>
-          <!-- Friday -->
-        </tr>
-        <tr>
-          <td>8:30-9:20</td>
-          <td></td>
-          <!-- Monday -->
-          <td></td>
-          <!-- Tuesday -->
-          <td></td>
-          <!-- Wednesday -->
-          <td></td>
-          <!-- Thursday -->
-          <td></td>
-          <!-- Friday -->
-        </tr>
-        <tr>
-          <td>9:30-10:20</td>
-          <td>ICS211</td>
-          <!-- Monday -->
-          <td></td>
-          <!-- Tuesday -->
-          <td>ICS211</td>
-          <!-- Wednesday -->
-          <td></td>
-          <!-- Thursday -->
-          <td></td>
-          <!-- Friday -->
-        </tr>
-        <tr>
-          <td>10:30-11:20</td>
-          <td></td>
-          <!-- Monday -->
-          <td>ENG111</td>
-          <!-- Tuesday -->
-          <td></td>
-          <!-- Wednesday -->
-          <td>ENG111</td>
-          <!-- Thursday -->
-          <td></td>
-          <!-- Friday -->
-        </tr>
-        <tr>
-          <td>11:30-12:20</td>
-          <td name="84494">MATH242</td>
-          <!-- Monday -->
-          <td></td>
-          <!-- Tuesday -->
-          <td name="84494">MATH242</td>
-          <!-- Wednesday -->
-          <td></td>
-          <!-- Thursday -->
-          <td></td>
-          <!-- Friday -->
-        </tr>
-        <tr>
-          <td>12:30-1:20</td>
-          <td></td>
-          <!-- Monday -->
-          <td></td>
-          <!-- Tuesday -->
-          <td></td>
-          <!-- Wednesday -->
-          <td></td>
-          <!-- Thursday -->
-          <td></td>
-          <!-- Friday -->
-        </tr>
-        <tr>
-          <td>1:30-2:20</td>
-          <td></td>
-          <!-- Monday -->
-          <td id="tempCell" name="84095">ICS141</td>
-          <!-- Tuesday -->
-          <td></td>
-          <!-- Wednesday -->
-          <td id="tempCell" name="84095">ICS141</td>
-          <!-- Thursday -->
-          <td></td>
-          <!-- Friday -->
-        </tr>
-        <tr>
-          <td>2:30-3:20</td>
-          <td></td>
-          <!-- Monday -->
-          <td></td>
-          <!-- Tuesday -->
-          <td></td>
-          <!-- Wednesday -->
-          <td></td>
-          <!-- Thursday -->
-          <td></td>
-          <!-- Friday -->
-        </tr>
-        <tr>
-          <td>3:30-4:20</td>
-          <td></td>
-          <!-- Monday -->
-          <td></td>
-          <!-- Tuesday -->
-          <td></td>
-          <!-- Wednesday -->
-          <td></td>
-          <!-- Thursday -->
-          <td></td>
-          <!-- Friday -->
-        </tr>
-        <tr>
-          <td>4:30-5:20</td>
-          <td></td>
-          <!-- Monday -->
-          <td></td>
-          <!-- Tuesday -->
-          <td></td>
-          <!-- Wednesday -->
-          <td></td>
-          <!-- Thursday -->
-          <td></td>
-          <!-- Friday -->
-        </tr>
-      </tbody>
-    </table>
-
-  </div>
   <!-- /main -->
   <div class="bottom-spacing"></div>
-  </div>
-  </div>
-
-  </div>
-
-  <div class="modal fade" id="infomodal1">
+  
+  @for(course <- resultsList) {
+  <div class="modal fade" id="infomodal@course.getCourseNumber()">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
@@ -403,14 +376,15 @@
           <h4>
             <b>Late Breaking Information</b>
           </h4>
-          <p class="professor-new-info">2/28/14 Ravi Narayan: This class will now be available with a WI credit.</p>
+          @for(comment <- UserCommentDB.getCommentsByCrn(course.getCourseNumber())) {
+              <p>@comment.getPostDate() @comment.getFullName: @comment.getComment()</p>
+          }
           <div id="messagebox" class="add-comment-area">
             <p>
               <b>New Message:</b>
             </p>
             <textarea rows="4" cols="50"></textarea>
           </div>
-          <p>12/15/13 Jonathan Ortal: Professor Narayan is in the process of trying to make ICS 111 a WI credit.</p>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -422,6 +396,34 @@
     <!-- /.modal-dialog -->
   </div>
   <!-- /.modal -->
+  }
+  
+  
+  @for(course <- resultsList) {
+  <div class="modal fade" id="watchmodal@course.getCourseNumber()">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">X</button>
+          <h4 class="modal-title"></h4>
+        </div>
+        <div class="modal-body">
+          <h4><b>Add this class to your watch list?</b></h4>
+
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          <a href="@routes.Application.addCourseToWatchlist(course.getCourseNumber())"><button type="button" class="btn btn-primary">Add</button></a>
+        </div>
+      </div>
+      <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+  </div>
+  <!-- /.modal --> 
+  
+  }
+  
 
   <div class="modal fade" id="infomodal2">
     <div class="modal-dialog">

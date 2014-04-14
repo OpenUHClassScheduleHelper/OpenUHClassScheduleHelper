@@ -1,0 +1,19 @@
+@(field: Field, label: String, checkboxMap: Map[String, Boolean])
+
+  <div class="checkbox form-group @if(field.hasErrors) {has-error}">
+    <label class="col-sm-2 control-label" for="@field.id"><b>@label</b></label>
+    <div class="checkbox" style="margin-top:5px" id="@field.id">
+      @for((checkboxName, isChecked) <- checkboxMap) {
+        <label class="checkbox-inline">
+          <input
+            type="checkbox"
+            name="@(field.name + "[]")"
+            id="@checkboxName"
+            value="@checkboxName"
+            @if(isChecked) {checked}>
+          @checkboxName
+        </label>
+      }
+      <span class="help-block">@{field.error.map { error => error.message }}</span>
+    </div>
+  </div>

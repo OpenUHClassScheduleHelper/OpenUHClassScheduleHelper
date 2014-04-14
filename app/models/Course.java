@@ -5,6 +5,7 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import play.db.ebean.Model;
+import play.db.ebean.Model.Finder;
 
 @Entity
 public class Course extends Model {
@@ -38,7 +39,6 @@ public class Course extends Model {
 
   /**
    * Constructor.
-   * 
    * @param genFocus The General focus attributes, if applicable.
    * @param crn The crn of the course.
    * @param courseName The name of the course, i.e. 'ICS 311'.
@@ -47,8 +47,7 @@ public class Course extends Model {
    * @param credits The number of credits.
    * @param instructor The instructor.
    */
-  public Course(String genFocus, String crn, String courseName, String section, String courseTitle,
-      String credits, String instructor) {
+  public Course(String genFocus, String crn, String courseName, String section, String courseTitle, String credits, String instructor) {
 
     this.setGenFocus(genFocus);
     this.setCourseNumber(crn);

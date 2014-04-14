@@ -1,0 +1,13 @@
+@(field: Field, id: String, searchType: String, optionMap: Map[String, Boolean], isMultiple: Boolean, onSelectFunction: String)
+
+      <select
+        onchange="@onSelectFunction"
+        class="form-control"
+        id="@id"
+        name="@if(isMultiple) {@(field.name + "[]")} else {@field.name}"
+        @if(isMultiple) {multiple="multiple"}>
+        @if(!isMultiple) {<option class="blank" value="">@searchType</option>}
+        @for((optionName, isSelected) <- optionMap) {
+          <option id="@optionName" value="@optionName" @if(isSelected) {selected}>@optionName</option>
+        }
+      </select>
