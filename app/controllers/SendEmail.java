@@ -12,33 +12,45 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
 /**
- * Code taken from http://stackoverflow.com/questions/3649014/send-email-using-java
+ * Code obtained from http://stackoverflow.com/questions/3649014/send-email-using-java
  * @author doraemon
  */
 public class SendEmail {
-    private SendEmail() {
-    }
+    private SendEmail() {}
 
     /**
      * Send email using GMail SMTP server.
      *
-     * @param username GMail username
-     * @param password GMail password
      * @param recipientEmail TO recipient
      * @param title title of the message
      * @param message message to be sent
      * @throws AddressException if the email address parse failed
      * @throws MessagingException if the connection is dead or not in the connected state or if the message is not a MimeMessage
      */
-    public static void Send(final String username, final String password, String recipientEmail, String title, String message) throws AddressException, MessagingException {
-      SendEmail.Send(username, password, recipientEmail, "", title, message);
+    public static void SendByEmail(String recipientEmail, String title, String message) throws AddressException, MessagingException {
+      SendEmail.Send(recipientEmail, "", title, message);
     }
 
+    
+    /**
+     * Send an SMS to the user.
+     * @param phoneNumber The users telephone number. 
+     * @param carrier The cell phone service provider.
+     * @param title The title of the message.
+     * @param message The message to be sent.
+     * @throws AddressException if the email address parse failed
+     * @throws MessagingException if the connection is dead or not in the connected state or if the message is not a MimeMessage
+     */
+    public static void SendBySms(String phoneNumber, String carrier, String title, String message) throws AddressException, MessagingException {
+      String smsGateway = getSmsGateway(phoneNumber, carrier);
+      SendByEmail(smsGateway, title, message);
+    }
+    
+    
+    
     /**
      * Send email using GMail SMTP server.
      *
-     * @param username GMail username
-     * @param password GMail password
      * @param recipientEmail TO recipient
      * @param ccEmail CC recipient. Can be empty if there is no CC recipient
      * @param title title of the message
@@ -46,8 +58,12 @@ public class SendEmail {
      * @throws AddressException if the email address parse failed
      * @throws MessagingException if the connection is dead or not in the connected state or if the message is not a MimeMessage
      */
-    public static void Send(final String username, final String password, String recipientEmail, String ccEmail, String title, String message) throws AddressException, MessagingException {
-        Security.addProvider(new com.sun.net.ssl.internal.ssl.Provider());
+    private static void Send(String recipientEmail, String ccEmail, String title, String message) throws AddressException, MessagingException {
+        
+      String username = "openuhschedulehelper";  // Gmail Username
+      String password = "Gm[2cFUiqV-#!CL";       // Gmail Password
+      
+      Security.addProvider(new com.sun.net.ssl.internal.ssl.Provider());
         final String SSL_FACTORY = "javax.net.ssl.SSLSocketFactory";
 
         // Get a Properties object
@@ -92,4 +108,68 @@ public class SendEmail {
         t.sendMessage(msg, msg.getAllRecipients());      
         t.close();
     }
+    
+    /**
+     * Get the SMS gateway for the specified carrier.
+     * @param carrier The carrier.
+     * @return The SMS gateway specific to the carrier.
+     */
+    private static String getSmsGateway(String phoneNumber, String carrier) {
+      String gateway = null;
+      
+      switch (carrier) {
+        case "Alltel Wireless":
+          gateway ="@text.wireless.alltel.com";
+          break;
+        case "AT&T Wireless":
+          gateway = "@txt.att.net";
+          break;
+        case "AT&T Mobility (formerly Cingular)":
+          gateway = "@cingularme.com";
+          break;
+        case "Boost Mobile":
+          gateway = "@myboostmobile.com";
+          break;
+        case "Cricket":
+          gateway = "@sms.mycricket.com";
+          break;
+        case "Metro PCS":
+          gateway = "@mymetropcs.com";
+          break;
+        case "Sprint (PCS)":
+          gateway = "@messaging.sprintpcs.com";
+          break;
+        case "Sprint (Nextel)":
+          gateway = "@page.nextel.com";
+          break;
+        case "Straight Talk":
+          gateway = "@VTEXT.COM";
+          break;
+        case "T-Mobile":
+          gateway = "@tmomail.net";
+          break;
+        case "U.S. Cellular":
+          gateway = "@email.uscc.net";
+          break;
+        case "Verizon":
+          gateway = "@vtext.com";
+          break;
+        case "Virgin Mobile":
+          gateway = "@vmobl.com";
+          break;
+        default:
+          // No default action.
+      }
+      
+      // If the carrier is valid, append the phone number to create the correct gateway.
+      if (gateway != null) {
+        gateway = phoneNumber + gateway;
+      }
+      
+      return gateway;
+    }
+    
+    
+    
+    
 }

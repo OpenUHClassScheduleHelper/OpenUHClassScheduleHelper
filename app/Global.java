@@ -26,20 +26,6 @@ public class Global extends GlobalSettings {
    */
   public void onStart(Application app) {
     
-    /*
-    try {
-      SendEmail.Send("openuhschedulehelper", "Gm[2cFUiqV-#!CL", "8083432159@txt.att.net", "test", "did this work?");
-    }
-    catch (AddressException e) {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
-    }
-    catch (MessagingException e) {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
-    }
-    */
-    
     // Add students to the database
     UserInfoDB.addUserInfo("rnamahoe", "Robert", "Namahoe");
     UserInfoDB.addUserInfo("ek26", "Evan", "Komiyama");

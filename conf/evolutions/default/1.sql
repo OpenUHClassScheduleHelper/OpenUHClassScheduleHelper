@@ -1,5 +1,5 @@
 # --- Created by Ebean DDL
-# To stop Ebean DDL generation, remove this comment and start using Evolutions 
+# To stop Ebean DDL generation, remove this comment and start using Evolutions
 
 # --- !Ups
 
@@ -43,7 +43,10 @@ create table user_info (
   user_name                 varchar(255),
   first_name                varchar(255),
   last_name                 varchar(255),
+  notification_preference   varchar(255),
+  email                     varchar(255),
   telephone                 varchar(255),
+  carrier                   varchar(255),
   constraint pk_user_info primary key (id))
 ;
 

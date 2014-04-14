@@ -23,7 +23,11 @@ public class UserInfo extends Model {
   private String userName;   
   private String firstName; 
   private String lastName;
+  private String notificationPreference;
+  private String email;
   private String telephone;
+  private String carrier;
+  
   
   // One of me (user) maps to many of the following (courses) in the schedule.
   @OneToMany(mappedBy="userInfo")
@@ -234,6 +238,56 @@ public class UserInfo extends Model {
       }
     }
     return results;
+  }
+
+  /**
+   * @return the email
+   */
+  public String getEmail() {
+    return email;
+  }
+
+  /**
+   * @param email the email to set
+   */
+  public void setEmail(String email) {
+    this.email = email;
+  }
+
+  /**
+   * @return the carrier
+   */
+  public String getCarrier() {
+    return carrier;
+  }
+
+  /**
+   * @param carrier the carrier to set
+   */
+  public void setCarrier(String carrier) {
+    this.carrier = carrier;
+  }
+
+  /**
+   * @return the notificationPreference
+   */
+  public String getNotificationPreference() {
+    return notificationPreference;
+  }
+
+  /**
+   * @param notificationPreference the notificationPreference to set
+   */
+  public void setNotificationPreference(String notificationPreference) {
+    this.notificationPreference = notificationPreference;
+  }
+  
+  /**
+   * Finds out if the user wants to be notified of new late breaking news.
+   * @return true if the user wants to be notified, false otherwise.
+   */
+  public boolean wantsNotification() {
+    return this.notificationPreference.equals("Opt-in");
   }
   
 }

@@ -3,7 +3,8 @@
   schedule: List[Course], 
   watchList: List[Course], 
   comments: List[UserComment],  
-  commentForm: Form[views.formdata.CommentFormData])
+  commentForm: Form[views.formdata.CommentFormData],
+  preferencesForm: Form[views.formdata.NotificationPreferencesFormData])
 
 @import helper._
 @import bootstrap3._
@@ -77,51 +78,93 @@ function submitComment(id)
       <div class="panel-heading">
         We can notify you by email and/or text message when new late breaking information is added to a course in your
         schedule or watchlist<br>
-        <br>You have opted out.
+        <br>You have chose to @preferencesForm("userPreference").value.
       </div>
       <div class="panel-body">
-
-        <form class="form-horizontal" role="form">
+        @form(routes.Application.updateNotificationPreferences(), 'class -> "form-horizontal", 'role -> "form") {
           <div class="form-group">
             <label class="col-sm-3 control-label" style="text-align: left;">Preference:</label>
             <div class="col-sm-9">
-              <select id="selPreference" class="form-control"> 
-                <option>Opt-in</option>
-                <option>Opt-out</option>
+              <select id="userPreference" name="userPreference" class="form-control"> 
+                <option id="Opt-in" value="Opt-in" @if(preferencesForm("userPreference").value=="Opt-in") {selected}>
+                        Opt-in
+                </option>
+                <option id="Opt-out" value="Opt-out" @if(preferencesForm("userPreference").value=="Opt-out") {selected}>
+                        Opt-out
+                </option>
               </select>
             </div>
           </div>
-          <div class="form-group">
+          <div class="form-group @if(preferencesForm("userEmail").hasErrors) {has-error}">
             <label class="col-sm-3 control-label" style="text-align: left;">Email:</label>
             <div class="col-sm-9">
-              <input id="userEmail" type="email" class="form-control" placeholder="user@@hawaii.edu">
+              <input id="userEmail" 
+                     name="userEmail" 
+                     type="email" 
+                     class="form-control" 
+                     value="@preferencesForm("userEmail").value"
+                     placeholder="user@@hawaii.edu">
+              <span class="help-block">@{preferencesForm("userEmail").error.map { error => error.message }}</span>
             </div>
           </div>
-          <div class="form-group">
-            <label class="col-sm-3 control-label" style="text-align: left;">Telephone:</label>
+          <div class="form-group @if(preferencesForm("userPhone").hasErrors) {has-error}">
+            <label class="col-sm-3 control-label" style="text-align: left;">Mobile phone #:</label>
             <div class="col-sm-9">
-              <input id="userPhone" type="text" class="form-control" placeholder="808-123-4567">
+              <input id="userPhone" 
+                     name="userPhone" 
+                     type="text" 
+                     class="form-control" 
+                     value="@preferencesForm("userPhone").value"
+                     placeholder="808-123-4567">
+              <span class="help-block">@{preferencesForm("userPhone").error.map { error => error.message }}</span>       
             </div>
           </div>
-          <div class="form-group">
+          <div class="form-group @if(preferencesForm("userCarrier").hasErrors) {has-error}">
             <label class="col-sm-3 control-label" style="text-align: left;">Service Provider: </label>
             <div class="col-sm-9">
-              <select id="selCarrier" class="form-control">
+              <select id="userCarrier" name="userCarrier" class="form-control">
                 <option></option>
-                <option>Alltel Wireless</option>
-                <option>AT&T Wireless</option>
-                <option>AT&T Mobility (formerly Cingular)</option>
-                <option>Boost Mobile</option>
-                <option>Cricket</option>
-                <option>Metro PCS</option>
-                <option>Sprint (PCS)</option>
-                <option>Sprint (Nextel)</option>
-                <option>Straight Talk</option>
-                <option>T-Mobile</option>
-                <option>U.S. Cellular</option>
-                <option>Verizon</option>
-                <option>Virgin Mobile</option>
+                <option id="Alltel Wireless" value="Alltel Wireless" 
+                        @if(preferencesForm("userCarrier").value=="Alltel Wireless") {selected}>
+                        Alltel Wireless</option>
+                <option id="AT&T Wireless" value="AT&T Wireless" 
+                        @if(preferencesForm("userCarrier").value=="AT&T Wireless") {selected}>
+                        AT&T Wireless</option>
+                <option id="AT&T Mobility (formerly Cingular)" value="AT&T Mobility (formerly Cingular)" 
+                        @if(preferencesForm("userCarrier").value=="AT&T Mobility (formerly Cingular)") {selected}">
+                        AT&T Mobility (formerly Cingular)</option>
+                <option id="Boost Mobile" value="Boost Mobile" 
+                        @if(preferencesForm("userCarrier").value=="Boost Mobile") {selected}>
+                        Boost Mobile</option>
+                <option id="Cricket" value="Cricket" 
+                        @if(preferencesForm("userCarrier").value=="Cricket") {selected}>
+                        Cricket</option>
+                <option id="Metro PCS" value="Metro PCS" 
+                        @if(preferencesForm("userCarrier").value=="Metro PCS") {selected}>
+                        Metro PCS</option>
+                <option id="Sprint (PCS)" value="Sprint (PCS)" 
+                        @if(preferencesForm("userCarrier").value=="Sprint (PCS)") {selected}>
+                        Sprint (PCS)</option>
+                <option id="Sprint (Nextel)" value="Sprint (Nextel)" 
+                        @if(preferencesForm("userCarrier").value=="Sprint (Nextel)") {selected}>
+                        Sprint (Nextel)</option>
+                <option id="Straight Talk" value="Straight Talk" 
+                        @if(preferencesForm("userCarrier").value=="Straight Talk") {selected}>
+                        Straight Talk</option>
+                <option id="T-Mobile" value="T-Mobile" 
+                        @if(preferencesForm("userCarrier").value=="T-Mobile") {selected}>
+                        T-Mobile</option>
+                <option id="U.S. Cellular" value="U.S. Cellular" 
+                        @if(preferencesForm("userCarrier").value=="U.S. Cellular") {selected}>
+                        U.S. Cellular</option>
+                <option id="Verizon" value="Verizon" 
+                        @if(preferencesForm("userCarrier").value=="Verizon") {selected}>
+                        Verizon</option>
+                <option id="Virgin Mobile" value="Virgin Mobile" 
+                        @if(preferencesForm("userCarrier").value=="Virgin Mobile") {selected}>
+                        Virgin Mobile</option>
               </select>
+              <span class="help-block">@{preferencesForm("userCarrier").error.map { error => error.message }}</span> 
             </div>
           </div>
           <div class="form-group">
@@ -129,11 +172,10 @@ function submitComment(id)
               <button type="submit" class="btn btn-success">Save Changes</button>
             </div>
           </div>
-        </form>
+        }
       </div>
     </div>
   </div>
-  <!-- End Preferences Section -->
 <!-- End Preferences Section -->
 
 <!-- Hidden form to edit comment -->
@@ -492,5 +534,4 @@ function submitComment(id)
 
 
 }
-
 }

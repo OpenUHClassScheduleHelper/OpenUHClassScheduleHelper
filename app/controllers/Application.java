@@ -3,6 +3,8 @@ package controllers;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.Map;
+import javax.mail.MessagingException;
+import javax.mail.internet.AddressException;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import models.UserInfoDB;
@@ -13,6 +15,7 @@ import play.mvc.Controller;
 import play.mvc.Result;
 import play.mvc.Security;
 import views.formdata.CommentFormData;
+import views.formdata.NotificationPreferencesFormData;
 import views.formdata.Days;
 import views.formdata.Departments;
 import views.formdata.FocusTypes;
@@ -190,35 +193,52 @@ public class Application extends Controller {
   public static Result myAccount() {
     UserInfo user = Secured.getUserInfo(ctx());
     Form<CommentFormData> commentForm = Form.form(CommentFormData.class);
+    NotificationPreferencesFormData preferencesFormData = new NotificationPreferencesFormData(user);
+    Form<NotificationPreferencesFormData> preferencesForm = Form.form(NotificationPreferencesFormData.class).fill(preferencesFormData);
     return ok(Account.render("My Account", user, user.getSchedule(), user.getWatchList(),
-        UserCommentDB.getCommentsByUserName(user.getUserName()), commentForm));
-  }
-
-
-  /**
-   * Handles the deleting of a comment from the database.
-   * 
-   * @param id The id of the comment to delete.
-   * @return The resulting My Account page.
-   */
-  @Security.Authenticated(Secured.class)
-  public static Result deleteComment(long id) {
-    UserCommentDB.removeComment(id);
-    return redirect(routes.Application.myAccount());
+        UserCommentDB.getCommentsByUserName(user.getUserName()), commentForm, preferencesForm));
   }
 
   /**
-   * Handles the deleting of a course from the users watch list.
-   * @param crn The crn of the course to delete.
-   * @return The resulting My Account page.
+   * Update the current users notification preferences.
+   * @return
    */
   @Security.Authenticated(Secured.class)
-  public static Result deleteCourseFromWatchlist(String crn) {
+  public static Result updateNotificationPreferences() {
     UserInfo user = Secured.getUserInfo(ctx());
-    user.removeFromWatchList(crn);
+    Form<CommentFormData> commentForm = Form.form(CommentFormData.class);
+    Form<NotificationPreferencesFormData> preferencesForm = Form.form(NotificationPreferencesFormData.class).bindFromRequest();
+    if (preferencesForm.hasErrors()) {
+      return badRequest(Account.render("My Account", user, user.getSchedule(), user.getWatchList(),
+          UserCommentDB.getCommentsByUserName(user.getUserName()), commentForm, preferencesForm));
+    }
+    else {
+      NotificationPreferencesFormData formData = preferencesForm.get();
+      user.setNotificationPreference(formData.userPreference);
+      user.setEmail(formData.userEmail);
+      user.setTelephone(formData.userPhone);
+      user.setCarrier(formData.userCarrier);
+      user.save();
+      
+      if (user.wantsNotification() && user.getTelephone() != null) {
+        // send confirmation text
+        String message = "This is to confirm that you've opted-in to receiving messages by text.";
+        try {
+          SendEmail.SendBySms(user.getTelephone(), user.getCarrier(), "", message);
+        }
+        catch (AddressException e) {
+          // TODO Auto-generated catch block
+          e.printStackTrace();
+        }
+        catch (MessagingException e) {
+          // TODO Auto-generated catch block
+          e.printStackTrace();
+        }
+      }
+    }
     return redirect(routes.Application.myAccount());
   }
-
+  
   /**
    * Edit a comment in the users CommentDB. Called from the MyAccount page.
    */
@@ -244,7 +264,31 @@ public class Application extends Controller {
     }
     return redirect(routes.Application.myAccount());
   }
+  
+  /**
+   * Handles the deleting of a comment from the database.
+   * 
+   * @param id The id of the comment to delete.
+   * @return The resulting My Account page.
+   */
+  @Security.Authenticated(Secured.class)
+  public static Result deleteComment(long id) {
+    UserCommentDB.removeComment(id);
+    return redirect(routes.Application.myAccount());
+  }
 
+  /**
+   * Handles the deleting of a course from the users watch list.
+   * @param crn The crn of the course to delete.
+   * @return The resulting My Account page.
+   */
+  @Security.Authenticated(Secured.class)
+  public static Result deleteCourseFromWatchlist(String crn) {
+    UserInfo user = Secured.getUserInfo(ctx());
+    user.removeFromWatchList(crn);
+    return redirect(routes.Application.myAccount());
+  }
+  
   public static Result addCourseToWatchlist(String crn) {
     UserInfo user = Secured.getUserInfo(ctx());
     UserInfoDB.getUser(user.getUserName()).addToWatchList(CourseDB.getCourse(crn));
