@@ -3,27 +3,33 @@
 # ~~~~
 
 # Home page
-GET     /                           controllers.Application.index()
+GET     /                               controllers.Application.index()
 
-GET     /searchresults              controllers.Application.searchResults()
+GET     /searchresults                  controllers.Application.searchResults()
 
-GET     /login                      controllers.Application.login()
-GET     /logout                     controllers.Application.logout()
+GET     /login                          controllers.Application.login()
+GET     /logout                         controllers.Application.logout()
 
-GET     /map                        controllers.Application.map()
+GET     /map                            controllers.Application.map()
 
+<<<<<<< HEAD
 GET     /results                    controllers.Application.getResults(pageNum: Int ?= 1)
+=======
+GET     /results                        controllers.Application.getResults()
+GET     /results                        controllers.Application.classSearch()
+>>>>>>> send-email-2
 
-GET     /populateInstructors        controllers.Application.populateInstructorList(dept: String)
-GET     /populateCourses            controllers.Application.populateCourseList(dept: String)
+GET     /populateInstructors            controllers.Application.populateInstructorList(dept: String)
+GET     /populateCourses                controllers.Application.populateCourseList(dept: String)
 
-GET     /myaccount                  controllers.Application.myAccount()
-GET     /deleteComment              controllers.Application.deleteComment(id: Long)
-GET     /deleteCourse               controllers.Application.deleteCourseFromWatchlist(crn: String)
-GET     /addCourseToWatchlist       controllers.Application.addCourseToWatchlist(crn: String)
-GET     /addCourseToSchedule        controllers.Application.addCourseToSchedule(crn: String)
+GET     /myaccount                      controllers.Application.myAccount()
+POST    /updateNotificationPreferences  controllers.Application.updateNotificationPreferences()
+GET     /deleteComment                  controllers.Application.deleteComment(id: Long)
+GET     /deleteCourse                   controllers.Application.deleteCourseFromWatchlist(crn: String)
+GET     /addCourseToWatchlist           controllers.Application.addCourseToWatchlist(crn: String)
+GET     /addCourseToSchedule            controllers.Application.addCourseToSchedule(crn: String)
 
-GET    /editComment                controllers.Application.editComment()
+GET    /editComment                     controllers.Application.editComment()
 
 
 # Map static resources from the /public folder to the /assets URL path

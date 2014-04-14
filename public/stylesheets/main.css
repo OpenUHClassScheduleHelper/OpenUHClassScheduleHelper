@@ -219,7 +219,7 @@ input[type=radio]{
     /*float:left;*/
 }
 
-/************* Schedule Table CSS *************/
+/**
 #tempCell {
   background-color: #BBFF99;
   visibility: hidden;
@@ -250,12 +250,11 @@ input[type=radio]{
 }
 
 .form-horizontal .control-label{
-/* text-align:right; */
   text-align:left;
   margin-left:10px;
 }
 
-/************* Schedule Table End *************/
+**/
 
 /************* Instructor-courses CSS *************/
 .instructor-course {
@@ -631,7 +630,7 @@ margin-left: 10px;
   max-width: 200px;
 }
 
-#search-course {
+#search-course { 
   max-width: 150px;
   margin-left: 10px;
 }
@@ -704,11 +703,6 @@ a:hover {
   min-height:50px; /*must be min-height or pull down menu will be transparent.*/
 }
 
-/***** Start of split-cell, specific styles. *****/
-.conflict {
-  background-color: #F58E9D;
-}
-/***** End of split-cell, specific styles. *****/
 /***** Sticky footer *****/
 
 html, body {height: 100%;}
