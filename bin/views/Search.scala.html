@@ -1,35 +1,61 @@
-@(page: String, courses:List[Course])
+@(page: String, isLoggedIn: Boolean, courses:List[Course]) @Main(page, isLoggedIn) {
+<div class="full col-sm-6 login-panel" style="margin-top: 0%">
+    <h4 class="text-center">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">Search results</h3>
+            </div>
+    </h4>
+    <table class="table table-condensed">
+        <thead>
+            <tr>
+                <th>GenFocus</th>
+                <th>CRN</th>
+                <th>Course Name</th>
+                <th>Section</th>
+                <th>Course Title</th>
+                <th>Credits</th>
+                <th>Instructor</th>
+            </tr>
+        </thead>
 
-@Main(page) {
-    <div class="full col-sm-6 login-panel" style="margin-top: 0%">
-        <h4 class="text-center">
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h3 class="panel-title">Search results</h3>
-                </div>
-        </h4>
-        <table class="table table-condensed">
-          <thead>
+        @for(course <- courses) {
+        <tr>
+            <td>@course.getGenFocus()</td>
+            <td>@course.getCourseNumber()</td>
+            <td>@course.getCourseName()</td>
+            <td>@course.getSection()</td>
+            <td>@course.getCourseTitle()</td>
+            <td>@course.getCredits()</td>
+            <td>@course.getInstructor()</td>
+        </tr>
+        }
+    </table>
+
+    <h4 class="text-center">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">Meeting example for CRN: 84935</h3>
+            </div>
+    </h4>
+
+    <table class="table table-condensed">
+        <thead>
             <tr>
-              <th>CRN</th>
-              <th>Course Name</th>
-              <th>Section</th>
-              <th>Course Title</th>
-              <th>Instructor</th>
-              <th>Room</th>
+                <th>Day</th>
+                <th>Start</th>
+                <th>End</th>
+                <th>Room</th>
             </tr>
-          </thead>
-          
-          @for(course <- courses) {
-            <tr>
-              <td>@course.getCourseNumber()</td>
-              <td>@course.getCourseName()</td>
-              <td>@course.getSection()</td>
-              <td>@course.getCourseTitle()</td>
-              <td>@course.getInstructor()</td>
-              <td>@course.getRoom()</td>
-            </tr>
-          }
-        </table>
-    </div>
+        </thead>
+        @for(meeting <- CourseDB.getCourse("84935").getMeeting()) {
+        <tr>
+            <td>@meeting.getDay()</td>
+            <td>@meeting.getStart()</td>
+            <td>@meeting.getEnd()</td>
+            <td>@meeting.getRoom()</td>
+        </tr>
+        }        
+    </table>
+</div>
 }

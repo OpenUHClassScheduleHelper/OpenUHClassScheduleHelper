@@ -4,7 +4,14 @@
 @import bootstrap3._
 
 @Main(page, true) {
-
+ <style>
+   table {
+     border-collapse:collapse;
+   }
+   table, th, td {
+     border:1px solid black;
+   }
+ </style>
  <script type='text/javascript'>
             $(document).ready(function() { 
 
@@ -307,7 +314,7 @@ $(document).ready(function(){
 @if(resultsList.size() == 0) {
 <h3 id="resultsHeader">No Results</h3>
 }else {
-    <table class="result-table hidden-sm hidden-xs">
+    <table id="borderTest" class="result-table hidden-sm hidden-xs">
       <tr class="tableheader">
         <th>CRN</th>
         <th>Course</th>

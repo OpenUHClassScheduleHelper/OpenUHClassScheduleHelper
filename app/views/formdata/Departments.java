@@ -18,6 +18,7 @@ public class Departments {
     Map<String, Boolean> deptMap = new HashMap<>();
     List<Course> courseList = CourseDB.getCourses();
     for (Course course : courseList) {
+      if (course.getCourseName() == null) { break; }
       String courseDept = course.getCourseName().split(" ")[0];
       if(! deptMap.containsKey(courseDept)) {
         deptMap.put(courseDept, false); 

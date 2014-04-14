@@ -35,10 +35,11 @@ Seq[Any](format.raw/*1.52*/("""
 <title>"""),_display_(Seq[Any](/*7.9*/page)),format.raw/*7.13*/("""</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="stylesheet" href="http:////netdna.bootstrapcdn.com/bootswatch/3.0.0/spacelab/bootstrap.min.css">
+<link rel="stylesheet" href="http://code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css">
 
 <!--  Load site-specific customizations after bootstrap. -->
-<link rel="stylesheet" media="screen" href=""""),_display_(Seq[Any](/*12.46*/routes/*12.52*/.Assets.at("stylesheets/main.css"))),format.raw/*12.86*/("""">
-<link rel="shortcut icon" type="image/png" href=""""),_display_(Seq[Any](/*13.51*/routes/*13.57*/.Assets.at("images/favicon.png"))),format.raw/*13.89*/("""">
+<link rel="stylesheet" media="screen" href=""""),_display_(Seq[Any](/*13.46*/routes/*13.52*/.Assets.at("stylesheets/main.css"))),format.raw/*13.86*/("""">
+<link rel="shortcut icon" type="image/png" href=""""),_display_(Seq[Any](/*14.51*/routes/*14.57*/.Assets.at("images/favicon.png"))),format.raw/*14.89*/("""">
 
 <!-- Load Google Fonts -->
 <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Abel|Ubuntu">
@@ -51,6 +52,14 @@ Seq[Any](format.raw/*1.52*/("""
           <script src="http://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.6.2/html5shiv.js"></script>
           <script src="http://cdnjs.cloudflare.com/ajax/libs/respond.js/1.2.0/respond.js"></script>
         <![endif]-->
+        
+<!-- Load Bootstrap JavaScript components. HTMLUnit (used in testing) requires JQuery 1.8.3 or below). -->
+<script src=""""),_display_(Seq[Any](/*29.15*/routes/*29.21*/.Assets.at("lib/jquery.min.js"))),format.raw/*29.52*/(""""></script>
+<script src=""""),_display_(Seq[Any](/*30.15*/routes/*30.21*/.Assets.at("lib/jquery-ui.custom.min.js"))),format.raw/*30.62*/(""""></script>
+  <script src="http://code.jquery.com/jquery-1.8.3.min.js"></script>
+  <script src="http://code.jquery.com/ui/1.10.4/jquery-ui.min.js"></script>
+  <script src="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
+  <script src=""""),_display_(Seq[Any](/*34.17*/controllers/*34.28*/.routes.Application.jsRoutes())),format.raw/*34.58*/("""" type="text/javascript"></script>        
 </head>
 
 <body>
@@ -66,45 +75,42 @@ Seq[Any](format.raw/*1.52*/("""
           <a class="navbar-brand" href="index.html"></a>
         </div>
         <div class="collapse navbar-collapse">
-          """),_display_(Seq[Any](/*41.12*/if(isLoggedIn)/*41.26*/ {_display_(Seq[Any](format.raw/*41.28*/("""
+          """),_display_(Seq[Any](/*50.12*/if(isLoggedIn)/*50.26*/ {_display_(Seq[Any](format.raw/*50.28*/("""
           <ul class="nav navbar-nav navbar-right">
             <li>
-              <a href=""""),_display_(Seq[Any](/*44.25*/routes/*44.31*/.Application.index())),format.raw/*44.51*/("""" 
-                 style="color: """),_display_(Seq[Any](/*45.33*/if(page=="Results")/*45.52*/{_display_(Seq[Any](format.raw/*45.53*/("""black""")))}/*45.59*/else/*45.63*/{_display_(Seq[Any](format.raw/*45.64*/("""white""")))})),format.raw/*45.70*/(""";">Search
+              <a href=""""),_display_(Seq[Any](/*53.25*/routes/*53.31*/.Application.getResults())),format.raw/*53.56*/("""" 
+                 style="color: """),_display_(Seq[Any](/*54.33*/if(page=="Results")/*54.52*/{_display_(Seq[Any](format.raw/*54.53*/("""black""")))}/*54.59*/else/*54.63*/{_display_(Seq[Any](format.raw/*54.64*/("""white""")))})),format.raw/*54.70*/(""";">Search
               </a>
             </li>
             <li>
-              <a href=""""),_display_(Seq[Any](/*49.25*/routes/*49.31*/.Application.index())),format.raw/*49.51*/("""" 
-                 style="color: """),_display_(Seq[Any](/*50.33*/if(page=="Campus Map")/*50.55*/{_display_(Seq[Any](format.raw/*50.56*/("""black""")))}/*50.62*/else/*50.66*/{_display_(Seq[Any](format.raw/*50.67*/("""white""")))})),format.raw/*50.73*/(""";">View Map
+              <a href=""""),_display_(Seq[Any](/*58.25*/routes/*58.31*/.Application.map())),format.raw/*58.49*/("""" 
+                 style="color: """),_display_(Seq[Any](/*59.33*/if(page=="Campus Map")/*59.55*/{_display_(Seq[Any](format.raw/*59.56*/("""black""")))}/*59.62*/else/*59.66*/{_display_(Seq[Any](format.raw/*59.67*/("""white""")))})),format.raw/*59.73*/(""";">Campus Map
               </a>
             </li>
             <li>
-              <a href=""""),_display_(Seq[Any](/*54.25*/routes/*54.31*/.Application.myAccount())),format.raw/*54.55*/("""" 
-                 style="color: """),_display_(Seq[Any](/*55.33*/if(page=="My Account")/*55.55*/{_display_(Seq[Any](format.raw/*55.56*/("""black""")))}/*55.62*/else/*55.66*/{_display_(Seq[Any](format.raw/*55.67*/("""white""")))})),format.raw/*55.73*/(""";">My Account
+              <a href=""""),_display_(Seq[Any](/*63.25*/routes/*63.31*/.Application.myAccount())),format.raw/*63.55*/("""" 
+                 style="color: """),_display_(Seq[Any](/*64.33*/if(page=="My Account")/*64.55*/{_display_(Seq[Any](format.raw/*64.56*/("""black""")))}/*64.62*/else/*64.66*/{_display_(Seq[Any](format.raw/*64.67*/("""white""")))})),format.raw/*64.73*/(""";">My Account
               </a>
             </li>
             <li>
-              <a href=""""),_display_(Seq[Any](/*59.25*/routes/*59.31*/.Application.index())),format.raw/*59.51*/("""" 
+              <a href=""""),_display_(Seq[Any](/*68.25*/routes/*68.31*/.Application.logout())),format.raw/*68.52*/("""" 
                  style="color: white">Sign Out
               </a>
             </li>
           </ul>
-          """)))}/*64.13*/else/*64.18*/{_display_(Seq[Any](format.raw/*64.19*/("""
+          """)))}/*73.13*/else/*73.18*/{_display_(Seq[Any](format.raw/*73.19*/("""
           <ul class="nav navbar-nav navbar-right">
-            <li><a href=""""),_display_(Seq[Any](/*66.27*/routes/*66.33*/.Application.login())),format.raw/*66.53*/("""" style="color: white;">Sign In</a></li>
+            <li><a href=""""),_display_(Seq[Any](/*75.27*/routes/*75.33*/.Application.login())),format.raw/*75.53*/("""" style="color: white;">Sign In</a></li>
           </ul>
-          """)))})),format.raw/*68.12*/("""
+          """)))})),format.raw/*77.12*/("""
         </div>
       </div>
     </div>
   </div>  
   <!-- End Navbar -->
   
-  """),_display_(Seq[Any](/*75.4*/content)),format.raw/*75.11*/("""
+  """),_display_(Seq[Any](/*84.4*/content)),format.raw/*84.11*/("""
   
-  <!-- Load Bootstrap JavaScript components. HTMLUnit (used in testing) requires JQuery 1.8.3 or below). -->
-  <script src="http://code.jquery.com/jquery-1.8.3.min.js"></script>
-  <script src="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
 </body>
 </html>
 """))}
@@ -119,11 +125,11 @@ Seq[Any](format.raw/*1.52*/("""
 }
                 /*
                     -- GENERATED --
-                    DATE: Sun Mar 30 09:38:30 HST 2014
+                    DATE: Sun Apr 13 20:27:52 HST 2014
                     SOURCE: C:/Users/orts/Documents/GitHub/OpenUHClassScheduleHelper/app/views/Main.scala.html
-                    HASH: d270e1fc2a0b95c6c81e69f3587ec21bb3b1697a
-                    MATRIX: 786->1|930->51|1011->98|1036->102|1372->402|1387->408|1443->442|1533->496|1548->502|1602->534|2887->1783|2910->1797|2950->1799|3082->1895|3097->1901|3139->1921|3211->1957|3239->1976|3278->1977|3303->1983|3316->1987|3355->1988|3393->1994|3521->2086|3536->2092|3578->2112|3650->2148|3681->2170|3720->2171|3745->2177|3758->2181|3797->2182|3835->2188|3965->2282|3980->2288|4026->2312|4098->2348|4129->2370|4168->2371|4193->2377|4206->2381|4245->2382|4283->2388|4415->2484|4430->2490|4472->2510|4610->2630|4623->2635|4662->2636|4778->2716|4793->2722|4835->2742|4937->2812|5058->2898|5087->2905
-                    LINES: 26->1|29->1|35->7|35->7|40->12|40->12|40->12|41->13|41->13|41->13|69->41|69->41|69->41|72->44|72->44|72->44|73->45|73->45|73->45|73->45|73->45|73->45|73->45|77->49|77->49|77->49|78->50|78->50|78->50|78->50|78->50|78->50|78->50|82->54|82->54|82->54|83->55|83->55|83->55|83->55|83->55|83->55|83->55|87->59|87->59|87->59|92->64|92->64|92->64|94->66|94->66|94->66|96->68|103->75|103->75
+                    HASH: 1f00c73319a774bb48bb5f6d0a4694e5462ab7d4
+                    MATRIX: 786->1|930->51|1011->98|1036->102|1469->499|1484->505|1540->539|1630->593|1645->599|1699->631|2463->1359|2478->1365|2531->1396|2594->1423|2609->1429|2672->1470|2978->1740|2998->1751|3050->1781|3783->2478|3806->2492|3846->2494|3978->2590|3993->2596|4040->2621|4112->2657|4140->2676|4179->2677|4204->2683|4217->2687|4256->2688|4294->2694|4422->2786|4437->2792|4477->2810|4549->2846|4580->2868|4619->2869|4644->2875|4657->2879|4696->2880|4734->2886|4866->2982|4881->2988|4927->3012|4999->3048|5030->3070|5069->3071|5094->3077|5107->3081|5146->3082|5184->3088|5316->3184|5331->3190|5374->3211|5512->3331|5525->3336|5564->3337|5680->3417|5695->3423|5737->3443|5839->3513|5960->3599|5989->3606
+                    LINES: 26->1|29->1|35->7|35->7|41->13|41->13|41->13|42->14|42->14|42->14|57->29|57->29|57->29|58->30|58->30|58->30|62->34|62->34|62->34|78->50|78->50|78->50|81->53|81->53|81->53|82->54|82->54|82->54|82->54|82->54|82->54|82->54|86->58|86->58|86->58|87->59|87->59|87->59|87->59|87->59|87->59|87->59|91->63|91->63|91->63|92->64|92->64|92->64|92->64|92->64|92->64|92->64|96->68|96->68|96->68|101->73|101->73|101->73|103->75|103->75|103->75|105->77|112->84|112->84
                     -- GENERATED --
                 */
             

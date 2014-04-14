@@ -1,5 +1,4 @@
 package controllers;
-
 /**
  * Represents a table row extracted by the Jaunt API.
  * @author Rob Namahoe
@@ -10,10 +9,11 @@ public class JauntRowItem {
     private String course;
     private String section;
     private String title;
-    private String credits;
     private String instructor;
     private String days;
     private String time;
+    private String start;
+    private String end;
     private String location;
     
     /**
@@ -25,16 +25,38 @@ public class JauntRowItem {
     
     /**
      * Meeting times constructor.
+     * This is a convenience constructor.
      * @param crn the crn used for comparison later
      * @param days the days of the course
      * @param time the time that the course meets
      * @param location the location of the course (on the given day)
      */
     public JauntRowItem(String crn, String days, String time, String location) {
-    	this.setCrn(crn);
-    	this.setDays(days);
-    	this.setTime(time);
-    	this.setLocation(location);
+      this.setCrn(crn);
+      this.setDays(days);
+      this.setTime(time);
+      this.setLocation(location);
+    }
+    
+    /**
+     * Meeting times constructor.
+     * This is a convenience constructor.
+     * @param crn the crn used for comparison later
+     * @param days the days of the course
+     * @param start the start time of the course
+     * @param end the end time of the course
+     * @param location the location of the course (on the given day)
+     */
+    public JauntRowItem(String focus, String crn, String course, String section, String title, String days, String location) {
+      this.setFocus(focus);
+      this.setCrn(crn);
+      this.setCourse(course);
+      this.setSection(section);
+      this.setTitle(title);
+      this.setDays(days);
+      // this.setStart(start);
+      // this.setEnd(end);
+      this.setLocation(location);
     }
     
     /**
@@ -142,42 +164,44 @@ public class JauntRowItem {
       this.instructor = instructor;
     }
 
-	public String getDays() {
-		return days;
-	}
-
-	public void setDays(String days) {
-		this.days = days;
-	}
-
-	public String getTime() {
-		return time;
-	}
-
-	public void setTime(String time) {
-		this.time = time;
-	}
-
-	public String getLocation() {
-		return location;
-	}
-
-	public void setLocation(String location) {
-		this.location = location;
-	}
-
-  /**
-   * @return the credits
-   */
-  public String getCredits() {
-    return credits;
+  public String getDays() {
+    return days;
   }
 
-  /**
-   * @param credits the credits to set
-   */
-  public void setCredits(String credits) {
-    this.credits = credits;
+  public void setDays(String days) {
+    this.days = days;
+  }
+
+  public String getTime() {
+    return time;
+  }
+
+  public void setTime(String time) {
+    this.time = time;
+  }
+
+  public String getLocation() {
+    return location;
+  }
+
+  public void setLocation(String location) {
+    this.location = location;
+  }
+
+  public String getStart() {
+    return start;
+  }
+
+  public void setStart(String start) {
+    this.start = start;
+  }
+
+  public String getEnd() {
+    return end;
+  }
+
+  public void setEnd(String end) {
+    this.end = end;
   }
 
 }

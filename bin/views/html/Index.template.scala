@@ -50,7 +50,7 @@ Seq[Any](format.raw/*2.16*/("""
       </div>
       <!-- End of col-md-6 (Text Columns) -->
       <div class="col-md-6">
-        <img class="block-image" src=""""),_display_(Seq[Any](/*26.40*/routes/*26.46*/.Assets.at("images/search.jpg"))),format.raw/*26.77*/("""">
+        <img class="block-image" src=""""),_display_(Seq[Any](/*26.40*/routes/*26.46*/.Assets.at("images/search.png"))),format.raw/*26.77*/("""">
       </div>
       <!-- End of col-md-6 (Image Columns) -->
     </div>
@@ -92,33 +92,17 @@ Seq[Any](format.raw/*2.16*/("""
   </div>
   <!-- End of color block -->
 
-  <!-- Up-To-Date Info Block -->
-  <div class="colorblock-gradient">
-    <div class="col-md-6 col-md-push-6">
-      <div class="block-header" style="color:white;">Up-To-Date Information</div>
-      <div class="block-text" style="color:white;">There are few things in the world more frustrating than when you can't get a seat in
-        a class you need. So we've gone through great pains to keep the information on this site as up-to-date as
-        possible (especially the number of available seats).</div>
-    </div>
-    <!-- End of col-md-6 (Text Columns) -->
-    <div class="col-md-6 col-md-pull-6">
-      <img class="block-image" src=""""),_display_(Seq[Any](/*78.38*/routes/*78.44*/.Assets.at("images/uptodate.jpg"))),format.raw/*78.77*/("""">
-    </div>
-    <!-- End of col-md-6 (Image Columns) -->
-  </div>
-  <!-- End of color block -->
-
 
   <!-- Map Block -->
-  <div class="colorblock-white">
-    <div class="col-md-6">
+  <div class="colorblock-gradient">
+    <div class="col-md-6 col-md-push-6">
       <div class="block-header">Map your route between classes</div>
       <div class="block-text">Don't know where your class is? Curious how far it is between classes? Click on the
         Maps link to see a map of your schedule.</div>
     </div>
     <!-- End of col-md-6 (Text Columns) -->
-    <div class="col-md-6">
-      <img class="block-image" src=""""),_display_(Seq[Any](/*94.38*/routes/*94.44*/.Assets.at("images/myroute.jpg"))),format.raw/*94.76*/("""">
+    <div class="col-md-6 col-md-pull-6">
+      <img class="block-image" src=""""),_display_(Seq[Any](/*78.38*/routes/*78.44*/.Assets.at("images/myroute.jpg"))),format.raw/*78.76*/("""">
     </div>
     <!-- End of col-md-6 (Image Columns) -->
   </div>
@@ -126,15 +110,15 @@ Seq[Any](format.raw/*2.16*/("""
 
 
   <!-- Testmony Block -->
-  <div class="colorblock-gradient">
-    <div class="col-md-6 col-md-push-6">
-      <div class="block-header" style="color:white;">Students love us!</div>
-      <div class="block-text" style="color:white;">We think we've got something great here but you don't have to take our word for it.
+  <div class="colorblock-white">
+    <div class="col-md-6">
+      <div class="block-header">Students love us!</div>
+      <div class="block-text">We think we've got something great here but you don't have to take our word for it.
         Here's what some other users have got to say.</div>
     </div>
     <!-- End of col-md-6 (Text Columns) -->
-    <div class="col-md-6 col-md-pull-6">
-      <img class="block-image" src=""""),_display_(Seq[Any](/*110.38*/routes/*110.44*/.Assets.at("images/testimony.jpg"))),format.raw/*110.78*/("""">
+    <div class="col-md-6">
+      <img class="block-image" src=""""),_display_(Seq[Any](/*94.38*/routes/*94.44*/.Assets.at("images/testimony.jpg"))),format.raw/*94.78*/("""">
     </div>
     <!-- End of col-md-6 (Image Columns) -->
   </div>
@@ -169,11 +153,11 @@ Seq[Any](format.raw/*2.16*/("""
 }
                 /*
                     -- GENERATED --
-                    DATE: Sun Mar 30 09:38:30 HST 2014
+                    DATE: Wed Apr 02 16:27:57 HST 2014
                     SOURCE: C:/Users/orts/Documents/GitHub/OpenUHClassScheduleHelper/app/views/Index.scala.html
-                    HASH: 6d4fbb40a81e70beefca4c495035782bd2463064
-                    MATRIX: 774->3|882->17|921->22|967->60|1006->62|1927->947|1942->953|1995->984|2803->1756|2818->1762|2869->1791|3503->2389|3518->2395|3572->2427|4365->3184|4380->3190|4435->3223|5025->3777|5040->3783|5094->3815|5755->4439|5771->4445|5828->4479
-                    LINES: 26->2|29->2|31->4|31->4|31->4|53->26|53->26|53->26|73->46|73->46|73->46|89->62|89->62|89->62|105->78|105->78|105->78|121->94|121->94|121->94|137->110|137->110|137->110
+                    HASH: e11d14eb165fe459ae273a5f375ea7d708092e0a
+                    MATRIX: 774->3|882->17|921->22|967->60|1006->62|1927->947|1942->953|1995->984|2803->1756|2818->1762|2869->1791|3503->2389|3518->2395|3572->2427|4193->3012|4208->3018|4262->3050|4849->3601|4864->3607|4920->3641
+                    LINES: 26->2|29->2|31->4|31->4|31->4|53->26|53->26|53->26|73->46|73->46|73->46|89->62|89->62|89->62|105->78|105->78|105->78|121->94|121->94|121->94
                     -- GENERATED --
                 */
             

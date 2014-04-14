@@ -121,12 +121,12 @@ public class Application extends Controller {
 
 
   /**
-   * Returns the sample resutls page to see if classes are implemented properly. This is only for testing!
+   * Returns the sample results page to see if classes are implemented properly. This is only for testing!
    * @return The registration page.
    */
   @Security.Authenticated(Secured.class)
   public static Result searchResults() {
-    List<Course> courseList = CourseDB.getCourses();
+    List<Course> courseList = CourseDB.getCourses(); 
     return ok(Search.render("Search", true, courseList));
   }
 
@@ -143,11 +143,15 @@ public class Application extends Controller {
 
     UserInfo user = Secured.getUserInfo(ctx());
     schedule = user.getSchedule();
-    
+        
     if (data != null) {
       resultsList =
           CourseDB.courseSearchList(data.days, data.focus, data.department, data.course, data.instructor,
               data.startTime, data.endTime);
+    }
+    
+    else {
+      resultsList = CourseDB.getCourses();
     }
 
     // Create Schedule Events

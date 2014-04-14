@@ -15,7 +15,6 @@ import com.avaje.ebean.Query;
  */
 public class CourseDB {
   
-  
   /**
    * Add a course to the database of courses.
    * @param focus The General focus attributes, if applicable.
@@ -31,18 +30,22 @@ public class CourseDB {
     
     Course course = getCourseByCrn(crn);
     
+    // System.out.println("course name: " + name);
+    
     // If the course is not in the database, then create a new entry
-    if (course == null) {
+    if (crn == null) {
+      System.out.println("crn == null condition");
       course = new Course(focus, crn, name, section, title, credits, instructor);
     }
     else {
     // The course already exists in the database, so update the fields.
       course.setGenFocus(focus);
+      course.setCourseNumber(crn);
       course.setCourseName(name);
       course.setSection(section);
       course.setCourseTitle(title);
       course.setCredits(credits);
-      course.setInstructor(instructor);
+      course.setInstructor(instructor);  
     }
     course.save();
   }
