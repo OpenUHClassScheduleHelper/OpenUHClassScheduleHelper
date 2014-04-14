@@ -7,6 +7,7 @@ import java.util.HashSet;
 import java.util.List;
 import com.avaje.ebean.Ebean;
 import com.avaje.ebean.Page;
+import com.avaje.ebean.PagingList;
 import com.avaje.ebean.Query;
 
 
@@ -14,6 +15,9 @@ import com.avaje.ebean.Query;
  * Class that stores a DB of the courses.
  */
 public class CourseDB {
+  
+  private static final int PAGINATION_MAX = 5;
+  private static PagingList<Course> pages;
   
   /**
    * Add a course to the database of courses.
@@ -144,7 +148,120 @@ public class CourseDB {
     }
   } 
   
-  public Page<Course> page(String[] days, String[] genFocus, String department, String courseTitleandName, String instructor, String startTime, String endTime) {
+  public static void page(String[] days, String[] genFocus, String department, String courseTitleandName, String instructor, String startTime, String endTime) {
+    boolean noQueryCheck = true;
+    int daycheck = 0;
+    int focuscheck = 0;
+    Query<Course> query = Ebean.createQuery(Course.class);
+    CourseDB.setPages(pages);
+    
+    if(! department.equals("")) {
+      noQueryCheck = false;
+      query.where().eq("department", department);
+    }
+    
+    if(! instructor.equals("Any Instructor") && ! instructor.equals("")) {
+      noQueryCheck = false;
+      String comparableInstName = instructor.split(", ")[1] + " " + instructor.split(", ")[0];
+      query.where().eq("instructor", comparableInstName);
+    }
+    
+    if(! courseTitleandName.equals("Any Course") && ! courseTitleandName.equals("")) {
+      noQueryCheck = false;
+      String comparableCourseName = "";
+      if(courseTitleandName.split(": ").length > 2) {
+        comparableCourseName = courseTitleandName.split(": ")[1] + ": " + courseTitleandName.split(": ")[2];
+      }else {
+        comparableCourseName = courseTitleandName.split(": ")[1];
+      }
+      query.where().eq("courseTitle", comparableCourseName);
+    }
+    
+    if(days != null) {
+    for(String day : days) {
+      if(day == null) {
+        daycheck++;
+      }
+    }
+    }
+    
+    if(genFocus != null) {
+      for(String focus : genFocus) {
+        if(focus == null) {
+          focuscheck++;
+        }
+      }
+    }
+    
+    if(genFocus != null && genFocus.length > 0 && focuscheck != 4) {
+      noQueryCheck = false;
+      for(String focus : genFocus) {
+        if(focus != null) {
+          if(focus.equals("ETH")) {
+            query.where().contains("genFocus", "ETH");
+          }
+          if(focus.equals("WI")) {
+            query.where().contains("genFocus", "WI");
+          }
+          if(focus.equals("OC")) {
+            query.where().contains("genFocus", "OC");
+          }
+          if(focus.equals("HAP")) {
+            query.where().contains("genFocus", "HAP");
+          }
+        }
+      }
+      }
+    
+    
+    /*if(days != null && days.length > 0 && daycheck != 4) {
+      noQueryCheck = false;
+      if(! department.equals("") || focuscheck != 4) {
+        queryString += "and ";
+      }
+      int index = 0;
+      for(String day : days) {
+        if(day != null) {
+          index++;
+          if(index > 1) {
+          queryString += "and ";
+          }
+          if(day.equals("M")) {
+            queryString += "genFocus like :m ";
+          }
+          if(day.equals("T")) {
+            queryString += "genFocus like :t ";
+          }
+          if(day.equals("W")) {
+            queryString += "genFocus like :w ";
+          }
+          if(day.equals("R")) {
+            queryString += "genFocus like :r ";
+          }
+          if(day.equals("F")) {
+            queryString += "genFocus like :f ";
+          }
+          if(day.equals("Sa")) {
+            queryString += "genFocus like :sa ";
+          }
+          if(day.equals("Su")) {
+            queryString += "genFocus like :su ";
+          }
+        }
+      }
+    }*/
+    
+    if(noQueryCheck) {
+      query.findList();
+    }
+    
+     pages = query.findPagingList(PAGINATION_MAX);
+     CourseDB.setPages(pages);
+    
+  }
+  
+  
+  /*public static void page(String[] days, String[] genFocus, String department, String courseTitleandName, String instructor, String startTime, String endTime) {
     String queryString = "find course where ";
     boolean noQueryCheck = true;
     int daycheck = 0;
@@ -245,7 +362,7 @@ public class CourseDB {
           }
         }
       }
-    }*/
+    }
     
     if(noQueryCheck) {
       queryString = "find course *";
@@ -292,39 +409,11 @@ public class CourseDB {
         }
       }
     }
-      List<Course> courseList = query.findList();
-      Page<Course> page = null;
-      return page;
     
-    /*List<Course> courseList = CourseDB.getCourses();
-    List<Course> tempCourseList = new ArrayList<>();
-    List<Course> finalCourseList = new ArrayList<>();
-    boolean passed = false;
-    if(! department.equals("")) {
-       finalCourseList = getCoursesByDept(department);
-       
-       if(! instructor.equals("Any Instructor") && (! instructor.equals(""))) {
-         finalCourseList = Course.find().where().eq("department", department).eq("name", instructor).findList();
-       }
-       
-       
-       if(! courseTitleandName.equals("Any Course") && (! courseTitleandName.equals(""))) {
-         if(! instructor.equals("Any Instructor") && (! instructor.equals(""))) {
-           finalCourseList = Course.find().where().eq("department", department).eq("name", instructor).eq("courseTitle", courseTitleandName).findList();
-         }else {
-           finalCourseList = Course.find().where().eq("department", department).eq("courseTitle", courseTitleandName).findList();
-         }
-       }
-       
-       for(Course course : tempCourseList) {
-         finalCourseList.remove(course);
-       }
-       
-    }else {
-      finalCourseList = courseList;
-    }*/
-    
-  }
+    pages = query.findPagingList(PAGINATION_MAX);
+    CourseDB.setPages(pages);
+  }*/
+  
   
   public static List<Course> courseSearchList(String[] days, String[] genFocus, String department, String courseTitleandName, String instructor, String startTime, String endTime) {
     String queryString = "find course where ";
@@ -613,6 +702,39 @@ public class CourseDB {
     return finalCourseList;
     */
   }
+  
+  
+  /**
+  * @param results The pages to set
+  */
+    public static void setPages(PagingList<Course> results) {
+      pages = results;
+    }
+    
+    /**
+  * Get the specified results page.
+  * @param page The page to retrieve.
+  * @return The specified results page.
+  */
+    public static List<Course> getCoursesInPage(int page) {
+      return pages.getPage(page).getList();
+    }
+    
+    /**
+  * Get the total number of pages of results.
+  * @return The number of result pages.
+  */
+    public static int getPageCount() {
+      return pages.getTotalPageCount();
+    }
+    
+    /**
+  * Get the total number of results (surfers).
+  * @return The number of surfers.
+  */
+    public static int getCourseCount() {
+      return pages.getTotalRowCount();
+    }
   
  
   

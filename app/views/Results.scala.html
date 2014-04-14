@@ -1,17 +1,10 @@
 @(page: String, focusList: Map[String, Boolean], dayList: Map[String, Boolean], departmentList: Map[String, Boolean], 
-  resultsList: List[Course], searchForm : Form[views.formdata.SearchForm], schedule: List[Course], events: List[ScheduleEvent])
+  resultsList: List[Course], searchForm : Form[views.formdata.SearchForm], schedule: List[Course], events: List[ScheduleEvent],
+  courseCount: Int, pageCount: Int, pageNumber: Int)
 @import helper.form 
 @import bootstrap3._
 
 @Main(page, true) {
- <style>
-   table {
-     border-collapse:collapse;
-   }
-   table, th, td {
-     border:1px solid black;
-   }
- </style>
  <script type='text/javascript'>
             $(document).ready(function() { 
 
@@ -192,7 +185,7 @@ $(document).ready(function(){
  <!-- search form -->
   <div id="searchFormWrapper">
     <form class="form-inline" role="form">
-      @form(routes.Application.getResults(), 'class -> "form-group") {
+      @form(routes.Application.getResults(1), 'class -> "form-group") {
       <div id="searchForm" class="form-group">
           @searchselect(searchForm("department"), id = "selDept", searchType = "Any Department", optionMap = departmentList, isMultiple = false, "getInstructorList(); getCourseList();")
           <select name="instructor" id="selInstructor" class="form-control" placeholder="Instructor" onchange="instructorsToCourses()">
@@ -212,7 +205,7 @@ $(document).ready(function(){
       <input type='hidden' id= 'startTime' name='startTime' value='' />
       <input type='hidden' id= 'endTime' name='endTime' value='' />
 
-      <button type="submit" class="btn btn-primary" style="margin-left:15px" onClick="submitForm()">Search</button>
+      <button type="submit" class="btn btn-primary" style="margin-left:15px">Search</button>
     </form>
     }
   </div>
@@ -314,7 +307,7 @@ $(document).ready(function(){
 @if(resultsList.size() == 0) {
 <h3 id="resultsHeader">No Results</h3>
 }else {
-    <table id="borderTest" class="result-table hidden-sm hidden-xs">
+    <table  class="result-table hidden-sm hidden-xs">
       <tr class="tableheader">
         <th>CRN</th>
         <th>Course</th>
@@ -357,6 +350,19 @@ $(document).ready(function(){
         </tr>
       }
       </table>
+      
+       <!-- Pagination -->
+            <div style="text-align:center">
+              <ul class="pagination">
+                @for(i <- 1 until (pageCount + 1)) {
+                  <li class=@if(i==pageNumber){"active"}>
+                    <a id="@i" href="@routes.Application.getResults(i)">
+                      @i
+                    </a>
+                  </li>
+                }
+              </ul>
+            </div> 
 }
 
   </div>

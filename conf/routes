@@ -12,8 +12,7 @@ GET     /logout                     controllers.Application.logout()
 
 GET     /map                        controllers.Application.map()
 
-GET     /results                    controllers.Application.getResults()
-GET     /results                    controllers.Application.classSearch()
+GET     /results                    controllers.Application.getResults(pageNum: Int ?= 1)
 
 GET     /populateInstructors        controllers.Application.populateInstructorList(dept: String)
 GET     /populateCourses            controllers.Application.populateCourseList(dept: String)

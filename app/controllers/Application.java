@@ -97,7 +97,7 @@ public class Application extends Controller {
           // add user to the database if they dont already exist
           UserInfoDB.addUserInfo(userName);
           
-          return redirect(routes.Application.getResults());
+          return redirect(routes.Application.getResults(1));
         }
         else {
           // you could redirect to the CAS login here if you want to
@@ -135,7 +135,7 @@ public class Application extends Controller {
    * @return The results page.
    */
   @Security.Authenticated(Secured.class)
-  public static Result getResults() {
+  public static Result getResults(int pageNum) {
     Form<SearchForm> formData = searchForm.bindFromRequest();
     SearchForm data = formData.get();
     List<Course> resultsList = new ArrayList<>();
@@ -145,9 +145,12 @@ public class Application extends Controller {
     schedule = user.getSchedule();
         
     if (data != null) {
-      resultsList =
+      /*resultsList =
           CourseDB.courseSearchList(data.days, data.focus, data.department, data.course, data.instructor,
-              data.startTime, data.endTime);
+              data.startTime, data.endTime);*/
+      CourseDB.page(data.days, data.focus, data.department, data.course, data.instructor,
+          data.startTime, data.endTime);
+      resultsList = CourseDB.getCoursesInPage(pageNum-1);
     }
     
     else {
@@ -183,8 +186,55 @@ public class Application extends Controller {
     }
 
     return ok(Results.render("Results", FocusTypes.getFocusTypes(), Days.getDays(), Departments.getDepartments(),
-        resultsList, searchForm, schedule, events));
+        resultsList, searchForm, schedule, events, CourseDB.getCourseCount(), CourseDB.getPageCount(), pageNum));
   }
+  
+  
+  /**
+   * Returns the Search page.
+   * @return The results page.
+   */
+  /*@Security.Authenticated(Secured.class)
+  public static Result search() {
+    Form<SearchForm> formData = searchForm.bindFromRequest();
+    SearchForm data = formData.get();
+    List<Course> resultsList = new ArrayList<>();
+    List<Course> schedule = new ArrayList<>();
+
+    UserInfo user = Secured.getUserInfo(ctx());
+    schedule = user.getSchedule();
+
+    // Create Schedule Events
+    Boolean conflictExists = false;
+    List<ScheduleEvent> events = new ArrayList<>();
+
+    if (resultsList.size() > 0 && schedule.size() > 0) {
+      for (Course result : resultsList) {
+        for (Meeting rMeeting : result.getMeeting()) {
+
+          // compare each result meeting with those on the schedule.
+          for (Course course : schedule) {
+            for (Meeting cMeeting : course.getMeeting()) {
+              if (!conflictExists) {
+                conflictExists = rMeeting.isOverlapping(cMeeting);
+              }
+            } // end of schedule meeting loop
+          } // end of schedule loop
+
+          // Create a new schedule event object with appropriate attributes.
+          ScheduleEvent event =
+              new ScheduleEvent(result.getCrn(), result.getCourseName(), rMeeting.getFullCalendarStartTime(),
+                  rMeeting.getFullCalendarEndTime(), conflictExists);
+          // Add it to the list of events
+          events.add(event);
+          conflictExists = false;
+        } // end of result meeting loop
+      } // end of result loop
+    }
+
+    return ok(Results.render("Search", FocusTypes.getFocusTypes(), Days.getDays(), Departments.getDepartments(),
+        resultsList, searchForm, schedule, events, CourseDB.getCourseCount(), CourseDB.getPageCount(), pageNum));
+  }*/
 
   /**
    * Returns the personal account page.
@@ -252,21 +302,15 @@ public class Application extends Controller {
   public static Result addCourseToWatchlist(String crn) {
     UserInfo user = Secured.getUserInfo(ctx());
     UserInfoDB.getUser(user.getUserName()).addToWatchList(CourseDB.getCourse(crn));
-    return redirect(routes.Application.getResults());
+    return redirect(routes.Application.getResults(1));
   }
 
   public static Result addCourseToSchedule(String crn) {
     UserInfo user = Secured.getUserInfo(ctx());
     UserInfoDB.getUser(user.getUserName()).addToSchedule(CourseDB.getCourse(crn));
-    return redirect(routes.Application.getResults());
+    return redirect(routes.Application.getResults(1));
   }
-
-  public static Result classSearch() {
-    Form<SearchForm> formData = searchForm.bindFromRequest();
-    SearchForm data = formData.get();
-
-    return redirect(routes.Application.getResults());
-  }
+  
 
   public static Result populateInstructorList(String dept) {
     List<String> instructors = CourseDB.getInstructors(dept);
@@ -291,6 +335,7 @@ public class Application extends Controller {
     return ok(courseddl);
 
   }
+  
 
   public static Result jsRoutes() {
     response().setContentType("text/javascript");
