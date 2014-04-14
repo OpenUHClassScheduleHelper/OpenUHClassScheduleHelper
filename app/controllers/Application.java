@@ -135,7 +135,7 @@ public class Application extends Controller {
    * @return The results page.
    */
   @Security.Authenticated(Secured.class)
-  public static Result getResults() {
+  public static Result getResults() { 
     Form<SearchForm> formData = searchForm.bindFromRequest();
     SearchForm data = formData.get();
     List<Course> resultsList = new ArrayList<>();
