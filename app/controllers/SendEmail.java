@@ -10,6 +10,7 @@ import javax.mail.Session;
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
+import play.Play;
 
 /**
  * Code obtained from http://stackoverflow.com/questions/3649014/send-email-using-java
@@ -59,9 +60,10 @@ public class SendEmail {
      * @throws MessagingException if the connection is dead or not in the connected state or if the message is not a MimeMessage
      */
     private static void Send(String recipientEmail, String ccEmail, String title, String message) throws AddressException, MessagingException {
-        
-      String username = "openuhschedulehelper";  // Gmail Username
-      String password = "Gm[2cFUiqV-#!CL";       // Gmail Password
+      
+      String username = Play.application().configuration().getString("openuhschedulehelper.gmail.username");
+      String password = Play.application().configuration().getString("openuhschedulehelper.gmail.password");
+      
       
       Security.addProvider(new com.sun.net.ssl.internal.ssl.Provider());
         final String SSL_FACTORY = "javax.net.ssl.SSLSocketFactory";
