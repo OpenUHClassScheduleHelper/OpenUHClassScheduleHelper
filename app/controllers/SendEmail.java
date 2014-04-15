@@ -31,7 +31,6 @@ public class SendEmail {
     public static void SendByEmail(String recipientEmail, String title, String message) throws AddressException, MessagingException {
       SendEmail.Send(recipientEmail, "", title, message);
     }
-
     
     /**
      * Send an SMS to the user.
@@ -47,8 +46,6 @@ public class SendEmail {
       SendByEmail(smsGateway, title, message);
     }
     
-    
-    
     /**
      * Send email using GMail SMTP server.
      *
@@ -61,9 +58,9 @@ public class SendEmail {
      */
     private static void Send(String recipientEmail, String ccEmail, String title, String message) throws AddressException, MessagingException {
       
+      // Get user credentials from environment variables.
       String username = Play.application().configuration().getString("openuhschedulehelper.gmail.username");
       String password = Play.application().configuration().getString("openuhschedulehelper.gmail.password");
-      
       
       Security.addProvider(new com.sun.net.ssl.internal.ssl.Provider());
         final String SSL_FACTORY = "javax.net.ssl.SSLSocketFactory";
@@ -170,8 +167,5 @@ public class SendEmail {
       
       return gateway;
     }
-    
-    
-    
-    
+
 }
