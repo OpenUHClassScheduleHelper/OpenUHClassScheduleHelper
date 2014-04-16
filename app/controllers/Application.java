@@ -246,6 +246,14 @@ public class Application extends Controller {
   @Security.Authenticated(Secured.class)
   public static Result myAccount() {
     UserInfo user = Secured.getUserInfo(ctx());
+    
+    // tests
+    List<Course> courses = user.getSchedule();
+    for (Course course : courses) {
+      course.getShortMeetingTimes();
+    }
+    // end tests
+    
     Form<CommentFormData> commentForm = Form.form(CommentFormData.class);
     NotificationPreferencesFormData preferencesFormData = new NotificationPreferencesFormData(user);
     Form<NotificationPreferencesFormData> preferencesForm = Form.form(NotificationPreferencesFormData.class).fill(preferencesFormData);
@@ -259,7 +267,7 @@ public class Application extends Controller {
    */
   @Security.Authenticated(Secured.class)
   public static Result updateNotificationPreferences() {
-    UserInfo user = Secured.getUserInfo(ctx());
+    UserInfo user = Secured.getUserInfo(ctx());    
     Form<CommentFormData> commentForm = Form.form(CommentFormData.class);
     Form<NotificationPreferencesFormData> preferencesForm = Form.form(NotificationPreferencesFormData.class).bindFromRequest();
     if (preferencesForm.hasErrors()) {
@@ -275,19 +283,13 @@ public class Application extends Controller {
       user.save();
       
       if (user.wantsNotification() && user.getTelephone() != null) {
-        // send confirmation text
+        // Send confirmation text
         String message = "This is to confirm that you've opted-in to receiving messages by text.";
         try {
           SendEmail.SendBySms(user.getTelephone(), user.getCarrier(), "", message);
         }
-        catch (AddressException e) {
-          // TODO Auto-generated catch block
-          e.printStackTrace();
-        }
-        catch (MessagingException e) {
-          // TODO Auto-generated catch block
-          e.printStackTrace();
-        }
+        catch (AddressException e) {e.printStackTrace();}
+        catch (MessagingException e) {e.printStackTrace();}
       }
     }
     return redirect(routes.Application.myAccount());
