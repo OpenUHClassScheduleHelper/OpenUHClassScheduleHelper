@@ -1,3 +1,7 @@
+.meetingcolumn {
+  text-align: left;
+}
+
 /** modal **/
 .modal-body .form-control {
   width: 97%;

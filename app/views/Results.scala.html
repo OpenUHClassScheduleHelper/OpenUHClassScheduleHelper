@@ -326,7 +326,7 @@ $(document).ready(function(){
           <td>@course.getDepartment()</td>
           <td>@course.printGenFocusList()</td>
           <td>@course.getInstructor()</td>
-          <td>@for(meeting <- course.getMeetingTimes()) {
+          <td class="meetingcolumn">@for(meeting <- course.getMeetingTimes()) {
               @meeting<br>
               }
           </td>
@@ -336,9 +336,8 @@ $(document).ready(function(){
           <button class="btn btn-success btn-sm added" title="Already Added">
             <div class="glyphicon glyphicon-plus" title="Already Added"></div>
           } else {
-            <a href="@routes.Application.addCourseToSchedule(course.getCourseNumber())">
-            <button class="btn btn-success btn-sm" title="Add to Schedule">
-            <div class="glyphicon glyphicon-plus" title="Add to Schedule"></div></button></a>
+            <button class="btn btn-success btn-sm" data-toggle="modal" data-target="#addmodal@course.getCourseNumber()" title="Add to Schedule">
+            <div class="glyphicon glyphicon-plus" data-toggle="modal" data-target="#addmodal@course.getCourseNumber()" title="Add to Schedule"></div></button>
           }
           </button> <img class="infoicon" id="infoicon@course.getCourseNumber()" src="@routes.Assets.at("images/more_information_icon.jpg")" data-toggle="modal"
           data-target="#infomodal@course.getCourseNumber()" title="Late Breaking News"></img>
@@ -351,13 +350,38 @@ $(document).ready(function(){
        <!-- Pagination -->
             <div style="text-align:center">
               <ul class="pagination">
-                @for(i <- 1 until (pageCount + 1)) {
+                  <li>
+                    <a id="first" href="@routes.Application.getResults(1)">
+                      First
+                    </a>
+                  </li>
+                @if(pageNumber+5 >= pageCount) {
+                  @for(i <- (pageCount-4) until (pageCount + 5)) {
+                    @if(i <= pageCount) {
+                    <li class=@if(i==pageNumber){"active"}>
+                    <a id="@i" href="@routes.Application.getResults(i)">
+                      @i
+                    </a>
+                  </li>
+                  }
+                  }
+                }
+                 @if(pageNumber+5 < pageCount) {
+                @for(i <- pageNumber until (pageNumber + 5)) {
+                  @if(i <= pageCount+1) {
                   <li class=@if(i==pageNumber){"active"}>
                     <a id="@i" href="@routes.Application.getResults(i)">
                       @i
                     </a>
                   </li>
+                  }
                 }
+                }
+                <li>
+                    <a id="first" href="@routes.Application.getResults(pageCount)">
+                      Last
+                    </a>
+                  </li>
               </ul>
             </div> 
 }
@@ -424,6 +448,31 @@ $(document).ready(function(){
         <div class="modal-footer">
           <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
           <a href="@routes.Application.addCourseToWatchlist(course.getCourseNumber())"><button type="button" class="btn btn-primary">Add</button></a>
+        </div>
+      </div>
+      <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+  </div>
+  <!-- /.modal --> 
+  
+  }
+  
+  @for(course <- resultsList) {
+  <div class="modal fade" id="addmodal@course.getCourseNumber()">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">X</button>
+          <h4 class="modal-title"></h4>
+        </div>
+        <div class="modal-body">
+          <h4><b>Add this class to your schedule?</b></h4>
+
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          <a href="@routes.Application.addCourseToSchedule(course.getCourseNumber())"><button type="button" class="btn btn-primary">Add</button></a>
         </div>
       </div>
       <!-- /.modal-content -->
