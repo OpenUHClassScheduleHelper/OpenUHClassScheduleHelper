@@ -37,7 +37,7 @@ public class Meeting extends Model {
    * @param room The location of the class (for that day)
    */
   public Meeting(String crn, String day, String start, String end, String room) {
-    this.crn = crn;
+    this.setCrn(crn);
     this.setDay(day);
     this.setStart(start);
     this.setEnd(end);
