@@ -89,7 +89,6 @@ font-size: 18px;
 
 #sm-menu {
 font-size: 14px;
->>>>>>> origin/courseClass
 }
 
 #resultsHeader{
@@ -218,43 +217,6 @@ input[type=radio]{
     cursor:pointer;
     /*float:left;*/
 }
-
-/**
-#tempCell {
-  background-color: #BBFF99;
-  visibility: hidden;
-}
-
-.tempRow {
-  border: 4px solid white;  
-  border-top-color:#BBFF99;
-  border-bottom-color:#BBFF99;
-  border-left-color:#BBFF99;
-  border-right-color:#BBFF99;
-}
-
-.conflictRow {
-  border: 4px solid white;  
-  border-top-color:#F58E9D;
-  border-bottom-color:#F58E9D;
-  border-left-color:#F58E9D;
-  border-right-color:#F58E9D;
-}
-
-.defaultRow {
-  border: 0px solid white;  
-  border-top-color:initial;
-  border-bottom-color:initial;
-  border-left-color:initial;
-  border-right-color:initial;
-}
-
-.form-horizontal .control-label{
-  text-align:left;
-  margin-left:10px;
-}
-
-**/
 
 /************* Instructor-courses CSS *************/
 .instructor-course {
