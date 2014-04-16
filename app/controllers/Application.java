@@ -246,14 +246,6 @@ public class Application extends Controller {
   @Security.Authenticated(Secured.class)
   public static Result myAccount() {
     UserInfo user = Secured.getUserInfo(ctx());
-    
-    // tests
-    List<Course> courses = user.getSchedule();
-    for (Course course : courses) {
-      course.getShortMeetingTimes();
-    }
-    // end tests
-    
     Form<CommentFormData> commentForm = Form.form(CommentFormData.class);
     NotificationPreferencesFormData preferencesFormData = new NotificationPreferencesFormData(user);
     Form<NotificationPreferencesFormData> preferencesForm = Form.form(NotificationPreferencesFormData.class).fill(preferencesFormData);

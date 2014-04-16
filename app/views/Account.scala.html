@@ -65,13 +65,15 @@ function submitComment(id)
   document.getElementById('hiddenCommentForm').submit();
 }
 </script>
-
-<h2>User Information</h2>
-<p class="info"><b>Name: </b>@user.getFullName()</p>
-<p class="info"><b>UH Username: </b>@user.getUserName()</p>
+<div class="container">
+  <h2>User Information</h2>
+  <p class="info"><b>Name: </b>@user.getFullName()</p>
+  <p class="info"><b>UH Username: </b>@user.getUserName()</p>
+</div>
 <!-- End User Information Section -->
 
 <!-- Begin Preferences Section -->
+<div class="container">
   <h2>Notification Preferences</h2>
   <div class="container">
     <div class="panel panel-default">
@@ -176,6 +178,7 @@ function submitComment(id)
       </div>
     </div>
   </div>
+</div>
 <!-- End Preferences Section -->
 
 <!-- Hidden form to edit comment -->
@@ -185,6 +188,7 @@ function submitComment(id)
 }
   
 <br>
+<div class="container">
 <ul class="nav nav-tabs" data-tabs="tabs" style="margin-left: 10px; margin-right: 10px; margin-top: 10px;">
   <li class="active"><a data-toggle="tab" href="#Schedule">Schedule</a></li>
   <li><a data-toggle="tab" href="#WatchList">Watch List</a></li>
@@ -193,14 +197,82 @@ function submitComment(id)
 </ul>
 
 <div class="tab-content" style="margin-left: 10px; margin-right: 10px;">
-  <div class="tab-pane active" id="Schedule">
-
-    <h1>Current Schedule</h1>
+  <div class="tab-pane active" id="Schedule">    
+    <div class="container">
+    
+    <!-- Schedule in normal view -->
+    <table class="table table-bordered hidden-sm hidden-xs" style="margin-top:10px;margin-left:25px;">
+      <tr>
+        <th>CRN</th>
+        <th>Course</th>
+        <th>Title</th>
+        <th>Instructor</th>
+        <th>Location</th>
+        <th>Time</th>
+        <th>Options</th>
+      </tr>
+      @for(course <- schedule) {
+      <tr>
+        <td>@course.getCourseNumber()</td>
+        <td>@course.getCourseName()</td>
+        <td>@course.getCourseTitle()</td>
+        <td>@course.getInstructor()</td>
+        <td>POST 127, POST 319</td>
+        <td>M 0530-0800p, W 0530-0645p</td>
+        <td>
+          <div>
+            <a class="btn btn-danger btn-xs" data-toggle="modal" href="#Course@course.getCrn()"><div class="glyphicon glyphicon-remove"></div>Remove</a>
+          </div>
+        </td>
+      </tr>
+      }
+    </table>
+    
+    @for(course <- schedule) {
+    <div class="visible-sm visible-xs">
+      <a class="btn course-dropdown-button" id="myclassbutton1"> @course.getCourseName() @course.getCourseTitle() </a>
+      <div class="mobileresults" id="myclassinfo1">
+        <p>
+          <b>CRN: </b><br>@course.getCourseNumber()
+        </p>
+        <hr></hr>
+        <p>
+          <b>Gen Ed./Focus: </b>@course.getGenFocus()<br>
+        </p>
+        <hr></hr>
+        <p>
+          <b>Instructor: </b><br>@course.getInstructor()
+        </p>
+        <hr></hr>
+        @for(meeting <- course.getMeeting()) {
+        <p>
+          <b>Location: </b><br>POST 127<br>POST 319
+        </p>
+        <hr></hr>
+        <p>
+          <b>Time: </b><br>M 0530-0800p<br> W 0530-0645p
+        </p>
+        <hr></hr>
+        }
+        <p>
+          <a type="button" class="btn btn-danger btn-xs glyphicon glyphicon-remove">
+            Remove
+          </a>
+        </p>
+      </div>
+    </div>
+    }
+   
+    
+    <!-- Full Calendar -->
     <div id='calendar'></div>
 
-  </div>
+  </div> <!-- End of container -->
+  </div> <!-- End of tab-pane div -->
+  
+  
+  
   <div class="tab-pane" id="WatchList">
-    <h1>Watch List</h1>
     <h3>Sprint 2014</h3>
     @for(course <- watchList) {
     <div class="visible-sm visible-xs">
@@ -268,7 +340,6 @@ function submitComment(id)
   </div>
 
   <div class="tab-pane" id="Comments">
-    <h1>Comments</h1>
 
     <table class="my-courses-table table-striped">
       <tr>
@@ -295,7 +366,6 @@ function submitComment(id)
   </div>
   
   <div class="tab-pane" id="ScheduleHistory">
-    <h1>Schedule History</h1>
     <h3>Spring 2014</h3>
     <div class="visible-sm visible-xs">
       <a class="btn course-dropdown-button" id="myclassbutton4"> ICS 111 Intro to Computer Science I </a>
@@ -452,7 +522,7 @@ function submitComment(id)
 </div>
 
 </div>
-
+</div>
 <div class="bottom-spacing"></div>
 <!-- /main -->
 

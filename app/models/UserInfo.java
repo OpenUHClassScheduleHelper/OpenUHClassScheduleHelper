@@ -23,7 +23,7 @@ public class UserInfo extends Model {
   private String userName;   
   private String firstName; 
   private String lastName;
-  private String notificationPreference;
+  private String notificationPreference = "Opt-out"; // Defaulted to opt-out.
   private String email;
   private String telephone;
   private String carrier;
