@@ -200,6 +200,7 @@ public class Course extends Model {
     return Meeting.find().where().eq("crn", this.crn).findList();
   }
   
+  
   public List<Meeting> getConcatMeetings() {
     List<Meeting> currentMeetingList = getMeeting();
     List<Meeting> newMeetingList = new ArrayList<>();
@@ -226,4 +227,76 @@ public class Course extends Model {
   }
   
   
+  /**
+   * 
+   * @return
+   */
+  public List<String> getMeetingTimes() {
+    List<Meeting> meeting = Meeting.find().where().eq("crn", this.crn).findList(); // meeting list
+    List<Meeting> meetingCopy = Meeting.find().where().eq("crn", this.crn).findList(); // copy of list for comparison
+    List<Meeting> meetingCollapsed = new ArrayList<>(); // collapsed list to be returned
+    int n = meeting.size();   
+    
+    for (int i = 0; i < n; i++) {
+
+      for (int j = 0; j < n; j++) {        
+        if (meetingCopy.get(i).getRoom().equals(meeting.get(j).getRoom()) &&
+            meetingCopy.get(i).getStart().equals(meeting.get(j).getStart()) &&
+            meetingCopy.get(i).getEnd().equals(meeting.get(j).getEnd()) &&
+            (!meetingCopy.get(i).getDay().equals(meeting.get(j).getDay()))) {
+          meetingCollapsed.add(meetingCopy.get(i));
+        }
+      }
+    }
+        
+    // meetingCollapsed contains the days to be collapsed
+    String mCat = "";
+    int m = meetingCollapsed.size(); // size of day string
+    
+    // special case
+    if (m == 6) {
+      mCat += meetingCollapsed.get(0).getDay();
+      mCat += meetingCollapsed.get(2).getDay();
+      mCat += meetingCollapsed.get(4).getDay();
+    }
+    
+    else { 
+      for (int i = 0; i < m; i++) {
+        mCat += meetingCollapsed.get(i).getDay();
+      }
+    }
+    
+    if (meetingCollapsed.size() > 0) {
+      // construct concatenated meeting object
+      Meeting newCat = new Meeting();
+      newCat.setRoom(meetingCollapsed.get(0).getRoom());
+      newCat.setStart(meetingCollapsed.get(0).getStart());
+      newCat.setEnd(meetingCollapsed.get(0).getEnd());
+      newCat.setDay(mCat);
+    
+      meetingCollapsed.clear();
+      meetingCollapsed.add(newCat);
+    }
+    
+    // add the meeting times that weren't concatenated
+    for (int i = 0; i < n; i++) {
+      if (meetingCollapsed.size() == 0) { // there were no days to concat; return the original list
+        meetingCollapsed.addAll(meeting);
+        break;
+      }      
+      if (!meeting.get(i).getRoom().equals(meetingCollapsed.get(0).getRoom())) {
+        meetingCollapsed.add(meeting.get(i));
+      }
+    }
+    
+    List<String> meetingTimes = new ArrayList<>();
+    for (int i = 0; i < meetingCollapsed.size(); i++) {
+      meetingTimes.add(meetingCollapsed.get(i).getMeetingString());
+      if (meetingCollapsed.get(i).getStart().equals("1130p")) {
+        meetingCollapsed.get(i).setStart("1130a");
+      }
+    }
+   
+    return meetingTimes;  
+  }
 }

@@ -35,10 +35,8 @@ public class CourseDB {
     Course course = getCourseByCrn(crn);
     
     // System.out.println("course name: " + name);
-    
     // If the course is not in the database, then create a new entry
-    if (crn == null) {
-      System.out.println("crn == null condition");
+    if (course == null) {
       course = new Course(focus, crn, name, section, title, credits, instructor);
     }
     else {

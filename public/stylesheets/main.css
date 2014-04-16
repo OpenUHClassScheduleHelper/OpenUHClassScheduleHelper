@@ -89,7 +89,6 @@ font-size: 18px;
 
 #sm-menu {
 font-size: 14px;
->>>>>>> origin/courseClass
 }
 
 #resultsHeader{
@@ -218,44 +217,6 @@ input[type=radio]{
     cursor:pointer;
     /*float:left;*/
 }
-
-/************* Schedule Table CSS *************/
-#tempCell {
-  background-color: #BBFF99;
-  visibility: hidden;
-}
-
-.tempRow {
-  border: 4px solid white;  
-  border-top-color:#BBFF99;
-  border-bottom-color:#BBFF99;
-  border-left-color:#BBFF99;
-  border-right-color:#BBFF99;
-}
-
-.conflictRow {
-  border: 4px solid white;  
-  border-top-color:#F58E9D;
-  border-bottom-color:#F58E9D;
-  border-left-color:#F58E9D;
-  border-right-color:#F58E9D;
-}
-
-.defaultRow {
-  border: 0px solid white;  
-  border-top-color:initial;
-  border-bottom-color:initial;
-  border-left-color:initial;
-  border-right-color:initial;
-}
-
-.form-horizontal .control-label{
-/* text-align:right; */
-  text-align:left;
-  margin-left:10px;
-}
-
-/************* Schedule Table End *************/
 
 /************* Instructor-courses CSS *************/
 .instructor-course {
@@ -631,7 +592,7 @@ margin-left: 10px;
   max-width: 200px;
 }
 
-#search-course {
+#search-course { 
   max-width: 150px;
   margin-left: 10px;
 }
@@ -704,11 +665,6 @@ a:hover {
   min-height:50px; /*must be min-height or pull down menu will be transparent.*/
 }
 
-/***** Start of split-cell, specific styles. *****/
-.conflict {
-  background-color: #F58E9D;
-}
-/***** End of split-cell, specific styles. *****/
 /***** Sticky footer *****/
 
 html, body {height: 100%;}

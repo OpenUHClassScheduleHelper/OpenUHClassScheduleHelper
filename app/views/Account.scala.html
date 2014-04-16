@@ -3,7 +3,8 @@
   schedule: List[Course], 
   watchList: List[Course], 
   comments: List[UserComment],  
-  commentForm: Form[views.formdata.CommentFormData])
+  commentForm: Form[views.formdata.CommentFormData],
+  preferencesForm: Form[views.formdata.NotificationPreferencesFormData])
 
 @import helper._
 @import bootstrap3._
@@ -64,36 +65,120 @@ function submitComment(id)
   document.getElementById('hiddenCommentForm').submit();
 }
 </script>
-
-<h2>Information</h2>
-<p class="info">
-  <b>Name: </b>@user.getFullName()
-</p>
-<p class="info">
-  <b>UH Username: </b>@user.getUserName()
-</p>
-
-<!-- End Student Information Section -->
+<div class="container">
+  <h2>User Information</h2>
+  <p class="info"><b>Name: </b>@user.getFullName()</p>
+  <p class="info"><b>UH Username: </b>@user.getUserName()</p>
+</div>
+<!-- End User Information Section -->
 
 <!-- Begin Preferences Section -->
-<h2>Notification Preferences</h2>
-<form class="form-horizontal" role="form">
-  <div class="form-group">
-    <label class="col-sm-4 control-label">Receive updates by email:</label>
-    <div class="col-sm-5">
-      <select class="form-control">
-        <option>Sign me up!</option>
-        <option>Maybe next time.</option>
-      </select>
+<div class="container">
+  <h2>Notification Preferences</h2>
+  <div class="container">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        We can notify you by email and/or text message when new late breaking information is added to a course in your
+        schedule or watchlist<br>
+        <br>You have chose to @preferencesForm("userPreference").value.
+      </div>
+      <div class="panel-body">
+        @form(routes.Application.updateNotificationPreferences(), 'class -> "form-horizontal", 'role -> "form") {
+          <div class="form-group">
+            <label class="col-sm-3 control-label" style="text-align: left;">Preference:</label>
+            <div class="col-sm-9">
+              <select id="userPreference" name="userPreference" class="form-control"> 
+                <option id="Opt-in" value="Opt-in" @if(preferencesForm("userPreference").value=="Opt-in") {selected}>
+                        Opt-in
+                </option>
+                <option id="Opt-out" value="Opt-out" @if(preferencesForm("userPreference").value=="Opt-out") {selected}>
+                        Opt-out
+                </option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group @if(preferencesForm("userEmail").hasErrors) {has-error}">
+            <label class="col-sm-3 control-label" style="text-align: left;">Email:</label>
+            <div class="col-sm-9">
+              <input id="userEmail" 
+                     name="userEmail" 
+                     type="email" 
+                     class="form-control" 
+                     value="@preferencesForm("userEmail").value"
+                     placeholder="user@@hawaii.edu">
+              <span class="help-block">@{preferencesForm("userEmail").error.map { error => error.message }}</span>
+            </div>
+          </div>
+          <div class="form-group @if(preferencesForm("userPhone").hasErrors) {has-error}">
+            <label class="col-sm-3 control-label" style="text-align: left;">Mobile phone #:</label>
+            <div class="col-sm-9">
+              <input id="userPhone" 
+                     name="userPhone" 
+                     type="text" 
+                     class="form-control" 
+                     value="@preferencesForm("userPhone").value"
+                     placeholder="808-123-4567">
+              <span class="help-block">@{preferencesForm("userPhone").error.map { error => error.message }}</span>       
+            </div>
+          </div>
+          <div class="form-group @if(preferencesForm("userCarrier").hasErrors) {has-error}">
+            <label class="col-sm-3 control-label" style="text-align: left;">Service Provider: </label>
+            <div class="col-sm-9">
+              <select id="userCarrier" name="userCarrier" class="form-control">
+                <option></option>
+                <option id="Alltel Wireless" value="Alltel Wireless" 
+                        @if(preferencesForm("userCarrier").value=="Alltel Wireless") {selected}>
+                        Alltel Wireless</option>
+                <option id="AT&T Wireless" value="AT&T Wireless" 
+                        @if(preferencesForm("userCarrier").value=="AT&T Wireless") {selected}>
+                        AT&T Wireless</option>
+                <option id="AT&T Mobility (formerly Cingular)" value="AT&T Mobility (formerly Cingular)" 
+                        @if(preferencesForm("userCarrier").value=="AT&T Mobility (formerly Cingular)") {selected}">
+                        AT&T Mobility (formerly Cingular)</option>
+                <option id="Boost Mobile" value="Boost Mobile" 
+                        @if(preferencesForm("userCarrier").value=="Boost Mobile") {selected}>
+                        Boost Mobile</option>
+                <option id="Cricket" value="Cricket" 
+                        @if(preferencesForm("userCarrier").value=="Cricket") {selected}>
+                        Cricket</option>
+                <option id="Metro PCS" value="Metro PCS" 
+                        @if(preferencesForm("userCarrier").value=="Metro PCS") {selected}>
+                        Metro PCS</option>
+                <option id="Sprint (PCS)" value="Sprint (PCS)" 
+                        @if(preferencesForm("userCarrier").value=="Sprint (PCS)") {selected}>
+                        Sprint (PCS)</option>
+                <option id="Sprint (Nextel)" value="Sprint (Nextel)" 
+                        @if(preferencesForm("userCarrier").value=="Sprint (Nextel)") {selected}>
+                        Sprint (Nextel)</option>
+                <option id="Straight Talk" value="Straight Talk" 
+                        @if(preferencesForm("userCarrier").value=="Straight Talk") {selected}>
+                        Straight Talk</option>
+                <option id="T-Mobile" value="T-Mobile" 
+                        @if(preferencesForm("userCarrier").value=="T-Mobile") {selected}>
+                        T-Mobile</option>
+                <option id="U.S. Cellular" value="U.S. Cellular" 
+                        @if(preferencesForm("userCarrier").value=="U.S. Cellular") {selected}>
+                        U.S. Cellular</option>
+                <option id="Verizon" value="Verizon" 
+                        @if(preferencesForm("userCarrier").value=="Verizon") {selected}>
+                        Verizon</option>
+                <option id="Virgin Mobile" value="Virgin Mobile" 
+                        @if(preferencesForm("userCarrier").value=="Virgin Mobile") {selected}>
+                        Virgin Mobile</option>
+              </select>
+              <span class="help-block">@{preferencesForm("userCarrier").error.map { error => error.message }}</span> 
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="col-sm-offset-3 col-sm-10">
+              <button type="submit" class="btn btn-success">Save Changes</button>
+            </div>
+          </div>
+        }
+      </div>
     </div>
   </div>
-  <div class="form-group">
-    <label class="col-sm-4 control-label">Enter your phone number to receive updates by text:</label>
-    <div class="col-sm-5">
-      <input type="text" class="form-control" placeholder="Telephone Number">
-    </div>
-  </div>
-</form>
+</div>
 <!-- End Preferences Section -->
 
 <!-- Hidden form to edit comment -->
@@ -103,22 +188,91 @@ function submitComment(id)
 }
   
 <br>
+<div class="container">
 <ul class="nav nav-tabs" data-tabs="tabs" style="margin-left: 10px; margin-right: 10px; margin-top: 10px;">
-  <li class="active"><a data-toggle="tab" href="#Schedule">Schedule</a></li>
+  <li class="active"><a data-toggle="tab" href="#Calendar">Calendar</a></li>
+  <li><a data-toggle="tab" href="#Schedule">Schedule</a></li>  
   <li><a data-toggle="tab" href="#WatchList">Watch List</a></li>
   <li><a data-toggle="tab" href="#Comments">Comments</a></li>
   <li><a data-toggle="tab" href="#ScheduleHistory">Schedule History</a></li>
 </ul>
 
 <div class="tab-content" style="margin-left: 10px; margin-right: 10px;">
-  <div class="tab-pane active" id="Schedule">
+  <div class="tab-pane active" id="Calendar">    
+    
+    <!-- Full Calendar -->
+    <div id='calendar' style="padding:1em;"></div>
 
-    <h1>Current Schedule</h1>
-    <div id='calendar'></div>
-
-  </div>
+  </div> <!-- End of tab-pane div -->
+  
+  <div class="tab-pane" id="Schedule">
+      <div class="container">
+    
+    <!-- Schedule in normal view -->
+    <table class="table table-bordered hidden-sm hidden-xs" style="margin-top:10px;margin-left:25px;">
+      <tr>
+        <th class="col-sm-1">CRN</th>
+        <th  class="col-sm-1">Course</th>
+        <th>Title</th>
+        <th>Instructor</th>
+        <th class="col-sm-3">Time/Location</th>
+        <th class="col-sm-1">Options</th>
+      </tr>
+      @for(course <- schedule) {
+      <tr>
+        <td>@course.getCourseNumber()</td>
+        <td>@course.getCourseName()</td>
+        <td>@course.getCourseTitle()</td>
+        <td>@course.getInstructor()</td>
+        <td>@for(meeting <- course.getMeetingTimes()) {@meeting<br>}
+        </td>
+        <td>
+          <div>
+            <a class="btn btn-danger btn-xs" data-toggle="modal" href="#Course@course.getCrn()"><div class="glyphicon glyphicon-remove"></div>Remove</a>
+          </div>
+        </td>
+      </tr>
+      }
+    </table>
+    
+    @for(course <- schedule) {
+    <div class="visible-sm visible-xs">
+      <a class="btn course-dropdown-button" id="myclassbutton1"> @course.getCourseName() @course.getCourseTitle() </a>
+      <div class="mobileresults" id="myclassinfo1">
+        <p>
+          <b>CRN: </b><br>@course.getCourseNumber()
+        </p>
+        <hr></hr>
+        <p>
+          <b>Gen Ed./Focus: </b>@course.getGenFocus()<br>
+        </p>
+        <hr></hr>
+        <p>
+          <b>Instructor: </b><br>@course.getInstructor()
+        </p>
+        <hr></hr>
+        @for(meeting <- course.getMeeting()) {
+        <p>
+          <b>Location: </b><br>POST 127<br>POST 319
+        </p>
+        <hr></hr>
+        <p>
+          <b>Time: </b><br>M 0530-0800p<br> W 0530-0645p
+        </p>
+        <hr></hr>
+        }
+        <p>
+          <a type="button" class="btn btn-danger btn-xs glyphicon glyphicon-remove">
+            Remove
+          </a>
+        </p>
+      </div>
+    </div>
+    }
+  </div> <!-- End of container -->
+  </div> <!-- End of Schedule Tab -->
+  
   <div class="tab-pane" id="WatchList">
-    <h1>Watch List</h1>
     <h3>Sprint 2014</h3>
     @for(course <- watchList) {
     <div class="visible-sm visible-xs">
@@ -161,7 +315,6 @@ function submitComment(id)
         <th>Course</th>
         <th>Title</th>
         <th>Department</th>
-        <th>Seats Avail</th>
         <th>Instructor</th>
         <th>Location</th>
         <th>Time</th>
@@ -173,7 +326,6 @@ function submitComment(id)
         <td>@course.getCourseName()</td>
         <td>@course.getCourseTitle()</td>
         <td>ICS</td>
-        <td>0</td>
         <td>@course.getInstructor()</td>
         <td>POST 127, POST 319</td>
         <td>M 0530-0800p, W 0530-0645p</td>
@@ -188,7 +340,6 @@ function submitComment(id)
   </div>
 
   <div class="tab-pane" id="Comments">
-    <h1>Comments</h1>
 
     <table class="my-courses-table table-striped">
       <tr>
@@ -215,7 +366,6 @@ function submitComment(id)
   </div>
   
   <div class="tab-pane" id="ScheduleHistory">
-    <h1>Schedule History</h1>
     <h3>Spring 2014</h3>
     <div class="visible-sm visible-xs">
       <a class="btn course-dropdown-button" id="myclassbutton4"> ICS 111 Intro to Computer Science I </a>
@@ -372,7 +522,7 @@ function submitComment(id)
 </div>
 
 </div>
-
+</div>
 <div class="bottom-spacing"></div>
 <!-- /main -->
 
@@ -454,5 +604,4 @@ function submitComment(id)
 
 
 }
-
 }

@@ -1,6 +1,9 @@
 import java.util.ArrayList;
+import javax.mail.MessagingException;
+import javax.mail.internet.AddressException;
 import controllers.JauntObj;
 import controllers.JauntRowItem;
+import controllers.SendEmail;
 import play.Application;
 import play.GlobalSettings;
 import models.MeetingDB;
@@ -76,9 +79,9 @@ public class Global extends GlobalSettings {
 
     // Create schedules and watch lists for users
     UserInfo user = UserInfoDB.getUser("rnamahoe");
-    user.addToSchedule(CourseDB.getCourse("85248"));
-    user.addToWatchList(CourseDB.getCourse("84935"));
-    user.addToSchedule(CourseDB.getCourse("84095"));
+    user.addToSchedule(CourseDB.getCourse("85344"));
+    user.addToWatchList(CourseDB.getCourse("85453"));
+    user.addToSchedule(CourseDB.getCourse("85473"));
 
   }
   

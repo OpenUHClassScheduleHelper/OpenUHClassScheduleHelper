@@ -37,7 +37,7 @@ public class Meeting extends Model {
    * @param room The location of the class (for that day)
    */
   public Meeting(String crn, String day, String start, String end, String room) {
-    this.crn = crn;
+    this.setCrn(crn);
     this.setDay(day);
     this.setStart(start);
     this.setEnd(end);
@@ -191,39 +191,48 @@ public class Meeting extends Model {
     switch (this.day.toUpperCase()) {
       case "M":   // Monday
         cal.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
-      break;
+        break;
       case "T":   // Tuesday
         cal.set(Calendar.DAY_OF_WEEK, Calendar.TUESDAY);
-      break;
+        break;
       case "W":   // Wednesday
         cal.set(Calendar.DAY_OF_WEEK, Calendar.WEDNESDAY);
-      break;
+        break;
       case "R":   // Thursday
         cal.set(Calendar.DAY_OF_WEEK, Calendar.THURSDAY);
-      break;
+        break;
       case "F":   // Friday
         cal.set(Calendar.DAY_OF_WEEK, Calendar.FRIDAY);
-      break;
+        break;
       case "S":  // Saturday
         cal.set(Calendar.DAY_OF_WEEK, Calendar.SATURDAY);
-      break;
+        break;
+      case "U":  // Sunday
+        cal.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
+        break;
+      default:
+        break;
     }
 
+    // Account for TBA entries
+    if (this.start.equalsIgnoreCase("TBA")) {
+      cal.setTimeZone(tz);
+      cal.set(Calendar.HOUR_OF_DAY, 0);
+      cal.set(Calendar.MINUTE, 0);
+      cal.set(Calendar.SECOND, 0);
+      return cal;
+    }
+    
     // Set the time depending on the entry needed - start or end
     String tempTime = (whichEntry.equals("start")) ? this.start : this.end;
-    int hour = 0; // initialize hour
 
     // Parse hour from tempTime and convert to military time.
-    if (!tempTime.equalsIgnoreCase("tba")) { // condition to handle tba for now
-      hour = Integer.parseInt(tempTime.substring(0,2));
-      hour += (tempTime.indexOf("p") > 0 && hour < 12) ? 12 : 0;
-    }
+    int hour = Integer.parseInt(tempTime.substring(0,2));
+    hour += (tempTime.indexOf("p") > 0 && hour < 12) ? 12 : 0;
 
     // Parse minute from tempTime
-    int minute = 0;
-    if (!(tempTime.length() < 4)) {
-      minute = Integer.parseInt(tempTime.substring(2,4));
-    }
+    int minute = Integer.parseInt(tempTime.substring(2,4));
+    
     // Set the time of the calendar object.
     cal.setTimeZone(tz);
     cal.set(Calendar.HOUR_OF_DAY, hour);

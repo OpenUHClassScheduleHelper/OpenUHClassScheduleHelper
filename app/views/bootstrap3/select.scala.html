@@ -1,0 +1,19 @@
+@(field: Field, nolabel: Boolean, label: String, optionMap: Map[String, Boolean], isMultiple: Boolean, placeholder: String, help:String)
+
+  <div class="form-group @if(field.hasErrors) {has-error}">
+    <label class="@("col-sm-2 control-label".when(!nolabel)) @("sr-only".when(nolabel))" for="@field.id">@label</label>
+    <div class="@("col-sm-10".when(!nolabel))">
+      <select
+        class="form-control"
+        id="@field.id"
+        name="@if(isMultiple) {@(field.name + "[]")} else {@field.name}"
+        @if(isMultiple) {multiple="multiple"}>
+        @if(!isMultiple) {<option class="blank" value="">@placeholder</option>}
+        @for((optionName, isSelected) <- optionMap) {
+          <option id="@optionName" value="@optionName" @if(isSelected) {selected}>@optionName</option>
+        }
+      </select>
+      <span class="help-block">@help</span>
+      <span class="help-block">@{field.error.map { error => error.message }}</span>
+    </div>
+  </div>
