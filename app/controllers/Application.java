@@ -165,7 +165,6 @@ public class Application extends Controller {
     List<ScheduleEvent> events = new ArrayList<>();
 
     if (resultsList.size() > 0) {
-      System.out.println("Creating list of events.");
       for (Course result : resultsList) {
         for (Meeting rMeeting : result.getMeeting()) {
           // compare each result meeting with those on the schedule.

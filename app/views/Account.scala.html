@@ -193,7 +193,7 @@ function submitComment(id)
   <li class="active"><a data-toggle="tab" href="#Calendar">Calendar</a></li>
   <li><a data-toggle="tab" href="#Schedule">Schedule</a></li>  
   <li><a data-toggle="tab" href="#WatchList">Watch List</a></li>
-  <li><a data-toggle="tab" href="#Comments">Comments</a></li>
+  <li><a data-toggle="tab" href="#News">Late Breaking News</a></li>
   <li><a data-toggle="tab" href="#ScheduleHistory">Schedule History</a></li>
 </ul>
 
@@ -273,7 +273,7 @@ function submitComment(id)
   </div> <!-- End of Schedule Tab -->
   
   <div class="tab-pane" id="WatchList">
-    <h3>Sprint 2014</h3>
+    <h3>Spring 2014</h3>
     @for(course <- watchList) {
     <div class="visible-sm visible-xs">
       <a class="btn course-dropdown-button" id="myclassbutton1"> @course.getCourseName() @course.getCourseTitle() </a>
@@ -339,7 +339,7 @@ function submitComment(id)
     </table>
   </div>
 
-  <div class="tab-pane" id="Comments">
+  <div class="tab-pane" id="News">
 
     <table class="my-courses-table table-striped">
       <tr>

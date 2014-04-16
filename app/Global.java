@@ -1,15 +1,11 @@
 import java.util.ArrayList;
-import javax.mail.MessagingException;
-import javax.mail.internet.AddressException;
 import controllers.JauntObj;
 import controllers.JauntRowItem;
-import controllers.SendEmail;
 import play.Application;
 import play.GlobalSettings;
 import models.MeetingDB;
 import models.UserCommentDB;
 import models.CourseDB;
-import models.UserInfo;
 import models.UserInfoDB;
 
 /**
