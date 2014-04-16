@@ -86,7 +86,7 @@ public class Global extends GlobalSettings {
   }
   
   private void populateTables() {
-    String url="https://www.sis.hawaii.edu/uhdad/avail.classes?i=MAN&t=201430&s=ENG";
+    String url="https://www.sis.hawaii.edu/uhdad/avail.classes?i=MAN&t=201430&s=ICS";
     JauntObj jaunt = new JauntObj(url);
     ArrayList<JauntRowItem> results = JauntObj.getResults();
     ArrayList<JauntRowItem> meetings = JauntObj.getMeeting();

@@ -190,26 +190,33 @@ function submitComment(id)
 <br>
 <div class="container">
 <ul class="nav nav-tabs" data-tabs="tabs" style="margin-left: 10px; margin-right: 10px; margin-top: 10px;">
-  <li class="active"><a data-toggle="tab" href="#Schedule">Schedule</a></li>
+  <li class="active"><a data-toggle="tab" href="#Calendar">Calendar</a></li>
+  <li><a data-toggle="tab" href="#Schedule">Schedule</a></li>  
   <li><a data-toggle="tab" href="#WatchList">Watch List</a></li>
   <li><a data-toggle="tab" href="#Comments">Comments</a></li>
   <li><a data-toggle="tab" href="#ScheduleHistory">Schedule History</a></li>
 </ul>
 
 <div class="tab-content" style="margin-left: 10px; margin-right: 10px;">
-  <div class="tab-pane active" id="Schedule">    
-    <div class="container">
+  <div class="tab-pane active" id="Calendar">    
+    
+    <!-- Full Calendar -->
+    <div id='calendar' style="padding:1em;"></div>
+
+  </div> <!-- End of tab-pane div -->
+  
+  <div class="tab-pane" id="Schedule">
+      <div class="container">
     
     <!-- Schedule in normal view -->
     <table class="table table-bordered hidden-sm hidden-xs" style="margin-top:10px;margin-left:25px;">
       <tr>
-        <th>CRN</th>
-        <th>Course</th>
+        <th class="col-sm-1">CRN</th>
+        <th  class="col-sm-1">Course</th>
         <th>Title</th>
         <th>Instructor</th>
-        <th>Location</th>
-        <th>Time</th>
-        <th>Options</th>
+        <th class="col-sm-3">Time/Location</th>
+        <th class="col-sm-1">Options</th>
       </tr>
       @for(course <- schedule) {
       <tr>
@@ -217,8 +224,8 @@ function submitComment(id)
         <td>@course.getCourseName()</td>
         <td>@course.getCourseTitle()</td>
         <td>@course.getInstructor()</td>
-        <td>POST 127, POST 319</td>
-        <td>M 0530-0800p, W 0530-0645p</td>
+        <td>@for(meeting <- course.getMeetingTimes()) {@meeting<br>}
+        </td>
         <td>
           <div>
             <a class="btn btn-danger btn-xs" data-toggle="modal" href="#Course@course.getCrn()"><div class="glyphicon glyphicon-remove"></div>Remove</a>
@@ -262,15 +269,8 @@ function submitComment(id)
       </div>
     </div>
     }
-   
-    
-    <!-- Full Calendar -->
-    <div id='calendar'></div>
-
   </div> <!-- End of container -->
-  </div> <!-- End of tab-pane div -->
-  
-  
+  </div> <!-- End of Schedule Tab -->
   
   <div class="tab-pane" id="WatchList">
     <h3>Sprint 2014</h3>

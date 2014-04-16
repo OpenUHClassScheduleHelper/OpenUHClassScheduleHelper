@@ -197,6 +197,14 @@ public class Course extends Model {
    * @return A list of meeting objects for this course.
    */
   public List<Meeting> getMeeting() {
+    return Meeting.find().where().eq("crn", this.crn).findList();
+  }
+  
+  /**
+   * 
+   * @return
+   */
+  public List<String> getMeetingTimes() {
     List<Meeting> meeting = Meeting.find().where().eq("crn", this.crn).findList(); // meeting list
     List<Meeting> meetingCopy = Meeting.find().where().eq("crn", this.crn).findList(); // copy of list for comparison
     List<Meeting> meetingCollapsed = new ArrayList<>(); // collapsed list to be returned
@@ -254,12 +262,14 @@ public class Course extends Model {
       }
     }
     
+    List<String> meetingTimes = new ArrayList<>();
     for (int i = 0; i < meetingCollapsed.size(); i++) {
+      meetingTimes.add(meetingCollapsed.get(i).getMeetingString());
       if (meetingCollapsed.get(i).getStart().equals("1130p")) {
         meetingCollapsed.get(i).setStart("1130a");
       }
     }
-        
-    return meetingCollapsed;  
+   
+    return meetingTimes;  
   }
 }

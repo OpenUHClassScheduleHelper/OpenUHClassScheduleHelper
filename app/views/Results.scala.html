@@ -315,9 +315,8 @@ $(document).ready(function(){
         <th>Department</th>
         <th>Gen Ed./Focus</th>
         <th>Instructor</th>
-        <th>Location</th>
-        <th>Time</th>
-        <th></th>
+        <th>Time/Location</th>
+        <th class="col-sm-2"></th>
       </tr>
       @for(course <- resultsList) {
         <tr id="@course.getCourseNumber()">
@@ -327,12 +326,10 @@ $(document).ready(function(){
           <td>@course.getDepartment()</td>
           <td>@course.printGenFocusList()</td>
           <td>@course.getInstructor()</td>
-          <td>@for(meeting <- course.getMeeting()) {
-              @meeting.getRoom()<br>
-              }</td>
-          <td>@for(meeting <- course.getMeeting()) {
-               @meeting.getDay() @meeting.getStart()-@meeting.getEnd()<br>
-               }</td>
+          <td>@for(meeting <- course.getMeetingTimes()) {
+              @meeting<br>
+              }
+          </td>
           <td class="buttoncolumn">
           
           @if(schedule.contains(course)) {

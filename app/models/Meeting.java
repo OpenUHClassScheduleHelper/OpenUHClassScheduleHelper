@@ -214,6 +214,15 @@ public class Meeting extends Model {
         break;
     }
 
+    // Account for TBA entries
+    if (this.start.equalsIgnoreCase("TBA")) {
+      cal.setTimeZone(tz);
+      cal.set(Calendar.HOUR_OF_DAY, 0);
+      cal.set(Calendar.MINUTE, 0);
+      cal.set(Calendar.SECOND, 0);
+      return cal;
+    }
+    
     // Set the time depending on the entry needed - start or end
     String tempTime = (whichEntry.equals("start")) ? this.start : this.end;
 

@@ -166,6 +166,7 @@ public class Application extends Controller {
 
     if (resultsList.size() > 0 && schedule.size() > 0) {
       for (Course result : resultsList) {
+        
         for (Meeting rMeeting : result.getMeeting()) {
 
           // compare each result meeting with those on the schedule.
