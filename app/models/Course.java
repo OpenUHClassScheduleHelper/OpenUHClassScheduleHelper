@@ -1,5 +1,6 @@
 package models;
 
+import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -197,6 +198,31 @@ public class Course extends Model {
    */
   public List<Meeting> getMeeting() {
     return Meeting.find().where().eq("crn", this.crn).findList();
+  }
+  
+  public List<Meeting> getConcatMeetings() {
+    List<Meeting> currentMeetingList = getMeeting();
+    List<Meeting> newMeetingList = new ArrayList<>();
+    boolean separate = true;
+    for(Meeting meeting : currentMeetingList) {
+      separate = true;
+      for(int i = 0; i < newMeetingList.size(); i++) {
+        if(meeting.getStart().equals(newMeetingList.get(i).getStart()) && 
+           meeting.getEnd().equals(newMeetingList.get(i).getEnd()) && 
+           meeting.getRoom().equals(newMeetingList.get(i).getRoom())) {
+           separate = false;
+           String oldDay = newMeetingList.get(i).getDay();
+           newMeetingList.get(i).setDay(oldDay + meeting.getDay());
+        }
+      }
+      
+      if(separate) {
+        newMeetingList.add(meeting);
+      }    
+    }
+    
+    
+    return newMeetingList;
   }
   
   

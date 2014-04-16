@@ -330,7 +330,7 @@ $(document).ready(function(){
           <td>@for(meeting <- course.getMeeting()) {
               @meeting.getRoom()<br>
               }</td>
-          <td>@for(meeting <- course.getMeeting()) {
+          <td>@for(meeting <- course.getConcatMeetings()) {
                @meeting.getDay() @meeting.getStart()-@meeting.getEnd()<br>
                }</td>
           <td class="buttoncolumn">
