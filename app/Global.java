@@ -1,8 +1,11 @@
 import java.util.ArrayList;
+import controllers.JauntCourseItem;
+import controllers.JauntMeetingItem;
 import controllers.JauntObj;
-import controllers.JauntRowItem;
 import play.Application;
 import play.GlobalSettings;
+import models.Course;
+import models.Meeting;
 import models.MeetingDB;
 import models.UserCommentDB;
 import models.CourseDB;
@@ -47,15 +50,18 @@ public class Global extends GlobalSettings {
   }
   
   private void populateTables(String url) {
-    JauntObj jaunt = new JauntObj(url);
-    ArrayList<JauntRowItem> results = JauntObj.getResults();
-    ArrayList<JauntRowItem> meetings = JauntObj.getMeeting();
-    for (JauntRowItem item : results) {
-      CourseDB.addCourse(item.getFocus(), item.getCrn(), item.getCourse(), item.getSection(), item.getTitle(),
-                          "", item.getInstructor());
+    JauntObj jaunt = new JauntObj();
+    jaunt.scrapeUrl(url);
+    
+    ArrayList<JauntCourseItem> courses = jaunt.getCourses();
+    ArrayList<JauntMeetingItem> meetings = jaunt.getMeetings();
+    
+    for (JauntCourseItem jauntCourseItem : courses) {
+      CourseDB.addCourse(new Course(jauntCourseItem));
     }
-    for (JauntRowItem meet : meetings) {
-      MeetingDB.addMeeting(meet.getCrn(), meet.getDays(), meet.getStart(), meet.getEnd(), meet.getLocation());
+    for (JauntMeetingItem jauntMeetingItem : meetings) {
+      Meeting meeting = new Meeting(jauntMeetingItem);
+      MeetingDB.addMeeting(meeting);
     }
   }
   

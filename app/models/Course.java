@@ -1,12 +1,15 @@
 package models;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import controllers.JauntCourseItem;
 import play.db.ebean.Model;
-import play.db.ebean.Model.Finder;
 
 @Entity
 public class Course extends Model {
@@ -15,21 +18,19 @@ public class Course extends Model {
   
   @Id
   private long id;
-  
-  // Many of me (courses) maps to One of the following (userinfo)
-  @ManyToOne
-  private UserInfo userInfo;
+
+  @OneToMany(mappedBy="course", cascade=CascadeType.ALL)
+  private List<CourseRoster> students;
   
   private String genFocus;
-  private String crn;  // CRN
+  private String crn;
   private String courseName;
   private String section;
   private String courseTitle;
   private String credits;
   private String instructor;
   private String department;
-  
-  private boolean watching = false;
+  private String semester;
   
   /**
    * default constructor.
@@ -39,6 +40,26 @@ public class Course extends Model {
   }
 
   /**
+   * Constructor method.
+   * @param course A JauntCourseItem.
+   */
+  public Course(JauntCourseItem course) {
+    this.genFocus = course.getFocus();
+    this.crn = course.getCrn();
+    this.courseName = course.getCourse();
+    this.section = course.getSection();
+    this.courseTitle = course.getTitle();
+    this.credits = course.getCredits();
+    this.instructor = course.getInstructor();
+    this.semester = course.getSemester();
+    
+    // parse department from course name.
+    if(courseName.contains(" ")){
+      this.department = courseName.substring(0, courseName.indexOf(" ")).trim(); 
+   }
+  }
+  
+  /**
    * Constructor.
    * @param genFocus The General focus attributes, if applicable.
    * @param crn The crn of the course.
@@ -47,8 +68,10 @@ public class Course extends Model {
    * @param courseTitle The title of the course, i.e. 'Algorithms'.
    * @param credits The number of credits.
    * @param instructor The instructor.
+   * @param semester The current semester.
    */
-  public Course(String genFocus, String crn, String courseName, String section, String courseTitle, String credits, String instructor) {
+  public Course(String genFocus, String crn, String courseName, String section, String courseTitle, String credits, 
+                String instructor, String semester) {
 
     this.setGenFocus(genFocus);
     this.setCourseNumber(crn);
@@ -57,6 +80,7 @@ public class Course extends Model {
     this.setCourseTitle(courseTitle);
     this.setCredits(credits);
     this.setInstructor(instructor);
+    this.setSemester(semester);
     
     // parse department from course name.
     if(courseName.contains(" ")){
@@ -70,6 +94,20 @@ public class Course extends Model {
    */
   public static Finder<Long, Course> find() {
     return new Finder<Long, Course>(Long.class, Course.class);
+  }
+  
+  /**
+   * @return the id
+   */
+  public long getId() {
+    return id;
+  }
+
+  /**
+   * @param id the id to set
+   */
+  public void setId(long id) {
+    this.id = id;
   }
   
   public String getGenFocus() {
@@ -128,18 +166,11 @@ public class Course extends Model {
     this.crn = courseNumber;
   }
   
-  public String printMeeting() {
-    String meetingString = "";
-    return meetingString;
-  }
-  
-  public String printRooms() {
-    return "todo";
-  }
-  
   public String printGenFocusList() {
     return this.genFocus;
   }
+  
+  
   
   /**
    * Get the CRN for the current course.
@@ -147,35 +178,6 @@ public class Course extends Model {
    */
   public String getCrn() {
     return this.crn;
-  }
-  
-  /**
-   * @return The userInfo
-   */
-  public UserInfo getUserInfo() {
-    return userInfo;
-  }
-  
-  /**
-   * Set the userInfo object.
-   * @param userInfo the userInfo to set.
-   */
-  public void setUserInfo(UserInfo userInfo) {
-    this.userInfo = userInfo;
-  }
-
-  /**
-   * @return the watching
-   */
-  public boolean isWatching() {
-    return watching;
-  }
-
-  /**
-   * @param watching the watching to set
-   */
-  public void setWatching(boolean watching) {
-    this.watching = watching;
   }
 
   /**
@@ -193,6 +195,20 @@ public class Course extends Model {
   }
   
   /**
+   * @return the semester
+   */
+  public String getSemester() {
+    return semester;
+  }
+
+  /**
+   * @param semester the semester to set
+   */
+  public void setSemester(String semester) {
+    this.semester = semester;
+  }
+  
+  /**
    * Get a list of meetings for this course.
    * @return A list of meeting objects for this course.
    */
@@ -200,8 +216,46 @@ public class Course extends Model {
     return Meeting.find().where().eq("crn", this.crn).findList();
   }
   
+  /**
+   * Get a "collapsed" list of meeting times. 
+   * @return A list of meeting times.
+   */
+  public List<String> getMeetingTimes() {
+    
+    String key = "";
+    String days = "";
+    ArrayList<String> results = new ArrayList<String>();
+    Map<String, String> hs = new HashMap<String, String>();
+    
+    List<Meeting> meetings = Meeting.find().where().eq("crn", this.crn).findList();
+
+    for (Meeting meeting : meetings) {
+      if (meeting.getStart().equalsIgnoreCase("tba")) {
+        key = "TBA" + " " + meeting.getRoom();
+        days = meeting.getDay();
+      }
+      else {
+        key = meeting.getStart() + "-" + meeting.getEnd() + " " + meeting.getRoom();
+        days = "";
+        if (hs.containsKey(key)) {
+          days = hs.get(key);
+        }
+        days = days + meeting.getDay();
+      }
+      hs.put(key, days);
+    }
+    
+    for (Map.Entry<String, String> entry : hs.entrySet()) {
+      results.add(entry.getValue() + " " + entry.getKey());
+    }
+    return results;
+  }
   
-  public List<Meeting> getConcatMeetings() {
+  /**
+   * Delete this method if it is not being used.
+   * @return
+   */
+  public List<Meeting> getConcatMeetings_Deprecated() {
     List<Meeting> currentMeetingList = getMeeting();
     List<Meeting> newMeetingList = new ArrayList<>();
     boolean separate = true;
@@ -221,82 +275,7 @@ public class Course extends Model {
         newMeetingList.add(meeting);
       }    
     }
-    
-    
     return newMeetingList;
   }
-  
-  
-  /**
-   * 
-   * @return
-   */
-  public List<String> getMeetingTimes() {
-    List<Meeting> meeting = Meeting.find().where().eq("crn", this.crn).findList(); // meeting list
-    List<Meeting> meetingCopy = Meeting.find().where().eq("crn", this.crn).findList(); // copy of list for comparison
-    List<Meeting> meetingCollapsed = new ArrayList<>(); // collapsed list to be returned
-    int n = meeting.size();   
-    
-    for (int i = 0; i < n; i++) {
 
-      for (int j = 0; j < n; j++) {        
-        if (meetingCopy.get(i).getRoom().equals(meeting.get(j).getRoom()) &&
-            meetingCopy.get(i).getStart().equals(meeting.get(j).getStart()) &&
-            meetingCopy.get(i).getEnd().equals(meeting.get(j).getEnd()) &&
-            (!meetingCopy.get(i).getDay().equals(meeting.get(j).getDay()))) {
-          meetingCollapsed.add(meetingCopy.get(i));
-        }
-      }
-    }
-        
-    // meetingCollapsed contains the days to be collapsed
-    String mCat = "";
-    int m = meetingCollapsed.size(); // size of day string
-    
-    // special case
-    if (m == 6) {
-      mCat += meetingCollapsed.get(0).getDay();
-      mCat += meetingCollapsed.get(2).getDay();
-      mCat += meetingCollapsed.get(4).getDay();
-    }
-    
-    else { 
-      for (int i = 0; i < m; i++) {
-        mCat += meetingCollapsed.get(i).getDay();
-      }
-    }
-    
-    if (meetingCollapsed.size() > 0) {
-      // construct concatenated meeting object
-      Meeting newCat = new Meeting();
-      newCat.setRoom(meetingCollapsed.get(0).getRoom());
-      newCat.setStart(meetingCollapsed.get(0).getStart());
-      newCat.setEnd(meetingCollapsed.get(0).getEnd());
-      newCat.setDay(mCat);
-    
-      meetingCollapsed.clear();
-      meetingCollapsed.add(newCat);
-    }
-    
-    // add the meeting times that weren't concatenated
-    for (int i = 0; i < n; i++) {
-      if (meetingCollapsed.size() == 0) { // there were no days to concat; return the original list
-        meetingCollapsed.addAll(meeting);
-        break;
-      }      
-      if (!meeting.get(i).getRoom().equals(meetingCollapsed.get(0).getRoom())) {
-        meetingCollapsed.add(meeting.get(i));
-      }
-    }
-    
-    List<String> meetingTimes = new ArrayList<>();
-    for (int i = 0; i < meetingCollapsed.size(); i++) {
-      meetingTimes.add(meetingCollapsed.get(i).getMeetingString());
-      if (meetingCollapsed.get(i).getStart().equals("1130p")) {
-        meetingCollapsed.get(i).setStart("1130a");
-      }
-    }
-   
-    return meetingTimes;  
-  }
 }

@@ -5,7 +5,6 @@
 
 create table course (
   id                        bigint auto_increment not null,
-  user_info_id              bigint,
   gen_focus                 varchar(255),
   crn                       varchar(255),
   course_name               varchar(255),
@@ -14,8 +13,16 @@ create table course (
   credits                   varchar(255),
   instructor                varchar(255),
   department                varchar(255),
-  watching                  tinyint(1) default 0,
+  semester                  varchar(255),
   constraint pk_course primary key (id))
+;
+
+create table course_roster (
+  id                        bigint auto_increment not null,
+  user_info_id              bigint,
+  course_id                 bigint,
+  status                    varchar(255),
+  constraint pk_course_roster primary key (id))
 ;
 
 create table meeting (
@@ -57,8 +64,10 @@ create table viewed_comment (
   constraint pk_viewed_comment primary key (id))
 ;
 
-alter table course add constraint fk_course_userInfo_1 foreign key (user_info_id) references user_info (id) on delete restrict on update restrict;
-create index ix_course_userInfo_1 on course (user_info_id);
+alter table course_roster add constraint fk_course_roster_userInfo_1 foreign key (user_info_id) references user_info (id) on delete restrict on update restrict;
+create index ix_course_roster_userInfo_1 on course_roster (user_info_id);
+alter table course_roster add constraint fk_course_roster_course_2 foreign key (course_id) references course (id) on delete restrict on update restrict;
+create index ix_course_roster_course_2 on course_roster (course_id);
 
 
 
@@ -67,6 +76,8 @@ create index ix_course_userInfo_1 on course (user_info_id);
 SET FOREIGN_KEY_CHECKS=0;
 
 drop table course;
+
+drop table course_roster;
 
 drop table meeting;
 

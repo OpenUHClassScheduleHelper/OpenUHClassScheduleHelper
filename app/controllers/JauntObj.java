@@ -1,13 +1,11 @@
 package controllers;
+
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Set;
-import java.util.Collections;
 import com.jaunt.Element;
+import com.jaunt.Elements;
 import com.jaunt.JauntException;
+import com.jaunt.ResponseException;
 import com.jaunt.UserAgent;
 
 /**
@@ -17,249 +15,140 @@ import com.jaunt.UserAgent;
  */
 public class JauntObj {
 
-  private String url = "https://www.sis.hawaii.edu/uhdad/avail.classes?i=MAN&t=201430&s=ICS";
-  private static ArrayList<JauntRowItem> rowItems = new ArrayList<>(); // initial list of courses, needed to construct other lists
-  private static ArrayList<JauntRowItem> meetingTimes = new ArrayList<>();  // list of courses with days/time on one row (where applicable)
-  private static ArrayList<JauntRowItem> meetingTimesIndividual = new ArrayList<>(); // list of courses with days/time on individual rows
+  private static ArrayList<JauntCourseItem> courseItems = new ArrayList<JauntCourseItem>();
+  private static ArrayList<JauntMeetingItem> meetingItems = new ArrayList<JauntMeetingItem>();
   
+  /**
+   * Default Constructor Method.
+   */
   public JauntObj() {
-    processUrl();
+    // Do nothing.
   }
 
   /**
-   * Constructor Method.
-   * 
-   * @param url
-   *            The url to scrape.
+   * Scrape the contents of a single page.
+   * @param url The url of the page to scrape.
    */
-  public JauntObj(String url) {
-    this.url = url;
-    processUrl();
+  public void scrapeUrl(String url) {
+    String semester = getSemester(url);
+    processUrl(url, semester);
   }
-
-  private void processUrl() {
-
-    String temp;
-
-    try {
-      UserAgent userAgent = new UserAgent();
-      userAgent.visit(this.url);
-      List<Element> trs = userAgent.doc.findFirst("<table class=listOfClasses>").getEach("<tr>").toList();
+  
+  /**
+   * The the contents of every linked page on the given url.
+   * @param url The url of the page containing the links of pages to scrape.
+   */
+  public void scrapeLinks(String url) {
+    String semester = getSemester(url);
+    ArrayList<String> links = getLinks(url);
+    for (String link : links) {
+      processUrl(link, semester);
+    }
+  }
+  
+  /**
+   * Scrape the contents of a page creating JauntCourseItems and JauntMeetingItems when needed.
+   * @param url The url of the page to scrape.
+   */
+  private void processUrl(String url, String semester) {
     
+    int iColumnCount = 0;
+    String crn = "";
+    
+    try {
+      
+      UserAgent userAgent = new UserAgent();
+      userAgent.visit(url);
+      List<Element> trs = userAgent.doc.findFirst("<table class=listOfClasses>").getEach("<tr>").toList();
+      
       for (int i = 0; i < trs.size(); i++) { // iterate through <tr>s
         Element tr = trs.get(i);
-
+        
         // Only process the row if there are more than 6 columns
         // otherwise it will crash.
-        if (tr.getEach("<td|th>").toList().size() > 6) {
+        iColumnCount =  tr.getEach("<td|th>").toList().size();
+        if (iColumnCount > 6) {
           // Only create a new row item if it is a valid CRN.
-          temp = tr.getElement(1).innerText();
-          if (isCrn(temp)) {
-            
-            JauntRowItem item = new JauntRowItem();
-            
-            item.setFocus(getFocus(tr.getElement(0).innerText())); // Focus
-            item.setCrn(tr.getElement(1).innerText()); // CRN
-            item.setCourse(tr.getElement(2).innerText()); // Course
-            item.setSection(tr.getElement(3).innerText()); // Section
-            item.setTitle(getTitle(tr.getElement(4).innerText())); // Title
-            item.setInstructor(tr.getElement(6).innerText()); // Instructor
-            item.setDays(tr.getElement(8).innerText()); // Day
-            item.setTime(tr.getElement(9).innerText()); // Time
-            item.setLocation(tr.getElement(10).innerText()); // Location
-
-            rowItems.add(item);
-            String[] splitTime = new String[2]; // Array for splitting the time, it will always have a size of two (start and end)
-            
-            // Ignore TBA times
-            if (!item.getDays().equalsIgnoreCase("tba")) { 
-              splitTime = item.getTime().split("-");
-
-              if (splitTime[1].endsWith("a")) {
-                splitTime[0] += "a";
-              }
-              
-              else {
-                splitTime[1] = splitTime[1].substring(0, splitTime[1].length()-1); // remove the p from the end time
-              
-                int x1 = Integer.parseInt(splitTime[0]); // parse start time as int
-                int x2 = Integer.parseInt(splitTime[1]); // parse end time as int
-                int y1 = 0; 
-                int y2 = 0; 
-                
-                x2 += 1200;
-                
-                // if the first condition is less, add an a
-                // if the second condition is less, add a p
-                
-                y1 = x2 - x1;
-                
-                x1 += 1200;
-                
-                y2 = x2 - x1;
-                
-                if (y1 < y2) {
-                  // append a
-                  splitTime[0] += "a";
-                  splitTime[1] += "p";
-                }
-                else {
-                  // append p
-                  splitTime[0] += "p";
-                  splitTime[1] += "p";
-                }
-              }
-            }
-            
-            // If day = tba, don't split
-            // TODO: split the times
-            if (!item.getDays().equalsIgnoreCase("tba")) {
-
-              int daySize = item.getDays().length();
-              String[] c = new String[daySize];
-              c = item.getDays().split("");
-              
-              // Add courses to the list            
-              for (int j = 1; j < c.length; j++) {
-                JauntRowItem itemSplit = new JauntRowItem();  
-                String d = c[j];
-                
-                // for each day construct a new row
-                itemSplit.setCrn(item.getCrn()); // CRN
-                itemSplit.setDays(d); // Day
-                itemSplit.setStart(splitTime[0]); // Start time;
-                itemSplit.setEnd(splitTime[1]); // End time
-                itemSplit.setLocation(item.getLocation()); // Location
-                meetingTimesIndividual.add(itemSplit);
-              
-              }   
-            }
-
-            // Add in TBA courses
-            if (item.getDays().equalsIgnoreCase("tba")) {
-              JauntRowItem itemSplit = new JauntRowItem();  
-              itemSplit.setCrn(item.getCrn()); // CRN
-              itemSplit.setDays(item.getDays()); // Day
-              itemSplit.setStart("TBA"); // Start time
-              itemSplit.setEnd("TBA"); // End time
-              itemSplit.setLocation(item.getLocation()); // Location
-              meetingTimesIndividual.add(itemSplit);
-            }
-                        
-            // add course to the list
-            JauntRowItem meetTime = new JauntRowItem();
-            meetTime.setFocus(item.getFocus());
-            meetTime.setCrn(item.getCrn());
-            meetTime.setCourse(item.getCourse());
-            meetTime.setSection(item.getSection());
-            meetTime.setTitle(item.getTitle());
-            meetTime.setDays(item.getDays());
-            // meetTime.setStart(splitTime[0]);
-            // meetTime.setEnd(splitTime[1]);
-            meetTime.setLocation(item.getLocation());
-            
-            meetingTimes.add(meetTime);
-            
-          } else {
-            
-            // Else if a 2nd row exists, add it to the combined list
-            JauntRowItem meetItem = new JauntRowItem();
-            
-            meetItem.setCrn(rowItems.get(rowItems.size()-1).getCrn()); // CRN
-            meetItem.setDays(tr.getElement(7).innerText()); // Day
-            meetItem.setTime(tr.getElement(8).innerText()); // Time
-            meetItem.setLocation(tr.getElement(9).innerText()); // Location
-            meetingTimes.add(meetItem);
-            
-            int daySize = meetItem.getDays().length();
-
-            String[] c = new String[daySize];
-            c = meetItem.getDays().split("");
-            
-            String[] splitTime = new String[2]; // Array for splitting the time, it will always have a size of two (start and end)
-            splitTime = meetItem.getTime().split("-");
-    
-            
-            // Also add it to the individual row list
-            // TODO: split the times
-            if (!meetItem.getDays().equalsIgnoreCase("tba")) { // Don't split TBA courses
-
-              if (splitTime[1].endsWith("a")) {
-                splitTime[0] += "a";
-              }
-                
-              else {
-                splitTime[1] = splitTime[1].substring(0, splitTime[1].length()-1); // remove the p from the end time
-                
-                  int x1 = Integer.parseInt(splitTime[0]); // parse start time as int
-                  int x2 = Integer.parseInt(splitTime[1]); // parse end time as int
-                  int y1 = 0; 
-                  int y2 = 0; 
-                  
-                  x2 += 1200;
-                  
-                  // if the first condition is less, add an a
-                  // if the second condition is less, add a p
-                  
-                  y1 = x2 - x1;
-                  
-                  x1 += 1200;
-                  
-                  y2 = x2 - x1;
-                  
-                  if (y1 < y2) {
-                    // append a
-                    splitTime[0] += "a";
-                    splitTime[1] += "p";
-                  }
-                  else {
-                    // append p
-                    splitTime[0] += "p";
-                    splitTime[1] += "p";
-                  }
-              }
-          
-                            
-              for (int k = 1; k < c.length; k++) {
-                JauntRowItem meetItemSplit = new JauntRowItem();
-              
-                // for each day construct a new row
-                meetItemSplit.setCrn(meetItem.getCrn()); // CRN
-                meetItemSplit.setDays(c[k]); // Day
-                meetItemSplit.setStart(splitTime[0]); // Start time
-                meetItemSplit.setEnd(splitTime[1]); // End time;
-                meetItemSplit.setLocation(meetItem.getLocation()); // Location
-                meetingTimesIndividual.add(meetItemSplit);                          
-              }
-            }
-            
-            // Add the TBA courses to the list
-            if (meetItem.getDays().equalsIgnoreCase("tba")) {
-                JauntRowItem meetItemSplit = new JauntRowItem();
-                
-                // for each day construct a new row
-                meetItemSplit.setCrn(meetItem.getCrn()); // CRN
-                meetItemSplit.setDays(meetItem.getDays()); // Day
-                meetItemSplit.setStart("TBA"); // Start time
-                meetItemSplit.setEnd("TBA"); // End time
-                meetItemSplit.setLocation(meetItem.getLocation()); // Location
-                meetingTimesIndividual.add(meetItemSplit);                          
-            }
+          if (isCrn(tr.getElement(1).innerText())) {
+            JauntCourseItem item = new JauntCourseItem();
+            crn = tr.getElement(1).innerText();
+            item.setCrn(crn);                                       // CRN
+            item.setFocus(getFocus(tr.getElement(0).innerText()));  // Focus
+            item.setCourse(tr.getElement(2).innerText());           // Course
+            item.setSection(tr.getElement(3).innerText());          // Section
+            item.setTitle(getTitle(tr.getElement(4).innerText()));  // Title
+            item.setCredits(tr.getElement(5).innerText());          // Credits            
+            item.setInstructor(tr.getElement(6).innerText());       // Instructor
+            item.setSemester(semester);                             // Semester
+            courseItems.add(item);
           }
-        }
-      }     
-    } catch (JauntException e) {
+
+          // Create and add JauntMeeting Items to the meeting collection.
+          // Columns are not consistent going forward, so get columns starting backwards.
+          addMeetingItems(crn, tr.getElement(iColumnCount-4).innerText(),tr.getElement(iColumnCount-3).innerText(),
+                              tr.getElement(iColumnCount-2).innerText());
+          
+        } // End of column check
+      } // end of for loop
+    }
+    catch (JauntException e) {
       System.err.println(e);
     }
   }
 
+  /**
+   * Get a list of 
+   * @param crn The crn of the current class.
+   * @param days The days the class meets.
+   * @param times The time of day the class meets.
+   * @param room The location of the class.
+   * @return A list of JauntMeetingItems.
+   */
+  private void addMeetingItems(String crn, String days, String times, String room) {
+    
+    String startTime = "";
+    String endTime = "";
+    String ampm = "a";
+    
+    if (times.equalsIgnoreCase("tba")) {
+      startTime = "TBA";
+      endTime = "TBA";
+    }
+    else {
+      startTime = times.substring(0, 4); 
+      endTime = times.substring(5,10);
+      if (times.substring(9).equalsIgnoreCase("p")) {
+        int startHour = Integer.parseInt(times.substring(0, 2));
+        startHour = (startHour == 12) ? 0 : startHour;
+        int endHour = Integer.parseInt(times.substring(5, 7));
+        for (int i = 1; i < 12; i++) {
+          if (i + endHour == startHour + 12) {
+            ampm = "p";
+          }
+        }
+      }
+      startTime = startTime + ampm;
+    }
+    
+    if (days.equalsIgnoreCase("tba")) {
+      JauntMeetingItem meeting = new JauntMeetingItem(crn, "TBA", startTime, endTime, room);
+      meetingItems.add(meeting);
+    }
+    else {
+      // loop through days creating a new JauntMeeingObject for each meeting
+      for (char day : days.toCharArray()) {
+        JauntMeetingItem meeting = new JauntMeetingItem(crn, Character.toString(day), startTime, endTime, room);
+        meetingItems.add(meeting);
+      }
+    }
+  }
+  
   /**
    * Checks if a string is a 5 digit number. 
    * @param strNum The string to test.
    * @return True if the string is also an integer, false otherwise.
    */
   private static boolean isCrn(String strNum) {
-    boolean ret = true;
     strNum.trim();
     if (strNum.length() != 5) {
       return false;
@@ -267,9 +156,9 @@ public class JauntObj {
     try {
       Integer.parseInt(strNum);
     } catch (NumberFormatException e) {
-      ret = false;
+      return false;
     }
-    return ret;
+    return true;
   }
 
   /**
@@ -302,55 +191,79 @@ public class JauntObj {
   }
 
   /**
-   * Get the list of results.
-   * @return The list of results.
+   * Get a list of all the links on the main Class Availability web site.
+   * @param mainPage The url to the main Class Availability web site.
+   * @return A list of link to the department class avail. web site.
    */
-  public static ArrayList<JauntRowItem> getResults() {
-    return rowItems;
+  private ArrayList<String> getLinks(String mainPage) {
+    
+    ArrayList<String> results = new ArrayList<String>();
+    
+    // Remove all special characters. Makes the comparison easier.
+    String mainUrl = mainPage.replaceAll("\\W", "");
+    
+    try{
+      UserAgent userAgent = new UserAgent();
+      userAgent.visit(mainPage);    
+      Elements links = userAgent.doc.findEvery("<a>");  // Get all links on the page.
+      for(Element link : links) {
+        // Ensure that the only pages returned are those that are sub-pages of the
+        // main page. This removes links to the UH homepage, for example.
+        if (link.getAttx("href").replaceAll("\\W", "").indexOf(mainUrl) > -1) {
+          results.add(link.getAttx("href"));
+        }
+      }                                                   
+    }
+    catch(ResponseException e){
+      System.out.println(e);
+    } 
+    return results;
   }
   
-  public static ArrayList<JauntRowItem> getMeeting() {
-    return meetingTimesIndividual;
-  }
-
   /**
-   * Print the results.
+   * Get the semester associated with the main page.
+   * @param mainPage The url to the main Class Availability web site.
+   * @return The semester the courses are being offered.
    */
-  public static void printResults() {
-    for (JauntRowItem item : rowItems) {
-      System.out.println(item.getFocus() + ", " + item.getCrn() + ", "
-          + item.getCourse() + ", " + item.getSection() + ", "
-          + item.getTitle() + ", " + item.getInstructor() + ", " + item.getDays());
-    }
-  }
+  public static String getSemester(String mainPage) {
+   
+    String[] tokens;
+    String semester = "";
 
-  /**
-   * Print meeting list.
-   * This is full course listing w/ merged meeting times and null rows eliminated
-   */
-  public static void printMeeting() {
-    
-    // ascii header for the console, can be safely removed
-    System.out.println("CRN, DATE, TIME, LOCATION");
-    System.out.println("-----------------------------------------------------------");
-    
-    // this is a list of courses with days/time on one line
-    for (JauntRowItem item : meetingTimes) {
-       System.out.println(item.getCrn() + ", " + item.getDays() + ", "
-          + item.getTime() + ", " + item.getLocation());
-    }
-    System.out.println("\ntotal courses: " + meetingTimes.size());
-    
+    try {
+      UserAgent userAgent = new UserAgent();  
+      userAgent.visit(mainPage);
+      Element body = userAgent.doc.findFirst("<TITLE>");
+      tokens = body.innerText().split(" ");
       
-    // ascii header for the console, can be safely removed
-    System.out.println("\nCRN, DAY, START, END, LOCATION");
-    System.out.println("-----------------------------------------------------------");
-    
-    for (JauntRowItem item : meetingTimesIndividual) {
-       System.out.println(item.getCrn() + ", " + item.getDays() + ", "
-          + item.getStart() + ", " + item.getEnd() + ", " + item.getLocation());
+      for (int i = 0; i < tokens.length; i++) {
+        String token = tokens[i];
+        if (token.equalsIgnoreCase("fall") || token.equalsIgnoreCase("summer") ||
+            token.equalsIgnoreCase("spring") || token.equalsIgnoreCase("winter")) {
+          semester = tokens[i] + " " + tokens[i + 1];
+        }
+      }
     }
-    // System.out.println("\ntotal rows: " + meetingTimesIndividual.size());
-    
+    catch(JauntException e){
+      System.err.println(e);
+    }
+    return semester;
   }
+  
+  /**
+   * Get the list of results.
+   * @return The list of JauntCourseItems.
+   */
+  public ArrayList<JauntCourseItem> getCourses() {
+    return courseItems;
+  }
+  
+  /**
+   * Get the list of course meetings.
+   * @return The list of JauntMeetingItems.
+   */
+  public ArrayList<JauntMeetingItem> getMeetings () {
+    return meetingItems;
+  }
+  
 }

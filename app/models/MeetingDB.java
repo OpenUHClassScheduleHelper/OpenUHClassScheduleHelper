@@ -10,14 +10,9 @@ public class MeetingDB {
 
   /**
    * Add a meeting to the meeting database.
-   * @param crn The crn of the course to add.
-   * @param day The day the course meets.
-   * @param start The start time of the course in the following format: hhmm(a/p)
-   * @param end The end time of the course in the following format: hhmm(a/p)
-   * @param room The location.
+   * @param meeting The meeting to add.
    */
-  public static void addMeeting(String crn, String day, String start, String end, String room) {
-    Meeting meeting = new Meeting(crn, day, start, end, room);
+  public static void addMeeting(Meeting meeting) {
     if (!duplicateExists(meeting)) {
       meeting.save();
     }

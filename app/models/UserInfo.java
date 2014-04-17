@@ -1,8 +1,9 @@
 package models;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Iterator;
+import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
@@ -20,6 +21,9 @@ public class UserInfo extends Model {
   @Id
   private long id;
   
+  @OneToMany(mappedBy="userInfo", cascade=CascadeType.ALL)
+  private List<CourseRoster> roster;
+  
   private String userName;   
   private String firstName; 
   private String lastName;
@@ -27,11 +31,7 @@ public class UserInfo extends Model {
   private String email;
   private String telephone;
   private String carrier;
-  
-  
-  // One of me (user) maps to many of the following (courses) in the schedule.
-  @OneToMany(mappedBy="userInfo")
-  private List<Course> schedule = new ArrayList<>();
+
   
   /**
    * Creates a new UserInfo instance.
@@ -62,6 +62,19 @@ public class UserInfo extends Model {
     return new Finder<Long, UserInfo>(Long.class, UserInfo.class);
   }
   
+  /**
+   * @return the id
+   */
+  public long getId() {
+    return id;
+  }
+
+  /**
+   * @param id the id to set
+   */
+  public void setId(long id) {
+    this.id = id;
+  }
   
   /**
    * @return the userName
@@ -133,9 +146,10 @@ public class UserInfo extends Model {
    * @param course The course to add.
    */
   public void addToSchedule(Course course) {
-    course.setUserInfo(UserInfoDB.getUser(this.userName));
-    course.save();
-    this.schedule.add(course);
+    // Don't add duplicates
+    CourseRoster entry = new CourseRoster(this, course, "schedule");
+    this.roster.add(entry);
+    this.save();
   }
   
   /**
@@ -152,14 +166,13 @@ public class UserInfo extends Model {
    */
   public void removeFromSchedule(Course course) {
     // If the course is in the schedule, then remove it.
-    Iterator<Course> it = this.schedule.iterator();
+    // Need to consider semester
+    List<CourseRoster> roster = CourseRoster.find().where().eq("userInfo", this).eq("course", course)
+                                            .eq("Status", "schedule").findList();
+    Iterator<CourseRoster> it = roster.iterator();
     while (it.hasNext()) {
-      Course scheduledCourse = it.next();
-      if (scheduledCourse.getCrn().equals(course.getCrn())) {
-        scheduledCourse.setUserInfo(null);
-        scheduledCourse.save();
-        it.remove();
-      }
+      CourseRoster entry = it.next();
+      entry.delete();
     }
   }
   
@@ -177,8 +190,10 @@ public class UserInfo extends Model {
    * @param course The course to watch.
    */
   public void addToWatchList(Course course) {
-    course.setWatching(true);
-    addToSchedule(course);
+    // Don't add duplicates
+    CourseRoster entry = new CourseRoster(this, course, "watchlist");
+    this.roster.add(entry);
+    this.save();
   }
   
   /**
@@ -194,8 +209,15 @@ public class UserInfo extends Model {
    * @param course The course to remove.
    */
   public void removeFromWatchList(Course course) {
-    // If the course exists in the watch list, then remove it.
-    removeFromSchedule(course);
+    // If the course is in the schedule, then remove it.
+    // Need to consider semester
+    List<CourseRoster> roster = CourseRoster.find().where().eq("userInfo", this).eq("course", course)
+                                            .eq("Status", "watchlist").findList();
+    Iterator<CourseRoster> it = roster.iterator();
+    while (it.hasNext()) {
+      CourseRoster entry = it.next();
+      entry.delete();
+    }
   }
   
   /**
@@ -209,10 +231,16 @@ public class UserInfo extends Model {
   
   /**
    * Get the list of courses in the users schedule.
-   * @return A list of courses in the users schedule.
    */
   public List<Course> getSchedule() {
-    return getList(false);
+    List<CourseRoster> roster = CourseRoster.find().where().eq("userInfo", this).findList();
+    List<Course> results = new ArrayList<Course>();
+    for (CourseRoster course : roster) {
+      if (course.getStatus().equalsIgnoreCase("schedule")) {
+        results.add(course.getCourse());
+      }
+    }
+    return results;
   }
   
   /**
@@ -220,25 +248,16 @@ public class UserInfo extends Model {
    * @return A list of courses in the users watch list.
    */
   public List<Course> getWatchList() {
-    return getList(true);
-  }
-  
-  /**
-   * A private method to retrieve the required course list.
-   * @param isWatching true to retrieve the watchlist, false to retrieve the schedule.
-   * @return A list of courses.
-   */
-  private List<Course> getList(boolean isWatching) {
+    List<CourseRoster> roster = CourseRoster.find().where().eq("userInfo", this).findList();
     List<Course> results = new ArrayList<Course>();
-    Iterator<Course> it = this.schedule.iterator();
-    while (it.hasNext()) {
-      Course scheduledCourse = it.next();
-      if (scheduledCourse.isWatching() == isWatching) {
-        results.add(scheduledCourse);
+    for (CourseRoster course : roster) {
+      if (course.getStatus().equalsIgnoreCase("watchlist")) {
+        results.add(course.getCourse());
       }
     }
     return results;
   }
+  
 
   /**
    * @return the email

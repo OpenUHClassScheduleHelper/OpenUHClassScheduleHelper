@@ -6,9 +6,9 @@ import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import com.avaje.ebean.Ebean;
-import com.avaje.ebean.Page;
 import com.avaje.ebean.PagingList;
 import com.avaje.ebean.Query;
+import controllers.JauntCourseItem;
 
 
 /**
@@ -28,28 +28,27 @@ public class CourseDB {
    * @param title The title of the course, i.e. 'Algorithms'.
    * @param credits The number of credits.
    * @param instructor The instructor.
+   * @param semester The current semester.
    */
-  public static void addCourse(String focus, String crn, String name, String section, 
-                               String title, String credits, String instructor) {
+  public static void addCourse(Course newCourse) {
     
-    Course course = getCourseByCrn(crn);
+    Course course = getCourseByCrn(newCourse.getCrn());
     
-    // System.out.println("course name: " + name);
-    // If the course is not in the database, then create a new entry
-    if (course == null) {
-      course = new Course(focus, crn, name, section, title, credits, instructor);
+    // If the course is already in the database, then update the fields.
+    if (course != null) {
+      course.setGenFocus(newCourse.getGenFocus());
+      course.setCourseNumber(newCourse.getCourseNumber());
+      course.setCourseName(newCourse.getCourseName());
+      course.setSection(newCourse.getSection());
+      course.setCourseTitle(newCourse.getCourseTitle());
+      course.setCredits(newCourse.getCredits());
+      course.setInstructor(newCourse.getInstructor());  
+      course.setSemester(newCourse.getSemester());
+      course.save();
     }
     else {
-    // The course already exists in the database, so update the fields.
-      course.setGenFocus(focus);
-      course.setCourseNumber(crn);
-      course.setCourseName(name);
-      course.setSection(section);
-      course.setCourseTitle(title);
-      course.setCredits(credits);
-      course.setInstructor(instructor);  
+      newCourse.save();
     }
-    course.save();
   }
 
   /**

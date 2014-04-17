@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.TimeZone;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import controllers.JauntMeetingItem;
 import play.db.ebean.Model;
 
 @Entity
@@ -22,12 +23,24 @@ public class Meeting extends Model {
   private String room;
 
   /**
-   * default constructor.
+   * Default constructor.
    */
   public Meeting() {
     // default constructor
   }
 
+  /**
+   * Constructor.
+   * @param meeting The JauntMeetingItem that represents the meeting to add.
+   */
+  public Meeting(JauntMeetingItem meeting) {
+   this.crn = meeting.getCrn();
+   this.day = meeting.getDay();
+   this.start = meeting.getStartTime();
+   this.end = meeting.getEndTime();
+   this.room = meeting.getRoom();
+  }
+  
   /**
    * Constructor for the object to be placed in the meeting list. The list will be used to construct the Course object.
    * @param crn The crn of the course.

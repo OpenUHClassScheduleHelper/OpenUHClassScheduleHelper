@@ -338,17 +338,28 @@ public class Application extends Controller {
   
   public static Result addCourseToWatchlist(String crn) {
     UserInfo user = Secured.getUserInfo(ctx());
-    UserInfoDB.getUser(user.getUserName()).addToWatchList(CourseDB.getCourse(crn));
+    user.addToWatchList(CourseDB.getCourse(crn));
     return redirect(routes.Application.getResults(1));
   }
 
   public static Result addCourseToSchedule(String crn) {
     UserInfo user = Secured.getUserInfo(ctx());
-    UserInfoDB.getUser(user.getUserName()).addToSchedule(CourseDB.getCourse(crn));
+    user.addToSchedule(crn);
     return redirect(routes.Application.getResults(1));
   }
   
-
+  /**
+   * Handles the deleting of a course from the users watch list.
+   * @param crn The crn of the course to delete.
+   * @return The resulting My Account page.
+   */
+  @Security.Authenticated(Secured.class)
+  public static Result deleteCourseFromSchedule(String crn) {
+    UserInfo user = Secured.getUserInfo(ctx());
+    user.removeFromSchedule(crn);
+    return redirect(routes.Application.myAccount());
+  }
+  
   public static Result populateInstructorList(String dept) {
     List<String> instructors = CourseDB.getInstructors(dept);
     String instructorddl = "";
