@@ -355,11 +355,13 @@ $(document).ready(function(){
                       First
                     </a>
                   </li>
+                  @if(pageNumber-1 >= 1) {
                   <li>
                     <a id="previous" href="@routes.Application.getResults(pageNumber-1)">
                       &laquo;
                     </a>
                   </li>
+                  }
                 @if(pageNumber+5 >= pageCount) {
                   @for(i <- (pageCount-4) until (pageCount + 5)) {
                     @if(i <= pageCount) {
@@ -382,12 +384,15 @@ $(document).ready(function(){
                   }
                 }
                 }
+                @if(pageNumber+1 <= pageCount) {
                 <li>
                     <a id="next" href="@routes.Application.getResults(pageNumber+1)">
                       &raquo;
                     </a>
                   </li>
+                  }
                 <li>
+                
                     <a id="first" href="@routes.Application.getResults(pageCount)">
                       Last
                     </a>
