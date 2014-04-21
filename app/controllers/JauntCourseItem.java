@@ -13,6 +13,7 @@ public class JauntCourseItem {
     private String title;
     private String instructor;
     private String semester;
+    private String campus;
     
     /**
      * Default Constructor Method.
@@ -25,12 +26,14 @@ public class JauntCourseItem {
      * @param focus Gen.Ed./Focus attribute. 
      * @param crn the crn of the course.
      * @param course The course number, i.e. 'ICS 311'.
-     * @param section The couse section.
+     * @param section The course section.
      * @param title The course title, i.e. 'Algorithms'.
      * @param instructor The instructor.
+     * @param semester The semester.
+     * @param campus The campus the course is offered at.
      */
     public JauntCourseItem(String focus, String crn, String course, String section, String title, String credits,
-                           String instructor, String semester) {
+                           String instructor, String semester, String campus) {
       this.setFocus(focus);
       this.setCrn(crn);
       this.setCourse(course);
@@ -39,6 +42,7 @@ public class JauntCourseItem {
       this.setCredits(credits);
       this.setInstructor(instructor);
       this.setSemester(semester);
+      this.setCampus(campus);
     }
 
     /**
@@ -155,6 +159,20 @@ public class JauntCourseItem {
      */
     public void setCredits(String credits) {
       this.credits = credits;
+    }
+
+    /**
+     * @return the campus
+     */
+    public String getCampus() {
+      return campus;
+    }
+
+    /**
+     * @param campus the campus to set
+     */
+    public void setCampus(String campus) {
+      this.campus = campus;
     }
 
 }

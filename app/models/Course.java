@@ -31,6 +31,7 @@ public class Course extends Model {
   private String instructor;
   private String department;
   private String semester;
+  private String campus;
   
   /**
    * default constructor.
@@ -52,6 +53,7 @@ public class Course extends Model {
     this.credits = course.getCredits();
     this.instructor = course.getInstructor();
     this.semester = course.getSemester();
+    this.campus = course.getCampus();
     
     // parse department from course name.
     if(courseName.contains(" ")){
@@ -69,9 +71,10 @@ public class Course extends Model {
    * @param credits The number of credits.
    * @param instructor The instructor.
    * @param semester The current semester.
+   * @param campus The campus the course is being offered at.
    */
   public Course(String genFocus, String crn, String courseName, String section, String courseTitle, String credits, 
-                String instructor, String semester) {
+                String instructor, String semester, String campus) {
 
     this.setGenFocus(genFocus);
     this.setCourseNumber(crn);
@@ -81,6 +84,7 @@ public class Course extends Model {
     this.setCredits(credits);
     this.setInstructor(instructor);
     this.setSemester(semester);
+    this.setCampus(campus);
     
     // parse department from course name.
     if(courseName.contains(" ")){
@@ -206,6 +210,20 @@ public class Course extends Model {
    */
   public void setSemester(String semester) {
     this.semester = semester;
+  }
+  
+  /**
+   * @return the campus
+   */
+  public String getCampus() {
+    return campus;
+  }
+
+  /**
+   * @param campus the campus to set
+   */
+  public void setCampus(String campus) {
+    this.campus = campus;
   }
   
   /**

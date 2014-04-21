@@ -272,16 +272,6 @@ public class Application extends Controller {
       user.setTelephone(formData.userPhone);
       user.setCarrier(formData.userCarrier);
       user.save();
-      
-      if (user.wantsNotification() && user.getTelephone() != null) {
-        // Send confirmation text
-        String message = "This is to confirm that you've opted-in to receiving messages by text.";
-        try {
-          SendEmail.SendBySms(user.getTelephone(), user.getCarrier(), "", message);
-        }
-        catch (AddressException e) {e.printStackTrace();}
-        catch (MessagingException e) {e.printStackTrace();}
-      }
     }
     return redirect(routes.Application.myAccount());
   }

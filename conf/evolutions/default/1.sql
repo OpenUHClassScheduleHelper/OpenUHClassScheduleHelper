@@ -14,6 +14,7 @@ create table course (
   instructor                varchar(255),
   department                varchar(255),
   semester                  varchar(255),
+  campus                    varchar(255),
   constraint pk_course primary key (id))
 ;
 

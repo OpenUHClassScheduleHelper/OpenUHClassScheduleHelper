@@ -20,7 +20,6 @@
 
 <script>
 $(document).ready(function() {
-
     $('#calendar').fullCalendar({
         editable: true,
         header: false,              // remove header 
@@ -65,6 +64,40 @@ function submitComment(id)
   document.getElementById('hiddenCommentForm').submit();
 }
 </script>
+
+<script>
+// Toggles User Preferences Form 
+$(document).ready(function() {
+  $('#userPreference').change(function() {
+    if ($('#userPreference').val()=="Opt-out") {
+      $('#contactDetails').slideUp(400, function() {
+        //Animation Complete 
+      });
+    } else {
+      $('#contactDetails').slideDown(600, function() {
+        //Animation Complete 
+      });
+    }
+  });
+});
+</script>
+
+<script>
+function toggleMobileDiv(id)
+{
+  if ($(id).is(":visible")) {
+    $(id).slideUp(400, function() {
+      //Animation Complete
+    });
+  } else {
+      $(id).slideDown(600, function() {
+      //Animation Complete
+    });
+  }
+}
+</script>
+
+<!-- Begin User Information Section -->
 <div class="container">
   <h2>User Information</h2>
   <p class="info"><b>Name: </b>@user.getFullName()</p>
@@ -97,81 +130,83 @@ function submitComment(id)
               </select>
             </div>
           </div>
-          <div class="form-group @if(preferencesForm("userEmail").hasErrors) {has-error}">
-            <label class="col-sm-3 control-label" style="text-align: left;">Email:</label>
-            <div class="col-sm-9">
-              <input id="userEmail" 
-                     name="userEmail" 
-                     type="email" 
-                     class="form-control" 
-                     value="@preferencesForm("userEmail").value"
-                     placeholder="user@@hawaii.edu">
-              <span class="help-block">@{preferencesForm("userEmail").error.map { error => error.message }}</span>
+          <div id="contactDetails" @if(preferencesForm("userPreference").value=="Opt-out") {style="display:none;"}>
+            <div class="form-group @if(preferencesForm("userEmail").hasErrors) {has-error}">
+              <label class="col-sm-3 control-label" style="text-align: left;">Email:</label>
+              <div class="col-sm-9">
+                <input id="userEmail" 
+                       name="userEmail" 
+                       type="email" 
+                       class="form-control" 
+                       value="@preferencesForm("userEmail").value"
+                       placeholder="user@@hawaii.edu">
+                <span class="help-block">@{preferencesForm("userEmail").error.map { error => error.message }}</span>
+              </div>
             </div>
-          </div>
-          <div class="form-group @if(preferencesForm("userPhone").hasErrors) {has-error}">
-            <label class="col-sm-3 control-label" style="text-align: left;">Mobile phone #:</label>
-            <div class="col-sm-9">
-              <input id="userPhone" 
-                     name="userPhone" 
-                     type="text" 
-                     class="form-control" 
-                     value="@preferencesForm("userPhone").value"
-                     placeholder="808-123-4567">
-              <span class="help-block">@{preferencesForm("userPhone").error.map { error => error.message }}</span>       
+            <div class="form-group @if(preferencesForm("userPhone").hasErrors) {has-error}">
+              <label class="col-sm-3 control-label" style="text-align: left;">Mobile phone #:</label>
+              <div class="col-sm-9">
+                <input id="userPhone" 
+                       name="userPhone" 
+                       type="text" 
+                       class="form-control" 
+                       value="@preferencesForm("userPhone").value"
+                       placeholder="808-123-4567">
+                <span class="help-block">@{preferencesForm("userPhone").error.map { error => error.message }}</span>       
+              </div>
             </div>
-          </div>
-          <div class="form-group @if(preferencesForm("userCarrier").hasErrors) {has-error}">
-            <label class="col-sm-3 control-label" style="text-align: left;">Service Provider: </label>
-            <div class="col-sm-9">
-              <select id="userCarrier" name="userCarrier" class="form-control">
-                <option></option>
-                <option id="Alltel Wireless" value="Alltel Wireless" 
-                        @if(preferencesForm("userCarrier").value=="Alltel Wireless") {selected}>
-                        Alltel Wireless</option>
-                <option id="AT&T Wireless" value="AT&T Wireless" 
-                        @if(preferencesForm("userCarrier").value=="AT&T Wireless") {selected}>
-                        AT&T Wireless</option>
-                <option id="AT&T Mobility (formerly Cingular)" value="AT&T Mobility (formerly Cingular)" 
-                        @if(preferencesForm("userCarrier").value=="AT&T Mobility (formerly Cingular)") {selected}">
-                        AT&T Mobility (formerly Cingular)</option>
-                <option id="Boost Mobile" value="Boost Mobile" 
-                        @if(preferencesForm("userCarrier").value=="Boost Mobile") {selected}>
-                        Boost Mobile</option>
-                <option id="Cricket" value="Cricket" 
-                        @if(preferencesForm("userCarrier").value=="Cricket") {selected}>
-                        Cricket</option>
-                <option id="Metro PCS" value="Metro PCS" 
-                        @if(preferencesForm("userCarrier").value=="Metro PCS") {selected}>
-                        Metro PCS</option>
-                <option id="Sprint (PCS)" value="Sprint (PCS)" 
-                        @if(preferencesForm("userCarrier").value=="Sprint (PCS)") {selected}>
-                        Sprint (PCS)</option>
-                <option id="Sprint (Nextel)" value="Sprint (Nextel)" 
-                        @if(preferencesForm("userCarrier").value=="Sprint (Nextel)") {selected}>
-                        Sprint (Nextel)</option>
-                <option id="Straight Talk" value="Straight Talk" 
-                        @if(preferencesForm("userCarrier").value=="Straight Talk") {selected}>
-                        Straight Talk</option>
-                <option id="T-Mobile" value="T-Mobile" 
-                        @if(preferencesForm("userCarrier").value=="T-Mobile") {selected}>
-                        T-Mobile</option>
-                <option id="U.S. Cellular" value="U.S. Cellular" 
-                        @if(preferencesForm("userCarrier").value=="U.S. Cellular") {selected}>
-                        U.S. Cellular</option>
-                <option id="Verizon" value="Verizon" 
-                        @if(preferencesForm("userCarrier").value=="Verizon") {selected}>
-                        Verizon</option>
-                <option id="Virgin Mobile" value="Virgin Mobile" 
-                        @if(preferencesForm("userCarrier").value=="Virgin Mobile") {selected}>
-                        Virgin Mobile</option>
-              </select>
-              <span class="help-block">@{preferencesForm("userCarrier").error.map { error => error.message }}</span> 
+            <div class="form-group @if(preferencesForm("userCarrier").hasErrors) {has-error}">
+              <label class="col-sm-3 control-label" style="text-align: left;">Service Provider: </label>
+              <div class="col-sm-9">
+                <select id="userCarrier" name="userCarrier" class="form-control">
+                  <option></option>
+                  <option id="Alltel Wireless" value="Alltel Wireless" 
+                          @if(preferencesForm("userCarrier").value=="Alltel Wireless") {selected}>
+                          Alltel Wireless</option>
+                  <option id="AT&T Wireless" value="AT&T Wireless" 
+                          @if(preferencesForm("userCarrier").value=="AT&T Wireless") {selected}>
+                          AT&T Wireless</option>
+                  <option id="AT&T Mobility (formerly Cingular)" value="AT&T Mobility (formerly Cingular)" 
+                          @if(preferencesForm("userCarrier").value=="AT&T Mobility (formerly Cingular)") {selected}">
+                          AT&T Mobility (formerly Cingular)</option>
+                  <option id="Boost Mobile" value="Boost Mobile" 
+                          @if(preferencesForm("userCarrier").value=="Boost Mobile") {selected}>
+                          Boost Mobile</option>
+                  <option id="Cricket" value="Cricket" 
+                          @if(preferencesForm("userCarrier").value=="Cricket") {selected}>
+                          Cricket</option>
+                  <option id="Metro PCS" value="Metro PCS" 
+                          @if(preferencesForm("userCarrier").value=="Metro PCS") {selected}>
+                          Metro PCS</option>
+                  <option id="Sprint (PCS)" value="Sprint (PCS)" 
+                          @if(preferencesForm("userCarrier").value=="Sprint (PCS)") {selected}>
+                          Sprint (PCS)</option>
+                  <option id="Sprint (Nextel)" value="Sprint (Nextel)" 
+                          @if(preferencesForm("userCarrier").value=="Sprint (Nextel)") {selected}>
+                          Sprint (Nextel)</option>
+                  <option id="Straight Talk" value="Straight Talk" 
+                          @if(preferencesForm("userCarrier").value=="Straight Talk") {selected}>
+                          Straight Talk</option>
+                  <option id="T-Mobile" value="T-Mobile" 
+                          @if(preferencesForm("userCarrier").value=="T-Mobile") {selected}>
+                          T-Mobile</option>
+                  <option id="U.S. Cellular" value="U.S. Cellular" 
+                          @if(preferencesForm("userCarrier").value=="U.S. Cellular") {selected}>
+                          U.S. Cellular</option>
+                  <option id="Verizon" value="Verizon" 
+                          @if(preferencesForm("userCarrier").value=="Verizon") {selected}>
+                          Verizon</option>
+                  <option id="Virgin Mobile" value="Virgin Mobile" 
+                          @if(preferencesForm("userCarrier").value=="Virgin Mobile") {selected}>
+                          Virgin Mobile</option>
+                </select>
+                <span class="help-block">@{preferencesForm("userCarrier").error.map { error => error.message }}</span> 
+              </div>
             </div>
           </div>
           <div class="form-group">
             <div class="col-sm-offset-3 col-sm-10">
-              <button type="submit" class="btn btn-success">Save Changes</button>
+              <button type="submit" class="btn btn-success btn-sm">Save Changes</button>
             </div>
           </div>
         }
@@ -189,337 +224,187 @@ function submitComment(id)
   
 <br>
 <div class="container">
-<ul class="nav nav-tabs" data-tabs="tabs" style="margin-left: 10px; margin-right: 10px; margin-top: 10px;">
-  <li class="active"><a data-toggle="tab" href="#Calendar">Calendar</a></li>
-  <li><a data-toggle="tab" href="#Schedule">Schedule</a></li>  
-  <li><a data-toggle="tab" href="#WatchList">Watch List</a></li>
-  <li><a data-toggle="tab" href="#News">Late Breaking News</a></li>
-  <li><a data-toggle="tab" href="#ScheduleHistory">Schedule History</a></li>
-</ul>
-
-<div class="tab-content" style="margin-left: 10px; margin-right: 10px;">
-  <div class="tab-pane active" id="Calendar">    
-    
-    <!-- Full Calendar -->
-    <div id='calendar' style="padding:1em;"></div>
-
-  </div> <!-- End of tab-pane div -->
+  <ul class="nav nav-tabs" data-tabs="tabs" style="margin-left: 10px; margin-right: 10px; margin-top: 10px;">
+    <li class="active"><a data-toggle="tab" href="#Calendar">Calendar</a></li>
+    <li><a data-toggle="tab" href="#Schedule">Schedule</a></li>  
+    <li><a data-toggle="tab" href="#WatchList">Watch List</a></li>
+    <li><a data-toggle="tab" href="#News">Late Breaking News</a></li>
+  </ul>
   
-  <div class="tab-pane" id="Schedule">
-      <div class="container">
+  <div class="tab-content" style="margin-left: 10px; margin-right: 10px;">
+    <div class="tab-pane active" id="Calendar">    
+      <!-- Full Calendar -->
+      <div id='calendar' style="padding:1em;"></div>
+    </div> <!-- End of tab-pane div -->
     
-    <!-- Schedule in normal view -->
-    <table class="table table-bordered hidden-sm hidden-xs" style="margin-top:10px;margin-left:25px;">
-      <tr>
-        <th class="col-sm-1">CRN</th>
-        <th  class="col-sm-1">Course</th>
-        <th>Title</th>
-        <th>Instructor</th>
-        <th class="col-sm-3">Day/Time/Location</th>
-        <th class="col-sm-1">Options</th>
-      </tr>
-      @for(course <- schedule) {
-      <tr>
-        <td>@course.getCourseNumber()</td>
-        <td>@course.getCourseName()</td>
-        <td>@course.getCourseTitle()</td>
-        <td>@course.getInstructor()</td>
-        <td>@for(meeting <- course.getMeetingTimes()) {@meeting<br>}
-        </td>
-        <td>
-          <div>
+    <div class="tab-pane" id="Schedule">
+      
+      <!-- Schedule in normal view -->
+      <table class="table table-bordered hidden-sm hidden-xs" style="margin-top:10px;margin-left:25px;">
+        <tr>
+          <th class="col-sm-1">CRN</th>
+          <th class="">Focus</th>
+          <th class="col-sm-1">Course</th>
+          <th>Title</th>
+          <th>Instructor</th>
+          <th class="col-sm-3">Day/Time/Location</th>
+          <th class="col-sm-1">Options</th>
+        </tr>
+        @for(course <- schedule) {
+        <tr>
+          <td>@course.getCourseNumber()</td>
+          <td>@if(course.getGenFocus()=="") {None} else {@course.getGenFocus()}</td>
+          <td>@course.getCourseName()</td>
+          <td>@course.getCourseTitle()</td>
+          <td>@course.getInstructor()</td>
+          <td>@for(meeting <- course.getMeetingTimes()) {@meeting<br>}
+          </td>
+          <td>
             <a class="btn btn-danger btn-xs" data-toggle="modal" href="#deleteSchedule@course.getCrn()">
               <div class="glyphicon glyphicon-remove"></div>Remove
             </a>
-          </div>
-        </td>
-      </tr>
+          </td>
+        </tr>
+        }
+      </table>
+      
+      <!-- Schedule in mobile view -->
+      @for(course <- schedule) {
+      <div class="visible-sm visible-xs">
+        <a class="btn course-dropdown-button" onclick="toggleMobileDiv(mobileSchedule@course.getCrn())">
+          @course.getCrn(): @course.getCourseName() - @course.getCourseTitle() 
+        </a>
+        <div id="mobileSchedule@course.getCrn()" style="display:none;">
+          <table class="table table-bordered">
+            <tr>
+              <td>Gen Ed/Focus</td>
+              <td>@if(course.getGenFocus()=="") {None} else {@course.getGenFocus()}</td>
+            </tr>
+            <tr>
+              <td>Instructor:</td>
+              <td>@course.getInstructor()</td>
+            </tr>
+            <tr>
+              <td>Day/Time/Location:</td>
+              <td>@for(meeting <- course.getMeetingTimes()) {@meeting<br>}</td>
+            </tr>
+            <tr>
+              <td>Delete from schedule?</td>
+              <td>
+                <a class="btn btn-danger btn-sm" data-toggle="modal" href="#deleteSchedule@course.getCrn()">
+                  <div class="glyphicon glyphicon-remove"></div>Remove
+                </a>
+              </td>
+            </tr>
+          </table>
+        </div> <!-- End of mobile table -->
+      </div> <!-- End of visible div -->
       }
-    </table>
+      <!-- End of Schedule in mobile view -->
+      
+    </div> <!-- End of Schedule Tab -->
     
-    @for(course <- schedule) {
-    <div class="visible-sm visible-xs">
-      <a class="btn course-dropdown-button" id="myclassbutton1"> @course.getCourseName() @course.getCourseTitle() </a>
-      <div class="mobileresults" id="myclassinfo1">
-        <p>
-          <b>CRN: </b><br>@course.getCourseNumber()
-        </p>
-        <hr></hr>
-        <p>
-          <b>Gen Ed./Focus: </b>@course.getGenFocus()<br>
-        </p>
-        <hr></hr>
-        <p>
-          <b>Instructor: </b><br>@course.getInstructor()
-        </p>
-        <hr></hr>
-        @for(meeting <- course.getMeetingTimes()) {
-          <p><b>Day/Time/Location: </b><br>@meeting<br></p>
+    <div class="tab-pane" id="WatchList">
+      <h3>Spring 2014</h3>
+      
+      <!-- Watchlist in normal view -->
+      <table class="table table-bordered hidden-sm hidden-xs" style="margin-top:10px;margin-left:25px;">
+        <tr>
+          <th class="col-sm-1">CRN</th>
+          <th class="">Focus</th>
+          <th  class="col-sm-1">Course</th>
+          <th>Title</th>
+          <th>Instructor</th>
+          <th class="col-sm-3">Day/Time/Location</th>
+          <th class="col-sm-1">Options</th>
+        </tr>
+        @for(course <- watchList) {
+        <tr>
+          <td>@course.getCourseNumber()</td>
+          <td>@if(course.getGenFocus()=="") {None} else {@course.getGenFocus()}</td>
+          <td>@course.getCourseName()</td>
+          <td>@course.getCourseTitle()</td>
+          <td>@course.getInstructor()</td>
+          <td>@for(meeting <- course.getMeetingTimes()) {@meeting<br>}
+          </td>
+          <td>
+            <div>
+              <a class="btn btn-danger btn-xs" data-toggle="modal" href="#deleteWatchlist@course.getCrn()">
+                <div class="glyphicon glyphicon-remove"></div>Remove
+              </a>
+            </div>
+          </td>
+        </tr>
         }
-        <p>
-          <a type="button" class="btn btn-danger btn-xs glyphicon glyphicon-remove">
-            Remove
-          </a>
-        </p>
-      </div>
-    </div>
-    }
-  </div> <!-- End of container -->
-  </div> <!-- End of Schedule Tab -->
-  
-  <div class="tab-pane" id="WatchList">
-    <h3>Spring 2014</h3>
-    @for(course <- watchList) {
-    <div class="visible-sm visible-xs">
-      <a class="btn course-dropdown-button" id="myclassbutton1"> @course.getCourseName() @course.getCourseTitle() </a>
-      <div class="mobileresults" id="myclassinfo1">
-        <p>
-          <b>CRN: </b><br>@course.getCourseNumber()
-        </p>
-        <hr></hr>
-        <p>
-          <b>Gen Ed./Focus: </b>@course.getGenFocus()<br>
-        </p>
-        <hr></hr>
-        <p>
-          <b>Instructor: </b><br>@course.getInstructor()
-        </p>
-        <hr></hr>
-        @for(meeting <- course.getMeeting()) {
-        <p>
-          <b>Location: </b><br>POST 127<br>POST 319
-        </p>
-        <hr></hr>
-        <p>
-          <b>Time: </b><br>M 0530-0800p<br> W 0530-0645p
-        </p>
-        <hr></hr>
-        }
-        <p>
-          <a type="button" class="btn btn-danger btn-xs glyphicon glyphicon-remove">
-            Remove
-          </a>
-        </p>
-      </div>
-    </div>
-    }
-
-    <table class="my-courses-table table-striped hidden-sm hidden-xs">
-      <tr>
-        <th>CRN</th>
-        <th>Course</th>
-        <th>Title</th>
-        <th>Department</th>
-        <th>Instructor</th>
-        <th>Location</th>
-        <th>Time</th>
-        <th></th>
-      </tr>
+      </table>
+      
+  <!-- Watchlist in mobile view -->
+      <!-- Schedule in mobile view -->
       @for(course <- watchList) {
-      <tr>
-        <td>@course.getCourseNumber()</td>
-        <td>@course.getCourseName()</td>
-        <td>@course.getCourseTitle()</td>
-        <td>ICS</td>
-        <td>@course.getInstructor()</td>
-        <td>POST 127, POST 319</td>
-        <td>M 0530-0800p, W 0530-0645p</td>
-        <td>
-          <div>
-            <a class="btn btn-danger btn-xs" data-toggle="modal" href="#deleteWatchlist@course.getCrn()">
-              <div class="glyphicon glyphicon-remove"></div>Remove
-            </a>
-          </div>
-        </td>
-      </tr>
+      <div class="visible-sm visible-xs">
+        <a class="btn course-dropdown-button" onclick="toggleMobileDiv(mobileWatchList@course.getCrn())">
+          @course.getCrn(): @course.getCourseName() - @course.getCourseTitle() 
+        </a>
+        <div id="mobileWatchList@course.getCrn()" style="display:none;">
+          <table class="table table-bordered">
+            <tr>
+              <td>Gen Ed/Focus</td>
+              <td>@if(course.getGenFocus()=="") {None} else {@course.getGenFocus()}</td>
+            </tr>
+            <tr>
+              <td>Instructor:</td>
+              <td>@course.getInstructor()</td>
+            </tr>
+            <tr>
+              <td>Day/Time/Location:</td>
+              <td>@for(meeting <- course.getMeetingTimes()) {@meeting<br>}</td>
+            </tr>
+            <tr>
+              <td>Delete from watchlist?</td>
+              <td>
+                <a class="btn btn-danger btn-sm" data-toggle="modal" href="#deleteWatchlist@course.getCrn()">
+                  <div class="glyphicon glyphicon-remove"></div>Remove
+                </a>
+              </td>
+            </tr>
+          </table>
+        </div> <!-- End of mobile table -->
+      </div> <!-- End of visible div -->
       }
-    </table>
-  </div>
+      <!-- End of Watchlist in mobile view -->
 
-  <div class="tab-pane" id="News">
-
-    <table class="my-courses-table table-striped">
-      <tr>
-        <th>Date</th>
-        <th>Course</th>
-        <th>Comment</th>
-        <th></th>
-        <th></th>
-        <th></th>
-      </tr>
-      @for(comment <- comments) {
-      <tr>
-        <td>@comment.getPostDate()</td>
-        <td>@comment.getCourseNumber()</td>
-        <td>@comment.getComment()</td>
-        <td></td>
-        <td>
-          <td><a type="button" class="btn btn-primary btn-xs" data-toggle="modal" href="#editComment@comment.getId()">Edit</a></td>
-        </td>
-        <td><a type="button" class="btn btn-danger btn-xs" data-toggle="modal" href="#deleteComment@comment.getId()">Delete</a></td>
-      </tr>
-      }
-    </table>
-  </div>
+    </div> <!-- End of Watchlist tab -->
+ 
+    <div class="tab-pane" id="News">
   
-  <div class="tab-pane" id="ScheduleHistory">
-    <h3>Spring 2014</h3>
-    <div class="visible-sm visible-xs">
-      <a class="btn course-dropdown-button" id="myclassbutton4"> ICS 111 Intro to Computer Science I </a>
-      <div class="mobileresults" id="myclassinfo4">
-        <p>
-          <b>CRN: </b><br>84935
-        </p>
-        <hr></hr>
-        <p>
-          <b>Gen Ed./Focus: </b><br>
-        </p>
-        <hr></hr>
-        <p>
-          <b>Instructor: </b><br>Ravi Narayan
-        </p>
-        <hr></hr>
-        <p>
-          <b>Location: </b><br>POST 127<br>POST 319
-        </p>
-        <hr></hr>
-        <p>
-          <b>Time: </b><br>M 0530-0800p<br> W 0530-0645p
-        </p>
-        <hr></hr>
-      </div>
+      <!-- Comments in normal view -->
+      <table class="table table-bordered" style="margin-top:10px;margin-left:25px;">
+        <tr>
+          <th class="col-sm-1">Date</th>
+          <th class="col-sm-1">Course</th>
+          <th class="">Comment</th>
+          <th class="col-sm-1">Edit</th>
+          <th class="col-sm-1">Delete</th>
+        </tr>
+        @for(comment <- comments) {
+        <tr>
+          <td>@comment.getPostDate()</td>
+          <td>@comment.getCourseNumber()</td>
+          <td>@comment.getComment()</td>
+          <td>
+            <a type="button" class="btn btn-primary btn-xs" data-toggle="modal" href="#editComment@comment.getId()">Edit</a>
+          </td>
+          <td>  
+            <a type="button" class="btn btn-danger btn-xs" data-toggle="modal" href="#deleteComment@comment.getId()">Delete</a>
+          </td>
+        </tr>
+        }
+      </table>
     </div>
-    <table class="my-courses-table table-striped hidden-sm hidden-xs">
-      <tr>
-        <th>CRN</th>
-        <th>Course</th>
-        <th>Title</th>
-        <th>Department</th>
-        <th>Gen Ed./Focus</th>
-        <th>Instructor</th>
-        <th>Location</th>
-        <th>Time</th>
-      </tr>
-
-      <tr>
-        <td>84935</td>
-        <td>ICS 111</td>
-        <td>Intro to Computer Science I</td>
-        <td>ICS</td>
-        <td></td>
-        <td>Ravi Narayan</td>
-        <td>POST 127, POST 319</td>
-        <td>M 0530-0800p, W 0530-0645p</td>
-      </tr>
-    </table>
-
-    <h3>Fall 2013</h3>
-    <div class="visible-sm visible-xs">
-      <a class="btn course-dropdown-button" id="myclassbutton5"> ICS 111 Intro to Computer Science I </a>
-      <div class="mobileresults" id="myclassinfo5">
-        <p>
-          <b>CRN: </b><br>84935
-        </p>
-        <hr></hr>
-        <p>
-          <b>Gen Ed./Focus: </b><br>
-        </p>
-        <hr></hr>
-        <p>
-          <b>Instructor: </b><br>Ravi Narayan
-        </p>
-        <hr></hr>
-        <p>
-          <b>Location: </b><br>POST 127<br>POST 319
-        </p>
-        <hr></hr>
-        <p>
-          <b>Time: </b><br>M 0530-0800p<br> W 0530-0645p
-        </p>
-        <hr></hr>
-      </div>
-    </div>
-
-    <table class="my-courses-table table-striped hidden-sm hidden-xs">
-      <tr>
-        <th>CRN</th>
-        <th>Course</th>
-        <th>Title</th>
-        <th>Department</th>
-        <th>Gen Ed./Focus</th>
-        <th>Instructor</th>
-        <th>Location</th>
-        <th>Time</th>
-      </tr>
-
-      <tr>
-        <td>84935</td>
-        <td>ICS 111</td>
-        <td>Intro to Computer Science I</td>
-        <td>ICS</td>
-        <td></td>
-        <td>Ravi Narayan</td>
-        <td>POST 127, POST 319</td>
-        <td>M 0530-0800p, W 0530-0645p</td>
-      </tr>
-    </table>
-
-    <h3>Spring 2013</h3>
-    <div class="visible-sm visible-xs">
-      <a class="btn course-dropdown-button" id="myclassbutton6"> ICS 111 Intro to Computer Science I </a>
-      <div class="mobileresults" id="myclassinfo6">
-        <p>
-          <b>CRN: </b><br>84935
-        </p>
-        <hr></hr>
-        <p>
-          <b>Gen Ed./Focus: </b><br>
-        </p>
-        <hr></hr>
-        <p>
-          <b>Instructor: </b><br>Ravi Narayan
-        </p>
-        <hr></hr>
-        <p>
-          <b>Location: </b><br>POST 127<br>POST 319
-        </p>
-        <hr></hr>
-        <p>
-          <b>Time: </b><br>M 0530-0800p<br> W 0530-0645p
-        </p>
-        <hr></hr>
-      </div>
-    </div>
-
-    <table class="my-courses-table table-striped hidden-sm hidden-xs">
-      <tr>
-        <th>CRN</th>
-        <th>Course</th>
-        <th>Title</th>
-        <th>Department</th>
-        <th>Gen Ed./Focus</th>
-        <th>Instructor</th>
-        <th>Location</th>
-        <th>Time</th>
-      </tr>
-
-      <tr>
-        <td>84935</td>
-        <td>ICS 111</td>
-        <td>Intro to Computer Science I</td>
-        <td>ICS</td>
-        <td></td>
-        <td>Ravi Narayan</td>
-        <td>POST 127, POST 319</td>
-        <td>M 0530-0800p, W 0530-0645p</td>
-      </tr>
-    </table>
   </div>
-
 </div>
 
-</div>
-</div>
+
 <div class="bottom-spacing"></div>
 <!-- /main -->
 
