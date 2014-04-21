@@ -43,13 +43,39 @@ public class Global extends GlobalSettings {
     UserCommentDB.addComment("84935", "rnarayan", "This class will now be available with a WI credit.");
     UserCommentDB.addComment("84494", "julia4", "This class will be conducted as an online course.");
     
-    // Populate database
-    populateTables("https://www.sis.hawaii.edu/uhdad/avail.classes?i=MAN&t=201430&s=ICS");
-    populateTables("https://www.sis.hawaii.edu/uhdad/avail.classes?i=MAN&t=201430&s=ENG");
+    // Scrape data from a single page
+    //populateTablesFromPage("https://www.sis.hawaii.edu/uhdad/avail.classes?i=MAN&t=201430&s=ICS");
+    //populateTablesFromPage("https://www.sis.hawaii.edu/uhdad/avail.classes?i=MAN&t=201430&s=ENG");
 
+    // Scrape data from all pages
+    populateTablesFromPages("https://www.sis.hawaii.edu/uhdad/avail.classes?i=MAN&t=201430");
+    
   }
   
-  private void populateTables(String url) {
+  /**
+   * Scrape course information from all links on the target page.
+   * @param url The url of the target page.
+   */
+  private void populateTablesFromPages(String url) {
+    JauntObj jaunt = new JauntObj();
+    jaunt.scrapeLinks(url);
+    ArrayList<JauntCourseItem> courses = jaunt.getCourses();
+    ArrayList<JauntMeetingItem> meetings = jaunt.getMeetings();
+    
+    for (JauntCourseItem jauntCourseItem : courses) {
+      CourseDB.addCourse(new Course(jauntCourseItem));
+    }
+    for (JauntMeetingItem jauntMeetingItem : meetings) {
+      Meeting meeting = new Meeting(jauntMeetingItem);
+      MeetingDB.addMeeting(meeting);
+    }
+  }
+  
+  /**
+   * Scrape course information from the target page.
+   * @param url The url of the target page.
+   */
+  private void populateTablesFromPage(String url) {
     JauntObj jaunt = new JauntObj();
     jaunt.scrapeUrl(url);
     

@@ -55,6 +55,8 @@ public class JauntObj {
     int iColumnCount = 0;
     String crn = "";
     
+    System.out.println("Scraping: " + url);
+    
     try {
       
       UserAgent userAgent = new UserAgent();
