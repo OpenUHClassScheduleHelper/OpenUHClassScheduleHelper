@@ -268,32 +268,5 @@ public class Course extends Model {
     }
     return results;
   }
-  
-  /**
-   * Delete this method if it is not being used.
-   * @return
-   */
-  public List<Meeting> getConcatMeetings_Deprecated() {
-    List<Meeting> currentMeetingList = getMeeting();
-    List<Meeting> newMeetingList = new ArrayList<>();
-    boolean separate = true;
-    for(Meeting meeting : currentMeetingList) {
-      separate = true;
-      for(int i = 0; i < newMeetingList.size(); i++) {
-        if(meeting.getStart().equals(newMeetingList.get(i).getStart()) && 
-           meeting.getEnd().equals(newMeetingList.get(i).getEnd()) && 
-           meeting.getRoom().equals(newMeetingList.get(i).getRoom())) {
-           separate = false;
-           String oldDay = newMeetingList.get(i).getDay();
-           newMeetingList.get(i).setDay(oldDay + meeting.getDay());
-        }
-      }
-      
-      if(separate) {
-        newMeetingList.add(meeting);
-      }    
-    }
-    return newMeetingList;
-  }
 
 }

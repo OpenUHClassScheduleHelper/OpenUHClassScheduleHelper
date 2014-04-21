@@ -48,7 +48,7 @@ public class Global extends GlobalSettings {
     //populateTablesFromPage("https://www.sis.hawaii.edu/uhdad/avail.classes?i=MAN&t=201430&s=ENG");
 
     // Scrape data from all pages
-    populateTablesFromPages("https://www.sis.hawaii.edu/uhdad/avail.classes?i=MAN&t=201430");
+   // populateTablesFromPages("https://www.sis.hawaii.edu/uhdad/avail.classes?i=MAN&t=201430");
     
   }
   

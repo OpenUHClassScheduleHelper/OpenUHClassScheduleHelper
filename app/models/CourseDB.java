@@ -3,8 +3,10 @@ package models;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import com.avaje.ebean.Ebean;
 import com.avaje.ebean.PagingList;
 import com.avaje.ebean.Query;
@@ -52,20 +54,20 @@ public class CourseDB {
   }
 
   /**
+   * Gets the List of courses.
+   * @return List of courses.
+   */
+  public static List<Course> getCourses() {
+    return Course.find().all();
+  }
+  
+  /**
    * Get the course by the crn.
    * @param crn The crn.
    * @return The course with the specified crn.
    */
   public static Course getCourseByCrn(String crn) {
     return Course.find().where().eq("crn", crn).findUnique();
-  }
-  
-  /**
-   * Gets the List of courses.
-   * @return List of courses.
-   */
-  public static List<Course> getCourses() {
-    return Course.find().all();
   }
   
   /**
@@ -127,7 +129,7 @@ public class CourseDB {
    * A custom comparator to sort instructor names (i.e. H Casanova) by last name.
    * @author Rob Namahoe
    */
-  static class InstructorComparator implements Comparator<String> {
+  private static class InstructorComparator implements Comparator<String> {
     public int compare(String s1, String s2) {
       return s1.substring(2, 3).compareTo(s2.substring(2,3));
     }
@@ -137,7 +139,7 @@ public class CourseDB {
    * A custom comparator to sort course names/title by course number.
    * @author Rob Namahoe
    */
-  static class CourseComparator implements Comparator<String> {
+  private static class CourseComparator implements Comparator<String> {
     public int compare(String str1, String str2) {
       String s1 = str1.substring(str1.indexOf(" ") + 1, str1.indexOf(" ") + 4).trim();
       String s2 = str2.substring(str2.indexOf(" ") + 1, str2.indexOf(" ") + 4).trim();
@@ -145,8 +147,207 @@ public class CourseDB {
     }
   } 
   
+  /**
+   * Get a list of all departments in the following format, abbreviation: full name.
+   * @return A list of departments.
+   */
+  public static List<String> getDepartmentList() {
+    Map<String, String> deptMap = getDeptMap();
+    HashSet<String> hs = new HashSet<String>();
+    List<String> deptList = new ArrayList<String>();
+    List<Course> courses = Course.find().select("department").findList();
+    // Add departments to a hashset to remove duplicate values.
+    for (Course course : courses) {
+      hs.add(course.getDepartment());
+    }
+    for (String dept : hs) {
+      String deptEntry = hs + ": Unknown";
+      if (deptMap.containsKey(dept)) {
+        deptEntry = deptMap.get(dept);
+      }
+      deptList.add(deptEntry);
+    }
+    Collections.sort(deptList);
+    return deptList;
+  }
+  
+  /**
+   * Get the department entry for the Department select element of the Search Form.
+   * @return A map of departments in the format: Abbreviation: FullName.
+   */
+  private static Map<String, String> getDeptMap() {
+    Map<String, String> deptMap = new HashMap<String, String>();
+    deptMap.put("ACM", "ACM: Academy for Creative Media");
+    deptMap.put("ACC", "ACC: Accounting");
+    deptMap.put("AS", "AS: Aerospace Studies");
+    deptMap.put("AMST", "AMST: American Studies");
+    deptMap.put("ANAT", "ANAT: Anatomy");
+    deptMap.put("ANSC", "ANSC: Animal Science");
+    deptMap.put("ANTH", "ANTH: Anthropology");
+    deptMap.put("ARAB", "ARAB: Arabic");
+    deptMap.put("ARCH", "ARCH: Architecture");
+    deptMap.put("ART", "ART: Art");
+    deptMap.put("ASAN", "ASAN: Asian Studies");
+    deptMap.put("ASTR", "ASTR: Astronomy");
+    deptMap.put("BIOC", "BIOC: Biochemistry");
+    deptMap.put("BE", "BE: Bioengineering");
+    deptMap.put("BIOL", "BIOL: Biology");
+    deptMap.put("BIOM", "BIOM: Biomedical Science");
+    deptMap.put("BOT", "BOT: Botany");
+    deptMap.put("BUS", "BUS: Business");
+    deptMap.put("BLAW", "BLAW: Business Law");
+    deptMap.put("CAM", "CAM: Cambodian");
+    deptMap.put("CMB", "CMB: Cell and Molecular Biology");
+    deptMap.put("CHAM", "CHAM: Chamorro");
+    deptMap.put("CHEM", "CHEM: Chemistry");
+    deptMap.put("CHN", "CHN: Chinese Language & Literature");
+    deptMap.put("CEE", "CEE: Civil & Environmental Engr");
+    deptMap.put("COM", "COM: Communication");
+    deptMap.put("CIS", "CIS: Communication & Info Sciences");
+    deptMap.put("CSD", "CSD: Communication Sci & Disorders");
+    deptMap.put("COMG", "COMG: Communicology");
+    deptMap.put("EDCS", "EDCS: Curriculum Studies");
+    deptMap.put("DNCE", "DNCE: Dance");
+    deptMap.put("DH", "DH: Dental Hygiene");
+    deptMap.put("DRB", "DRB: Developmental & Repro Biology");
+    deptMap.put("DIS", "DIS: Disability Studies");
+    deptMap.put("EALL", "EALL: East Asian Languages & Lit");
+    deptMap.put("ECON", "ECON: Economics");
+    deptMap.put("EDEA", "EDEA: Educational Administration");
+    deptMap.put("EDEF", "EDEF: Educational Foundations");
+    deptMap.put("EDEP", "EDEP: Educational Psychology");
+    deptMap.put("ETEC", "ETEC: Educational Technology");
+    deptMap.put("EE", "EE: Electrical Engineering");
+    deptMap.put("ENGR", "ENGR: Engineering, Interdisciplinary");
+    deptMap.put("ENG", "ENG: English");
+    deptMap.put("ESL", "ESL: English as a Second Language");
+    deptMap.put("ELI", "ELI: English Language Institute");
+    deptMap.put("ES", "ES: Ethnic Studies");
+    deptMap.put("FMCH", "FMCH: Family Medicine & Comm Health");
+    deptMap.put("FAMR", "FAMR: Family Resources");
+    deptMap.put("FDM", "FDM: Fashion Design Textiles & Mdsg");
+    deptMap.put("FIL", "FIL: Filipino");
+    deptMap.put("FIN", "FIN: Finance");
+    deptMap.put("FSHN", "FSHN: Food Science & Human Nutrition");
+    deptMap.put("FR", "FR: French");
+    deptMap.put("GEOG", "GEOG: Geography");
+    deptMap.put("GG", "GG: Geology & Geophysics");
+    deptMap.put("GERI", "GERI: Geriatric Medicine");
+    deptMap.put("GER", "GER: German");
+    deptMap.put("GHPS", "GHPS: Global Health & Pop Studies");
+    deptMap.put("GRK", "GRK: Greek");
+    deptMap.put("HAW", "HAW: Hawaiian");
+    deptMap.put("HWST", "HWST: Hawaiian Studies");
+    deptMap.put("HNDI", "HNDI: Hindi");
+    deptMap.put("HIST", "HIST: History");
+    deptMap.put("HON", "HON: Honors");
+    deptMap.put("HRM", "HRM: Human Resources Mgt");
+    deptMap.put("ILO", "ILO: Ilokano");
+    deptMap.put("IP", "IP: Indo-Pacific Languages");
+    deptMap.put("IND", "IND: Indonesian");
+    deptMap.put("ITM", "ITM: Information Technology Mgt");
+    deptMap.put("ICS", "ICS: Information& Computer Sciences");
+    deptMap.put("ITE", "ITE: Institute for Teacher Educatn");
+    deptMap.put("INS", "INS: Insurance");
+    deptMap.put("IS", "IS: Interdisciplinary Studies");
+    deptMap.put("CUL", "CUL: Internatl Cultural Studies");
+    deptMap.put("ITAL", "ITAL: Italian");
+    deptMap.put("JPN", "JPN: Japanese Language & Literature");
+    deptMap.put("JOUR", "JOUR: Journalism");
+    deptMap.put("KRS", "KRS: Kinesiology & Rehab Science");
+    deptMap.put("KOR", "KOR: Korean");
+    deptMap.put("LLEA", "LLEA: Lang & Lit Europe & Americas");
+    deptMap.put("LATN", "LATN: Latin");
+    deptMap.put("LAIS", "LAIS: Latin Amer & Iberian Studies");
+    deptMap.put("LAW", "LAW: Law");
+    deptMap.put("LWEV", "LWEV: Law-Environmental");
+    deptMap.put("LWJT", "LWJT: Law-Journals and Teams");
+    deptMap.put("LWPA", "LWPA: Law-Pacific and Asian");
+    deptMap.put("LIS", "LIS: Library & Information Science");
+    deptMap.put("LING", "LING: Linguistics");
+    deptMap.put("MGT", "MGT: Management");
+    deptMap.put("MAO", "MAO: Maori");
+    deptMap.put("MKT", "MKT: Marketing");
+    deptMap.put("MATH", "MATH: Mathematics");
+    deptMap.put("ME", "ME: Mechanical Engineering");
+    deptMap.put("MDED", "MDED: Medical Education");
+    deptMap.put("MEDT", "MEDT: Medical Technology");
+    deptMap.put("MED", "MED: Medicine");
+    deptMap.put("MET", "MET: Meteorology");
+    deptMap.put("MICR", "MICR: Microbiology");
+    deptMap.put("MSL", "MSL: Military Science & Leadership");
+    deptMap.put("MCB", "MCB: Molecular and Cell Biology");
+    deptMap.put("MBBE", "MBBE: Molecular Biosci & Bioengr");
+    deptMap.put("MUS", "MUS: Music");
+    deptMap.put("NHH", "NHH: Native Hawaiian Health");
+    deptMap.put("NREM", "NREM: Natural Res & Environmtl Mgt");
+    deptMap.put("NURS", "NURS: Nursing");
+    deptMap.put("OBGN", "OBGN: Obstetrics & Gynecology");
+    deptMap.put("OEST", "OEST: Ocean & Earth Science & Tech");
+    deptMap.put("ORE", "ORE: Ocean & Resources Engineering");
+    deptMap.put("OCN", "OCN: Oceanography");
+    deptMap.put("PACS", "PACS: Pacific Islands Studies");
+    deptMap.put("PATH", "PATH: Pathology");
+    deptMap.put("PACE", "PACE: Peace and Conflict Education");
+    deptMap.put("PED", "PED: Pediatrics");
+    deptMap.put("PERS", "PERS: Persian");
+    deptMap.put("PHRM", "PHRM: Pharmacology");
+    deptMap.put("PHIL", "PHIL: Philosophy");
+    deptMap.put("PHYS", "PHYS: Physics");
+    deptMap.put("PHYL", "PHYL: Physiology");
+    deptMap.put("PEPS", "PEPS: Plant & Environmtl Protect Sci");
+    deptMap.put("POLS", "POLS: Political Science");
+    deptMap.put("PORT", "PORT: Portuguese");
+    deptMap.put("PSTY", "PSTY: Psychiatry");
+    deptMap.put("PSY", "PSY: Psychology");
+    deptMap.put("PUBA", "PUBA: Public Administration");
+    deptMap.put("PH", "PH: Public Health");
+    deptMap.put("PPC", "PPC: Public Policy Center");
+    deptMap.put("RE", "RE: Real Estate");
+    deptMap.put("REL", "REL: Religion");
+    deptMap.put("RUS", "RUS: Russian");
+    deptMap.put("SAM", "SAM: Samoan");
+    deptMap.put("SNSK", "SNSK: Sanskrit");
+    deptMap.put("SLS", "SLS: Second Language Studies");
+    deptMap.put("SOCS", "SOCS: Social Science");
+    deptMap.put("SW", "SW: Social Work");
+    deptMap.put("SOC", "SOC: Sociology");
+    deptMap.put("SPAN", "SPAN: Spanish");
+    deptMap.put("SPED", "SPED: Special Education");
+    deptMap.put("SURG", "SURG: Surgery");
+    deptMap.put("TAHT", "TAHT: Tahitian");
+    deptMap.put("THAI", "THAI: Thai");
+    deptMap.put("THEA", "THEA: Theatre");
+    deptMap.put("TONG", "TONG: Tongan");
+    deptMap.put("TI", "TI: Translation & Interpretation");
+    deptMap.put("TIM", "TIM: Travel Industry Management");
+    deptMap.put("TRMD", "TRMD: Tropical Med & Medcl Micro");
+    deptMap.put("TPSS", "TPSS: Tropical Plant & Soil Sciences");
+    deptMap.put("PLAN", "PLAN: Urban & Regional Planning");
+    deptMap.put("URDU", "URDU: Urdu");
+    deptMap.put("VIET", "VIET: Vietnamese");
+    deptMap.put("WS", "WS: Women's Studies");
+    deptMap.put("ZOOL", "ZOOL: Zoology");
+    deptMap.put("PUBA", "PUBA: Public Administration");
+    deptMap.put("PH", "PH: Public Health");
+    deptMap.put("PPC", "PPC: Public Policy Center");
+    deptMap.put("RE", "RE: Real Estate");
+    deptMap.put("REL", "REL: Religion");
+    deptMap.put("RUS", "RUS: Russian");
+    deptMap.put("SAM", "SAM: Samoan");
+    deptMap.put("SNSK", "SNSK: Sanskrit");
+    deptMap.put("SLS", "SLS: Second Language Studies");
+    deptMap.put("SOCS", "SOCS: Social Science");
+    deptMap.put("SW", "SW: Social Work");
+    deptMap.put("SOC", "SOC: Sociology");
+    deptMap.put("SPAN", "SPAN: Spanish");
+    deptMap.put("SPED", "SPED: Special Education");
+    return deptMap;
+  }
+
   public static void page(String[] days, String[] genFocus, String department, String courseTitleandName, String instructor, String startTime, String endTime) {
     boolean noQueryCheck = true;
+
     int daycheck = 0;
     int focuscheck = 0;
     Query<Course> query = Ebean.createQuery(Course.class);

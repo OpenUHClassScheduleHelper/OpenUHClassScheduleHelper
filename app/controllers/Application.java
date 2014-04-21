@@ -162,7 +162,7 @@ public class Application extends Controller {
     }
     
     else {
-      resultsList = CourseDB.getCourses();
+      //resultsList = CourseDB.getCourses();
     }
 
     // Create Schedule Events
@@ -356,6 +356,7 @@ public class Application extends Controller {
   }
   
   public static Result populateInstructorList(String dept) {
+    dept = dept.substring(0, dept.indexOf(":"));
     List<String> instructors = CourseDB.getInstructors(dept);
     String instructorddl = "";
     for (int i = 0; i < instructors.size(); i++) {
@@ -363,9 +364,7 @@ public class Application extends Controller {
       String last = instructors.get(i).split(" ")[1];
       instructorddl += "<option>" + last + ", " + first + "</option>" + "\n";
     }
-
     return ok(instructorddl);
-
   }
 
   public static Result populateCourseList(String dept) {
@@ -374,9 +373,7 @@ public class Application extends Controller {
     for (int i = 0; i < courses.size(); i++) {
       courseddl += "<option>" + courses.get(i) + "</option>" + "\n";
     }
-
     return ok(courseddl);
-
   }
   
 
