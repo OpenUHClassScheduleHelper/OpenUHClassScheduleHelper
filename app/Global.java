@@ -25,31 +25,20 @@ public class Global extends GlobalSettings {
    */
   public void onStart(Application app) {
     
-    // Add students to the database
-    UserInfoDB.addUserInfo("rnamahoe", "Robert", "Namahoe");
-    UserInfoDB.addUserInfo("ek26", "Evan", "Komiyama");
-    UserInfoDB.addUserInfo("jortal", "Jon", "Ortal");
-    
-    // Add instructors to the database
-    UserInfoDB.addUserInfo("rnarayan", "Ravi", "Narayan");
-    UserInfoDB.addUserInfo("sugihara", "Kazuo", "Sugihara");
-    UserInfoDB.addUserInfo("julia4", "Julia", "Patriarche");
-    
     // Add User Comments to the database
     UserCommentDB.removeAllComments();
     UserCommentDB.addComment("84935", "jortal", "Professor Narayan is in the process of trying to make ICS 111 a WI credit.");
     UserCommentDB.addComment("84935", "rnamahoe", "Tough class but you sure do learn a lot!");
     UserCommentDB.addComment("86041", "rnamahoe", "I thought ICS111 was hard...this class is impossible!");
-    UserCommentDB.addComment("84935", "rnarayan", "This class will now be available with a WI credit.");
-    UserCommentDB.addComment("84494", "julia4", "This class will be conducted as an online course.");
-    
+
     // Scrape data from a single page
     //populateTablesFromPage("https://www.sis.hawaii.edu/uhdad/avail.classes?i=MAN&t=201430&s=ICS");
     //populateTablesFromPage("https://www.sis.hawaii.edu/uhdad/avail.classes?i=MAN&t=201430&s=ENG");
 
-    // Scrape data from all pages
-   // populateTablesFromPages("https://www.sis.hawaii.edu/uhdad/avail.classes?i=MAN&t=201430");
-    
+    // If tables are empty then scrape data from all pages
+    if (Course.find().all().size() == 0) {
+      populateTablesFromPages("https://www.sis.hawaii.edu/uhdad/avail.classes?i=MAN&t=201430");
+    }  
   }
   
   /**
