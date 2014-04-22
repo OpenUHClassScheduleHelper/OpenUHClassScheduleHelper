@@ -10,8 +10,6 @@ import java.util.Map;
 import com.avaje.ebean.Ebean;
 import com.avaje.ebean.PagingList;
 import com.avaje.ebean.Query;
-import controllers.JauntCourseItem;
-
 
 /**
  * Class that stores a DB of the courses.
@@ -34,7 +32,7 @@ public class CourseDB {
    */
   public static void addCourse(Course newCourse) {
     
-    Course course = getCourseByCrn(newCourse.getCrn());
+    Course course = Course.find().where().eq("crn", newCourse.getCrn()).findUnique();
     
     // If the course is already in the database, then update the fields.
     if (course != null) {
@@ -161,7 +159,7 @@ public class CourseDB {
       hs.add(course.getDepartment());
     }
     for (String dept : hs) {
-      String deptEntry = hs + ": Unknown";
+      String deptEntry = dept + ": Unknown";
       if (deptMap.containsKey(dept)) {
         deptEntry = deptMap.get(dept);
       }
