@@ -22,10 +22,6 @@ public class WebScraper {
   private static ArrayList<Course> courseList = new ArrayList<Course>();
   private static ArrayList<Meeting> meetingList = new ArrayList<Meeting>();
   
-  private static ArrayList<JauntCourseItem> courseItems = new ArrayList<JauntCourseItem>();
-  private static ArrayList<JauntMeetingItem> meetingItems = new ArrayList<JauntMeetingItem>();
-  
-  
   /**
    * The the contents of every linked page on the given url.
    * @param url The url of the page containing the links of pages to scrape.
@@ -51,11 +47,13 @@ public class WebScraper {
         e.printStackTrace();
       }
     }
-      
+    
+    System.out.println("Adding " + courseList.size() + " courses to the database.");
     for (Course course : courseList) {
       CourseDB.addCourse(course);
     }
     
+    System.out.println("Adding " + meetingList.size() + " meetings to the database.");
     for (Meeting meeting : meetingList) {
       MeetingDB.addMeeting(meeting);
     }
@@ -301,21 +299,5 @@ public class WebScraper {
     } 
     return results;
   }
-  
-  /**
-   * Get the list of results.
-   * @return The list of JauntCourseItems.
-   */
-  public static ArrayList<JauntCourseItem> getCourses() {
-    return courseItems;
-  }
-  
-  /**
-   * Get the list of course meetings.
-   * @return The list of JauntMeetingItems.
-   */
-  public static ArrayList<JauntMeetingItem> getMeetings () {
-    return meetingItems;
-  }
-  
+ 
 }

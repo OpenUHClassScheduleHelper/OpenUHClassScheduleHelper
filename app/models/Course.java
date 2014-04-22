@@ -8,7 +8,6 @@ import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
-import controllers.JauntCourseItem;
 import play.db.ebean.Model;
 
 @Entity
@@ -38,23 +37,6 @@ public class Course extends Model {
    */
   public Course() {
     // default constructor
-  }
-
-  /**
-   * Constructor method.
-   * @param course A JauntCourseItem.
-   */
-  public Course(JauntCourseItem course) {
-    this.genFocus = course.getFocus();
-    this.crn = course.getCrn();
-    this.courseName = course.getCourse();
-    this.section = course.getSection();
-    this.courseTitle = course.getTitle();
-    this.credits = course.getCredits();
-    this.instructor = course.getInstructor();
-    this.semester = course.getSemester();
-    this.campus = course.getCampus();
-    
   }
   
   /**
