@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.List;
 import controllers.JauntCourseItem;
 import controllers.JauntMeetingItem;
 import controllers.JauntObj;
@@ -31,53 +32,38 @@ public class Global extends GlobalSettings {
     UserCommentDB.addComment("84935", "rnamahoe", "Tough class but you sure do learn a lot!");
     UserCommentDB.addComment("86041", "rnamahoe", "I thought ICS111 was hard...this class is impossible!");
 
-    // Scrape data from a single page
-    //populateTablesFromPage("https://www.sis.hawaii.edu/uhdad/avail.classes?i=MAN&t=201430&s=ICS");
-    //populateTablesFromPage("https://www.sis.hawaii.edu/uhdad/avail.classes?i=MAN&t=201430&s=ENG");
 
     // If tables are empty then scrape data from all pages
-    if (Course.find().all().size() == 0) {
-      populateTablesFromPages("https://www.sis.hawaii.edu/uhdad/avail.classes?i=MAN&t=201430");
-    }  
-  }
-  
-  /**
-   * Scrape course information from all links on the target page.
-   * @param url The url of the target page.
-   */
-  private void populateTablesFromPages(String url) {
-    JauntObj jaunt = new JauntObj();
-    jaunt.scrapeLinks(url);
-    ArrayList<JauntCourseItem> courses = jaunt.getCourses();
-    ArrayList<JauntMeetingItem> meetings = jaunt.getMeetings();
-    
-    for (JauntCourseItem jauntCourseItem : courses) {
-      CourseDB.addCourse(new Course(jauntCourseItem));
-    }
-    for (JauntMeetingItem jauntMeetingItem : meetings) {
-      Meeting meeting = new Meeting(jauntMeetingItem);
-      MeetingDB.addMeeting(meeting);
-    }
-  }
-  
-  /**
-   * Scrape course information from the target page.
-   * @param url The url of the target page.
-   */
-  private void populateTablesFromPage(String url) {
-    JauntObj jaunt = new JauntObj();
-    jaunt.scrapeUrl(url);
-    
-    ArrayList<JauntCourseItem> courses = jaunt.getCourses();
-    ArrayList<JauntMeetingItem> meetings = jaunt.getMeetings();
-    
-    for (JauntCourseItem jauntCourseItem : courses) {
-      CourseDB.addCourse(new Course(jauntCourseItem));
-    }
-    for (JauntMeetingItem jauntMeetingItem : meetings) {
-      Meeting meeting = new Meeting(jauntMeetingItem);
-      MeetingDB.addMeeting(meeting);
+    ArrayList<JauntObj> scrapers = new ArrayList<JauntObj>();
+    if (Course.find().all().size() < 1) {
+      String url = "https://www.sis.hawaii.edu/uhdad/avail.classes?i=MAN&t=201510";
+      ArrayList<String> links = JauntObj.getLinks(url);
+      for (String link : links) {
+        JauntObj ps = new JauntObj(link);
+        ps.start();
+        scrapers.add(ps);
+      }
+      for (JauntObj scraper : scrapers) {
+        try {
+          scraper.join();
+        }
+        catch (InterruptedException e) {
+          e.printStackTrace();
+        }
+      }
+      
+      List<JauntCourseItem> courses = JauntObj.getCourses();
+      List<JauntMeetingItem> meetings = JauntObj.getMeetings();
+      
+      for (JauntCourseItem jauntCourseItem : courses) {
+        CourseDB.addCourse(new Course(jauntCourseItem));
+      }
+      
+      for (JauntMeetingItem jauntMeetingItem : meetings) {
+        MeetingDB.addMeeting(new Meeting(jauntMeetingItem));
+      }
+     
+      System.out.println("Done scraping.");
     }
   }
-  
 }

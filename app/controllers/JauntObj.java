@@ -13,23 +13,25 @@ import com.jaunt.UserAgent;
  * 
  * @author Rob Namahoe
  */
-public class JauntObj {
+public class JauntObj extends Thread {
 
+  private String url = "";
+  
   private static ArrayList<JauntCourseItem> courseItems = new ArrayList<JauntCourseItem>();
   private static ArrayList<JauntMeetingItem> meetingItems = new ArrayList<JauntMeetingItem>();
   
   /**
    * Default Constructor Method.
    */
-  public JauntObj() {
-    // Do nothing.
+  public JauntObj(String url) {
+    this.url = url;
   }
 
   /**
    * Scrape the contents of a single page.
    * @param url The url of the page to scrape.
    */
-  public void scrapeUrl(String url) {
+  public void run() {
     String semester = getSemester(url);
     processUrl(url, semester);
   }
@@ -197,7 +199,7 @@ public class JauntObj {
    * @param mainPage The url to the main Class Availability web site.
    * @return A list of link to the department class avail. web site.
    */
-  private ArrayList<String> getLinks(String mainPage) {
+  public static ArrayList<String> getLinks(String mainPage) {
     
     ArrayList<String> results = new ArrayList<String>();
     
@@ -256,7 +258,7 @@ public class JauntObj {
    * Get the list of results.
    * @return The list of JauntCourseItems.
    */
-  public ArrayList<JauntCourseItem> getCourses() {
+  public static ArrayList<JauntCourseItem> getCourses() {
     return courseItems;
   }
   
@@ -264,7 +266,7 @@ public class JauntObj {
    * Get the list of course meetings.
    * @return The list of JauntMeetingItems.
    */
-  public ArrayList<JauntMeetingItem> getMeetings () {
+  public static ArrayList<JauntMeetingItem> getMeetings () {
     return meetingItems;
   }
   

@@ -161,7 +161,7 @@ public class CourseDB {
       hs.add(course.getDepartment());
     }
     for (String dept : hs) {
-      String deptEntry = hs + ": Unknown";
+      String deptEntry = dept + ": Unknown";
       if (deptMap.containsKey(dept)) {
         deptEntry = deptMap.get(dept);
       }
