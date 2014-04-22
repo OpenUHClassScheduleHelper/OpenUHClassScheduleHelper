@@ -55,10 +55,6 @@ public class Course extends Model {
     this.semester = course.getSemester();
     this.campus = course.getCampus();
     
-    // parse department from course name.
-    if(courseName.contains(" ")){
-      this.department = courseName.substring(0, courseName.indexOf(" ")).trim(); 
-   }
   }
   
   /**
@@ -160,6 +156,10 @@ public class Course extends Model {
 
   public void setCourseName(String courseName) {
     this.courseName = courseName;
+    // parse department from course name.
+    if(courseName.contains(" ")){
+      this.department = courseName.substring(0, courseName.indexOf(" ")).trim(); 
+   }
   }
 
   public String getCourseNumber() {
@@ -219,6 +219,13 @@ public class Course extends Model {
     return campus;
   }
 
+  /**
+   * @param crn The CRN of the course.
+   */
+  public void setCrn(String crn) {
+    this.crn = crn;
+  }
+  
   /**
    * @param campus the campus to set
    */

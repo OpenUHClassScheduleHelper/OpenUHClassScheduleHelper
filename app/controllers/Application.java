@@ -127,7 +127,6 @@ public class Application extends Controller {
 
   }
 
-
   /**
    * Returns the sample results page to see if classes are implemented properly. This is only for testing!
    * @return The registration page.
@@ -156,7 +155,14 @@ public class Application extends Controller {
       /*resultsList =
           CourseDB.courseSearchList(data.days, data.focus, data.department, data.course, data.instructor,
               data.startTime, data.endTime);*/
-      CourseDB.page(data.days, data.focus, data.department, data.course, data.instructor,
+      
+      // Because we changed the way the department string is formatted in the search form select box,
+      // we need to parse out the department abbreviation before passing it to this method.
+      String dept = data.department;
+      if (data.department.indexOf(":") > 0) {
+        dept = data.department.substring(0, data.department.indexOf(":"));
+      }
+      CourseDB.page(data.days, data.focus, dept, data.course, data.instructor,
           data.startTime, data.endTime);
       resultsList = CourseDB.getCoursesInPage(pageNum-1);
     }
@@ -359,10 +365,17 @@ public class Application extends Controller {
     dept = dept.substring(0, dept.indexOf(":"));
     List<String> instructors = CourseDB.getInstructors(dept);
     String instructorddl = "";
+    String name = "";
     for (int i = 0; i < instructors.size(); i++) {
-      String first = instructors.get(i).split(" ")[0];
-      String last = instructors.get(i).split(" ")[1];
-      instructorddl += "<option>" + last + ", " + first + "</option>" + "\n";
+      if (instructors.get(i).indexOf(" ") > 0) {
+        String first = instructors.get(i).split(" ")[0];
+        String last = instructors.get(i).split(" ")[1];
+        name = last + ", " + first;
+      }
+      else {
+        name = instructors.get(i);
+      }
+      instructorddl += "<option>" + name + "</option>" + "\n";
     }
     return ok(instructorddl);
   }
@@ -376,7 +389,6 @@ public class Application extends Controller {
     return ok(courseddl);
   }
   
-
   public static Result jsRoutes() {
     response().setContentType("text/javascript");
     return ok(Routes.javascriptRouter("appRoutes", // appRoutes will be the JS object available in our view
