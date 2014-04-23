@@ -3,8 +3,6 @@ package controllers;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.Map;
-import javax.mail.MessagingException;
-import javax.mail.internet.AddressException;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import models.UserInfoDB;
@@ -37,9 +35,16 @@ import models.UserInfo;
 
 public class Application extends Controller {
   
+  // Development
   private static final String CAS_LOGIN = "https://cas-test.its.hawaii.edu/cas/login";
   private static final String CAS_VALIDATE = "https://cas-test.its.hawaii.edu/cas/serviceValidate";
   private static final String CAS_LOGOUT = "https://cas-test.its.hawaii.edu/cas/logout";
+  
+  // Production
+  //private static final String CAS_LOGIN = "https://authn.hawaii.edu/cas/login";
+  //private static final String CAS_VALIDATE = "https://authn.hawaii.edu/cas/serviceValidate";
+  //private static final String CAS_LOGOUT = "https://authn.hawaii.edu/cas/logout";
+  
   private static final Form<SearchForm> searchForm = Form.form(SearchForm.class);
 
   /**
@@ -122,7 +127,6 @@ public class Application extends Controller {
 
   }
 
-
   /**
    * Returns the sample results page to see if classes are implemented properly. This is only for testing!
    * @return The registration page.
@@ -151,13 +155,20 @@ public class Application extends Controller {
       /*resultsList =
           CourseDB.courseSearchList(data.days, data.focus, data.department, data.course, data.instructor,
               data.startTime, data.endTime);*/
-      CourseDB.page(data.days, data.focus, data.department, data.course, data.instructor,
+      
+      // Because we changed the way the department string is formatted in the search form select box,
+      // we need to parse out the department abbreviation before passing it to this method.
+      String dept = data.department;
+      if (data.department.indexOf(":") > 0) {
+        dept = data.department.substring(0, data.department.indexOf(":"));
+      }
+      CourseDB.page(data.days, data.focus, dept, data.course, data.instructor,
           data.startTime, data.endTime);
       resultsList = CourseDB.getCoursesInPage(pageNum-1);
     }
     
     else {
-      resultsList = CourseDB.getCourses();
+      //resultsList = CourseDB.getCourses();
     }
 
     // Create Schedule Events
@@ -272,16 +283,6 @@ public class Application extends Controller {
       user.setTelephone(formData.userPhone);
       user.setCarrier(formData.userCarrier);
       user.save();
-      
-      if (user.wantsNotification() && user.getTelephone() != null) {
-        // Send confirmation text
-        String message = "This is to confirm that you've opted-in to receiving messages by text.";
-        try {
-          SendEmail.SendBySms(user.getTelephone(), user.getCarrier(), "", message);
-        }
-        catch (AddressException e) {e.printStackTrace();}
-        catch (MessagingException e) {e.printStackTrace();}
-      }
     }
     return redirect(routes.Application.myAccount());
   }
@@ -361,16 +362,22 @@ public class Application extends Controller {
   }
   
   public static Result populateInstructorList(String dept) {
+    dept = dept.substring(0, dept.indexOf(":"));
     List<String> instructors = CourseDB.getInstructors(dept);
     String instructorddl = "";
+    String name = "";
     for (int i = 0; i < instructors.size(); i++) {
-      String first = instructors.get(i).split(" ")[0];
-      String last = instructors.get(i).split(" ")[1];
-      instructorddl += "<option>" + last + ", " + first + "</option>" + "\n";
+      if (instructors.get(i).indexOf(" ") > 0) {
+        String first = instructors.get(i).split(" ")[0];
+        String last = instructors.get(i).split(" ")[1];
+        name = last + ", " + first;
+      }
+      else {
+        name = instructors.get(i);
+      }
+      instructorddl += "<option>" + name + "</option>" + "\n";
     }
-
     return ok(instructorddl);
-
   }
 
   public static Result populateCourseList(String dept) {
@@ -379,12 +386,9 @@ public class Application extends Controller {
     for (int i = 0; i < courses.size(); i++) {
       courseddl += "<option>" + courses.get(i) + "</option>" + "\n";
     }
-
     return ok(courseddl);
-
   }
   
-
   public static Result jsRoutes() {
     response().setContentType("text/javascript");
     return ok(Routes.javascriptRouter("appRoutes", // appRoutes will be the JS object available in our view

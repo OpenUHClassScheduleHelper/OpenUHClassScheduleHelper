@@ -1,6 +1,16 @@
-@(page: String, focusList: Map[String, Boolean], dayList: Map[String, Boolean], departmentList: Map[String, Boolean], 
-  resultsList: List[Course], searchForm : Form[views.formdata.SearchForm], schedule: List[Course], events: List[ScheduleEvent],
-  courseCount: Int, pageCount: Int, pageNumber: Int)
+@(page: String, 
+  focusList: Map[String, Boolean], 
+  dayList: Map[String, Boolean], 
+  departmentList: Map[String, Boolean], 
+  resultsList: List[Course], 
+  searchForm : Form[views.formdata.SearchForm], 
+  schedule: List[Course], 
+  events: List[ScheduleEvent],
+  courseCount: Int, 
+  pageCount: Int, 
+  pageNumber: Int)
+  
+  
 @import helper.form 
 @import bootstrap3._
 

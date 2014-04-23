@@ -7,7 +7,6 @@ import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
-import controllers.JauntMeetingItem;
 import play.db.ebean.Model;
 
 @Entity
@@ -29,18 +28,6 @@ public class Meeting extends Model {
    */
   public Meeting() {
     // default constructor
-  }
-
-  /**
-   * Constructor.
-   * @param meeting The JauntMeetingItem that represents the meeting to add.
-   */
-  public Meeting(JauntMeetingItem meeting) {
-   this.crn = meeting.getCrn();
-   this.day = meeting.getDay();
-   this.start = meeting.getStartTime();
-   this.end = meeting.getEndTime();
-   this.room = meeting.getRoom();
   }
   
   /**

@@ -8,7 +8,6 @@ import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
-import controllers.JauntCourseItem;
 import play.db.ebean.Model;
 
 @Entity
@@ -31,32 +30,13 @@ public class Course extends Model {
   private String instructor;
   private String department;
   private String semester;
+  private String campus;
   
   /**
    * default constructor.
    */
   public Course() {
     // default constructor
-  }
-
-  /**
-   * Constructor method.
-   * @param course A JauntCourseItem.
-   */
-  public Course(JauntCourseItem course) {
-    this.genFocus = course.getFocus();
-    this.crn = course.getCrn();
-    this.courseName = course.getCourse();
-    this.section = course.getSection();
-    this.courseTitle = course.getTitle();
-    this.credits = course.getCredits();
-    this.instructor = course.getInstructor();
-    this.semester = course.getSemester();
-    
-    // parse department from course name.
-    if(courseName.contains(" ")){
-      this.department = courseName.substring(0, courseName.indexOf(" ")).trim(); 
-   }
   }
   
   /**
@@ -69,9 +49,10 @@ public class Course extends Model {
    * @param credits The number of credits.
    * @param instructor The instructor.
    * @param semester The current semester.
+   * @param campus The campus the course is being offered at.
    */
   public Course(String genFocus, String crn, String courseName, String section, String courseTitle, String credits, 
-                String instructor, String semester) {
+                String instructor, String semester, String campus) {
 
     this.setGenFocus(genFocus);
     this.setCourseNumber(crn);
@@ -81,6 +62,7 @@ public class Course extends Model {
     this.setCredits(credits);
     this.setInstructor(instructor);
     this.setSemester(semester);
+    this.setCampus(campus);
     
     // parse department from course name.
     if(courseName.contains(" ")){
@@ -156,6 +138,10 @@ public class Course extends Model {
 
   public void setCourseName(String courseName) {
     this.courseName = courseName;
+    // parse department from course name.
+    if(courseName.contains(" ")){
+      this.department = courseName.substring(0, courseName.indexOf(" ")).trim(); 
+   }
   }
 
   public String getCourseNumber() {
@@ -209,6 +195,27 @@ public class Course extends Model {
   }
   
   /**
+   * @return the campus
+   */
+  public String getCampus() {
+    return campus;
+  }
+
+  /**
+   * @param crn The CRN of the course.
+   */
+  public void setCrn(String crn) {
+    this.crn = crn;
+  }
+  
+  /**
+   * @param campus the campus to set
+   */
+  public void setCampus(String campus) {
+    this.campus = campus;
+  }
+  
+  /**
    * Get a list of meetings for this course.
    * @return A list of meeting objects for this course.
    */
@@ -249,33 +256,6 @@ public class Course extends Model {
       results.add(entry.getValue() + " " + entry.getKey());
     }
     return results;
-  }
-  
-  /**
-   * Delete this method if it is not being used.
-   * @return
-   */
-  public List<Meeting> getConcatMeetings_Deprecated() {
-    List<Meeting> currentMeetingList = getMeeting();
-    List<Meeting> newMeetingList = new ArrayList<>();
-    boolean separate = true;
-    for(Meeting meeting : currentMeetingList) {
-      separate = true;
-      for(int i = 0; i < newMeetingList.size(); i++) {
-        if(meeting.getStart().equals(newMeetingList.get(i).getStart()) && 
-           meeting.getEnd().equals(newMeetingList.get(i).getEnd()) && 
-           meeting.getRoom().equals(newMeetingList.get(i).getRoom())) {
-           separate = false;
-           String oldDay = newMeetingList.get(i).getDay();
-           newMeetingList.get(i).setDay(oldDay + meeting.getDay());
-        }
-      }
-      
-      if(separate) {
-        newMeetingList.add(meeting);
-      }    
-    }
-    return newMeetingList;
   }
 
 }
