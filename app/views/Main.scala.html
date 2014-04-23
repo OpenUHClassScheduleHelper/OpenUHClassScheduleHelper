@@ -1,4 +1,4 @@
-@(page: String, isLoggedIn: Boolean)(content: Html)
+@(page: String, email: String, isLoggedIn: Boolean)(content: Html)
 
 <!DOCTYPE html>
 
@@ -61,7 +61,7 @@
             </li>
             <li>
               <a href="@routes.Application.myAccount()" 
-                 style="color: @if(page=="My Account"){black}else{white};">My Account
+                 style="color: @if(page=="My Account"){black}else{white};">@email
               </a>
             </li>
             <li>

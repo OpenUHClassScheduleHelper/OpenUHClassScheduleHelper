@@ -53,7 +53,11 @@ public class Application extends Controller {
    * @return The home page.
    */
   public static Result index() {
-    return ok(Index.render("Home"));
+    UserInfo user = Secured.getUserInfo(ctx());
+    if(user == null) {
+      return ok(Index.render("Home", ""));
+    }
+    return ok(Index.render("Home", user.getEmail()));
   }
 
   /**
@@ -62,7 +66,11 @@ public class Application extends Controller {
    */
   @Security.Authenticated(Secured.class)
   public static Result map() {
-    return ok(MapRoute.render("Campus Map"));
+    UserInfo user = Secured.getUserInfo(ctx());
+    if(user == null) {
+      return ok(MapRoute.render("Campus Map", ""));
+    }
+    return ok(MapRoute.render("Campus Map", user.getEmail()));
   }
 
   public static Result login() throws Exception {
@@ -134,7 +142,8 @@ public class Application extends Controller {
   @Security.Authenticated(Secured.class)
   public static Result searchResults() {
     List<Course> courseList = CourseDB.getCourses(); 
-    return ok(Search.render("Search", true, courseList));
+    UserInfo user = Secured.getUserInfo(ctx());
+    return ok(Search.render("Search", user.getEmail(), true, courseList));
   }
 
   /**
@@ -198,7 +207,7 @@ public class Application extends Controller {
       } // end of result loop
     }
 
-    return ok(Results.render("Results", FocusTypes.getFocusTypes(), Days.getDays(), Departments.getDepartments(),
+    return ok(Results.render("Results", user, FocusTypes.getFocusTypes(), Days.getDays(), Departments.getDepartments(),
         resultsList, searchForm, schedule, events, CourseDB.getCourseCount(), CourseDB.getPageCount(), pageNum));
   }
   

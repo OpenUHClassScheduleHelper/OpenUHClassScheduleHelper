@@ -263,7 +263,7 @@ public class UserInfo extends Model {
    * @return the email
    */
   public String getEmail() {
-    return email;
+    return userName + "@hawaii.edu";
   }
 
   /**

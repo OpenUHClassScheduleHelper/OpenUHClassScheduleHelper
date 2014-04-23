@@ -9,7 +9,7 @@
 @import helper._
 @import bootstrap3._
 
-@Main(page, true) {
+@Main(page, user.getEmail(), true) {
 
 <!-- FullCalendar Scripts and Style -->
 <link rel="stylesheet" href="@routes.Assets.at("fullcalendar/fullcalendar.css")">
