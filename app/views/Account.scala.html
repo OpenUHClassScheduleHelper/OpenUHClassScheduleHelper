@@ -1,5 +1,6 @@
 @(page: String, 
   user : UserInfo, 
+  isLoggedIn: Boolean,
   schedule: List[Course], 
   watchList: List[Course], 
   comments: List[UserComment],  
@@ -9,7 +10,7 @@
 @import helper._
 @import bootstrap3._
 
-@Main(page, true) {
+@Main(page, user, isLoggedIn) {
 
 <!-- FullCalendar Scripts and Style -->
 <link rel="stylesheet" href="@routes.Assets.at("fullcalendar/fullcalendar.css")">

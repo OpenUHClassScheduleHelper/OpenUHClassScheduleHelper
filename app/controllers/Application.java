@@ -53,6 +53,7 @@ public class Application extends Controller {
    * @return The home page.
    */
   public static Result index() {
+    //Secured.isLoggedIn(ctx()), Secured.getUserInfo(ctx()), 
     return ok(Index.render("Home"));
   }
 
