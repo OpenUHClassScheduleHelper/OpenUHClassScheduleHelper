@@ -1,4 +1,6 @@
-@(page: String, 
+@(page: String,
+  user: UserInfo, 
+  isLoggedIn: Boolean,
   focusList: Map[String, Boolean], 
   dayList: Map[String, Boolean], 
   departmentList: Map[String, Boolean], 
@@ -14,7 +16,7 @@
 @import helper.form 
 @import bootstrap3._
 
-@Main(page, true) {
+@Main(page, user, isLoggedIn) {
  <script type='text/javascript'>
             $(document).ready(function() { 
 

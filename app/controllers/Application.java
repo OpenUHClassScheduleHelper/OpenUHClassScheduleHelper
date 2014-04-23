@@ -22,7 +22,6 @@ import java.util.List;
 import java.util.ArrayList;
 import views.html.Index;
 import views.html.Results;
-import views.html.Search;
 import views.html.Account;
 import views.html.MapRoute;
 import models.Course;
@@ -53,8 +52,7 @@ public class Application extends Controller {
    * @return The home page.
    */
   public static Result index() {
-    //Secured.isLoggedIn(ctx()), Secured.getUserInfo(ctx()), 
-    return ok(Index.render("Home"));
+    return ok(Index.render("Home", Secured.getUserInfo(ctx()), Secured.isLoggedIn(ctx())));
   }
 
   /**
@@ -63,7 +61,7 @@ public class Application extends Controller {
    */
   @Security.Authenticated(Secured.class)
   public static Result map() {
-    return ok(MapRoute.render("Campus Map"));
+    return ok(MapRoute.render("Campus Map", Secured.getUserInfo(ctx()), Secured.isLoggedIn(ctx())));
   }
 
   public static Result login() throws Exception {
@@ -129,16 +127,6 @@ public class Application extends Controller {
   }
 
   /**
-   * Returns the sample results page to see if classes are implemented properly. This is only for testing!
-   * @return The registration page.
-   */
-  @Security.Authenticated(Secured.class)
-  public static Result searchResults() {
-    List<Course> courseList = CourseDB.getCourses(); 
-    return ok(Search.render("Search", true, courseList));
-  }
-
-  /**
    * Returns the Results page.
    * @return The results page.
    */
@@ -199,7 +187,7 @@ public class Application extends Controller {
       } // end of result loop
     }
 
-    return ok(Results.render("Results", FocusTypes.getFocusTypes(), Days.getDays(), Departments.getDepartments(),
+    return ok(Results.render("Results", Secured.getUserInfo(ctx()), Secured.isLoggedIn(ctx()), FocusTypes.getFocusTypes(), Days.getDays(), Departments.getDepartments(),
         resultsList, searchForm, schedule, events, CourseDB.getCourseCount(), CourseDB.getPageCount(), pageNum));
   }
   
@@ -260,7 +248,7 @@ public class Application extends Controller {
     Form<CommentFormData> commentForm = Form.form(CommentFormData.class);
     NotificationPreferencesFormData preferencesFormData = new NotificationPreferencesFormData(user);
     Form<NotificationPreferencesFormData> preferencesForm = Form.form(NotificationPreferencesFormData.class).fill(preferencesFormData);
-    return ok(Account.render("My Account", user, user.getSchedule(), user.getWatchList(),
+    return ok(Account.render("My Account", user, Secured.isLoggedIn(ctx()), user.getSchedule(), user.getWatchList(),
         UserCommentDB.getCommentsByUserName(user.getUserName()), commentForm, preferencesForm));
   }
 
@@ -274,7 +262,7 @@ public class Application extends Controller {
     Form<CommentFormData> commentForm = Form.form(CommentFormData.class);
     Form<NotificationPreferencesFormData> preferencesForm = Form.form(NotificationPreferencesFormData.class).bindFromRequest();
     if (preferencesForm.hasErrors()) {
-      return badRequest(Account.render("My Account", user, user.getSchedule(), user.getWatchList(),
+      return badRequest(Account.render("My Account", user, Secured.isLoggedIn(ctx()), user.getSchedule(), user.getWatchList(),
           UserCommentDB.getCommentsByUserName(user.getUserName()), commentForm, preferencesForm));
     }
     else {

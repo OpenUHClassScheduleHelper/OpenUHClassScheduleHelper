@@ -18,8 +18,8 @@ public class Global extends GlobalSettings {
   public void onStart(Application app) {
     
     // Update Database
-    WebScraper ws = new WebScraper();
-    ws.scrapeLinks("https://www.sis.hawaii.edu/uhdad/avail.classes?i=MAN&t=201510");
+   // WebScraper ws = new WebScraper();
+    //ws.scrapeLinks("https://www.sis.hawaii.edu/uhdad/avail.classes?i=MAN&t=201510");
 
   }
 }
