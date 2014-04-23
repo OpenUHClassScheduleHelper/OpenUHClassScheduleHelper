@@ -3,8 +3,10 @@ package models;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import controllers.JauntMeetingItem;
 import play.db.ebean.Model;
 

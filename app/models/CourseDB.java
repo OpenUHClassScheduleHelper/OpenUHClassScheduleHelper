@@ -6,6 +6,7 @@ import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import com.avaje.ebean.Ebean;
+import com.avaje.ebean.FetchConfig;
 import com.avaje.ebean.PagingList;
 import com.avaje.ebean.Query;
 import controllers.JauntCourseItem;
@@ -150,7 +151,10 @@ public class CourseDB {
     int daycheck = 0;
     int focuscheck = 0;
     Query<Course> query = Ebean.createQuery(Course.class);
-    CourseDB.setPages(pages);
+    Query<Course> secondQuery = null;
+    Query<Course> finalQuery = Ebean.createQuery(Course.class);
+    //pages = null;
+    //CourseDB.setPages(pages);
     
     if(! department.equals("")) {
       noQueryCheck = false;
@@ -211,48 +215,179 @@ public class CourseDB {
       }
     
     
-    /*if(days != null && days.length > 0 && daycheck != 4) {
+    if(days != null && days.length > 0 && daycheck != 7) {
+      secondQuery = Ebean.createQuery(Course.class);
       noQueryCheck = false;
-      if(! department.equals("") || focuscheck != 4) {
-        queryString += "and ";
-      }
-      int index = 0;
+      List<Course> courseList = query.findList();
+      List<String> crnList = new ArrayList<>();
       for(String day : days) {
         if(day != null) {
-          index++;
-          if(index > 1) {
-          queryString += "and ";
-          }
           if(day.equals("M")) {
-            queryString += "genFocus like :m ";
+            //query.fetch("meeting", new FetchConfig().query()).fetch("meeting.crn").where().contains("meeting.day", "M");
+            //query.fetch("meeting").fetch("meeting.day").where().contains("meeting.day", "M");
+            for(Course course : courseList) {
+              for(Meeting meeting: course.getMeeting()) {
+                if(meeting.getDay().contains("M")) {
+                  if(! crnList.contains(course.getCrn())) {
+                    crnList.add(course.getCrn());
+                  }
+                }
+              }
+            }
+            
           }
           if(day.equals("T")) {
-            queryString += "genFocus like :t ";
+            for(Course course : courseList) {
+              for(Meeting meeting: course.getMeeting()) {
+                if(meeting.getDay().contains("T")) {
+                  if(! crnList.contains(course.getCrn())) {
+                    crnList.add(course.getCrn());
+                  }
+                }
+              }
+            }
           }
           if(day.equals("W")) {
-            queryString += "genFocus like :w ";
+            for(Course course : courseList) {
+              for(Meeting meeting: course.getMeeting()) {
+                if(meeting.getDay().contains("W")) {
+                  if(! crnList.contains(course.getCrn())) {
+                    crnList.add(course.getCrn());
+                  }
+                }
+              }
+            }
           }
           if(day.equals("R")) {
-            queryString += "genFocus like :r ";
+            for(Course course : courseList) {
+              for(Meeting meeting: course.getMeeting()) {
+                if(meeting.getDay().contains("R")) {
+                  if(! crnList.contains(course.getCrn())) {
+                    crnList.add(course.getCrn());
+                  }
+                }
+              }
+            }
           }
           if(day.equals("F")) {
-            queryString += "genFocus like :f ";
+            for(Course course : courseList) {
+              for(Meeting meeting: course.getMeeting()) {
+                if(meeting.getDay().contains("F")) {
+                  if(! crnList.contains(course.getCrn())) {
+                    crnList.add(course.getCrn());
+                  }
+                }
+              }
+            }
           }
           if(day.equals("Sa")) {
-            queryString += "genFocus like :sa ";
+            for(Course course : courseList) {
+              for(Meeting meeting: course.getMeeting()) {
+                if(meeting.getDay().contains("S")) {
+                  if(! crnList.contains(course.getCrn())) {
+                    crnList.add(course.getCrn());
+                  }
+                }
+              }
+            }
           }
           if(day.equals("Su")) {
-            queryString += "genFocus like :su ";
+            for(Course course : courseList) {
+              for(Meeting meeting: course.getMeeting()) {
+                if(meeting.getDay().contains("U")) {
+                  if(! crnList.contains(course.getCrn())) {
+                    crnList.add(course.getCrn());
+                  }
+                }
+              }
+            }
           }
         }
+      }  
+      for(String crn : crnList) {
+        secondQuery.where().eq("crn", crn);
       }
-    }*/
-    
-    if(noQueryCheck) {
-      query.findList();
     }
     
-     pages = query.findPagingList(PAGINATION_MAX);
+    
+    List<Course> initialCourseList = new ArrayList<>();
+    List<String> finalCrnList = new ArrayList<>();
+    if(secondQuery == null) {
+      initialCourseList = query.findList();
+    }else {
+      initialCourseList = secondQuery.findList();
+    }
+    
+    //================================================================================================================
+    if(startTime.equals("") || endTime.equals("")) {
+      for(Course course : initialCourseList) {
+        finalQuery.where().eq("crn", course.getCrn());
+      }
+    }else {
+    String start = startTime.split(" ")[0].replace(":", "");
+    String startAbbreviation =  startTime.split(" ")[1];
+    String end = endTime.split(" ")[0].replace(":", "");
+    String endAbbreviation =  endTime.split(" ")[1];
+    for(Course course : initialCourseList) {
+      boolean allDaysAvailable = true;
+      List<Meeting> meetingList = course.getMeeting();
+      for(int i =0; i < meetingList.size(); i++) {
+        String startMeeting = meetingList.get(i).getStart().substring(0, meetingList.get(i).getStart().length()-2);
+        String startAbbreviationMeeting =  meetingList.get(i).getStart().charAt(meetingList.get(i).getStart().length()-1) + "";
+        String endMeeting = meetingList.get(i).getStart().substring(0, meetingList.get(i).getEnd().length()-1);
+        String endAbbreviationMeeting =  meetingList.get(i).getStart().charAt(meetingList.get(i).getStart().length()-1) + "";
+        if(startAbbreviation.equals("AM") && startAbbreviationMeeting.equals("a")) {
+          if(start.compareTo(startMeeting) <= 0) {
+          //Do nothing: meeting start time is fine
+          }else {
+            allDaysAvailable = false;
+          }
+        }else if (startAbbreviation.equals("AM") && startAbbreviationMeeting.equals("p")) {
+          //Do nothing: meeting start time is fine
+        }else if (startAbbreviation.equals("PM") && startAbbreviationMeeting.equals("a")) {
+          allDaysAvailable = false;
+        }else if (startAbbreviation.equals("PM") && startAbbreviationMeeting.equals("p")) {
+          if(start.compareTo(startMeeting) <= 0) {
+            //Do nothing: meeting start time is fine
+            }else {
+              allDaysAvailable = false;
+            }
+        }
+        
+        
+        if(endAbbreviation.equals("AM") && endAbbreviationMeeting.equals("a")) {
+          if(end.compareTo(endMeeting) <= 0) {
+            //Do nothing: meeting start time is fine
+            }else {
+              allDaysAvailable = false;
+            }
+        }else if (endAbbreviation.equals("AM") && endAbbreviationMeeting.equals("p")) {
+          allDaysAvailable = false;
+        }else if (endAbbreviation.equals("PM") && endAbbreviationMeeting.equals("a")) {
+        //Do nothing: meeting end time is fine
+        }else if (endAbbreviation.equals("PM") && endAbbreviationMeeting.equals("p")) {
+          if(end.compareTo(endMeeting) <= 0) {
+            //Do nothing: meeting start time is fine
+            }else {
+              allDaysAvailable = false;
+            }
+        }
+        
+        
+      }
+      if(allDaysAvailable) {
+        finalCrnList.add(course.getCrn());
+      }
+    }
+    }
+    for(String crn : finalCrnList) {
+      finalQuery.where().eq("crn", crn);
+    }
+    
+    //================================================================================================================
+    
+
+     pages = finalQuery.findPagingList(PAGINATION_MAX);
      CourseDB.setPages(pages);
     
   }

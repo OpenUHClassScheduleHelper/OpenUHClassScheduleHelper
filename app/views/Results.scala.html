@@ -37,7 +37,7 @@
                                     range : true,
                                     min : 0,
                                     max : 1439,
-                                    values : [ 420, 1200 ],
+                                    values : [ 360, 1380 ],
                                     slide : slideTime
                                 });
 
@@ -363,6 +363,15 @@ $(document).ready(function(){
                   </li>
                   }
                 @if(pageNumber+5 >= pageCount) {
+                  @if(pageCount < 5) {
+                    @for(i <- pageCount) {
+                       <li class=@if(i==pageNumber){"active"}>
+                    <a id="@i" href="@routes.Application.getResults(i)">
+                      @i
+                    </a>
+                  </li>
+                    }
+                  }else {
                   @for(i <- (pageCount-4) until (pageCount + 5)) {
                     @if(i <= pageCount) {
                     <li class=@if(i==pageNumber){"active"}>
@@ -370,6 +379,7 @@ $(document).ready(function(){
                       @i
                     </a>
                   </li>
+                  }
                   }
                   }
                 }
@@ -393,7 +403,7 @@ $(document).ready(function(){
                   }
                 <li>
                 
-                    <a id="first" href="@routes.Application.getResults(pageCount)">
+                    <a id="last" href="@routes.Application.getResults(pageCount)">
                       Last
                     </a>
                   </li>
