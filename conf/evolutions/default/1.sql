@@ -3,7 +3,7 @@
 
 # --- !Ups
 
-create table course (
+create table course ( 
   id                        bigint auto_increment not null,
   gen_focus                 varchar(255),
   crn                       varchar(255),
