@@ -1,3 +1,11 @@
+#filterbutton {
+  
+}
+
+#filterSearch {
+  display: none;  
+}
+
 .meetingcolumn {
   text-align: left;
 }

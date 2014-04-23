@@ -346,12 +346,13 @@ public class CourseDB {
 
   public static void page(String[] days, String[] genFocus, String department, String courseTitleandName, String instructor, String startTime, String endTime) {
     boolean noQueryCheck = true;
-
+    int index = 0;
     int daycheck = 0;
     int focuscheck = 0;
     Query<Course> query = Ebean.createQuery(Course.class);
     Query<Course> secondQuery = null;
-    Query<Course> finalQuery = Ebean.createQuery(Course.class);
+    String secondQueryString = "find course where ";
+    String finalQueryString = "find course where ";
     //pages = null;
     //CourseDB.setPages(pages);
     
@@ -422,8 +423,6 @@ public class CourseDB {
       for(String day : days) {
         if(day != null) {
           if(day.equals("M")) {
-            //query.fetch("meeting", new FetchConfig().query()).fetch("meeting.crn").where().contains("meeting.day", "M");
-            //query.fetch("meeting").fetch("meeting.day").where().contains("meeting.day", "M");
             for(Course course : courseList) {
               for(Meeting meeting: course.getMeeting()) {
                 if(meeting.getDay().contains("M")) {
@@ -504,7 +503,20 @@ public class CourseDB {
         }
       }  
       for(String crn : crnList) {
-        secondQuery.where().eq("crn", crn);
+        String indexParameter = ":crn" + index;
+        if(index < crnList.size()-1) {
+          secondQueryString += "crn = " + indexParameter + " OR ";
+        }else {
+          secondQueryString += "crn = " + indexParameter;
+        }
+        index++;
+      }
+      secondQuery = Ebean.createQuery(Course.class, finalQueryString);
+      index = 0;
+      for(String crn : crnList) {
+        String indexParameter = "crn" + index;
+        index++;
+        secondQuery.setParameter(indexParameter, crn);
       }
     }
     
@@ -517,8 +529,25 @@ public class CourseDB {
       initialCourseList = secondQuery.findList();
     }
     
+    index = 0;
+    for(Course course : initialCourseList) {
+      String indexParameter = ":crn" + index;
+      if(index < initialCourseList.size()-1) {
+        finalQueryString += "crn = " + indexParameter + " OR ";
+      }else {
+        finalQueryString += "crn = " + indexParameter;
+      }
+      index++;
+    }
+    Query<Course> finalQuery = Ebean.createQuery(Course.class, finalQueryString);
+    index = 0;
+    for(Course course : initialCourseList) {
+      String indexParameter = "crn" + index;
+      index++;
+      finalQuery.setParameter(indexParameter, course.getCrn());
+    }
     //================================================================================================================
-    if(startTime.equals("") || endTime.equals("")) {
+    /*if(startTime.equals("") || endTime.equals("")) {
       for(Course course : initialCourseList) {
         finalQuery.where().eq("crn", course.getCrn());
       }
@@ -578,10 +607,12 @@ public class CourseDB {
         finalCrnList.add(course.getCrn());
       }
     }
-    }
+    
+    
     for(String crn : finalCrnList) {
       finalQuery.where().eq("crn", crn);
     }
+    }*/
     
     //================================================================================================================
     

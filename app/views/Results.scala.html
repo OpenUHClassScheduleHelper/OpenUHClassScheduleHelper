@@ -190,6 +190,24 @@ $(document).ready(function(){
 });
 </script>
 
+<script>
+$(document).ready(function(){
+$('#filterbutton').click(function() {
+
+    if ($('#filterSearch').is(":visible")) {
+        $('#filterSearch').slideUp(400, function() {
+            //Animation Complete
+        });
+    } else {
+        $('#filterSearch').slideDown(600, function() {
+            //Animation Complete
+        });
+    }
+});
+});
+</script>
+
+
 <!-- / FullCalendar Scripts and Style -->
 
  <!-- search form -->
@@ -205,17 +223,21 @@ $(document).ready(function(){
             <option>Any Course</option>
           </select>               
       </div>
+      <button type="submit" class="btn btn-primary" style="margin-left:15px">Search</button>
+      
+      <button type="button" class="btn" id="filterbutton">Filter</button>
+      <div id="filterSearch">
       @checkboxes(searchForm("focus"), label = "Focus:", checkboxMap = focusList)
-      <br>
+      
       @checkboxes(searchForm("days"), label = "Days:", checkboxMap = dayList)
+      <br>
       <div class="checkbox" style="margin-left:10px;padding-top:10px">
         <div id="slider-range"></div>
         <b>Time Range:<span id="time"></span></b>       
       </div>
       <input type='hidden' id= 'startTime' name='startTime' value='' />
       <input type='hidden' id= 'endTime' name='endTime' value='' />
-
-      <button type="submit" class="btn btn-primary" style="margin-left:15px">Search</button>
+      </div>
     </form>
     }
   </div>
@@ -374,7 +396,7 @@ $(document).ready(function(){
                   }
                 @if(pageNumber+5 >= pageCount) {
                   @if(pageCount < 5) {
-                    @for(i <- pageCount) {
+                    @for(i <- 1 until pageCount+1) {
                        <li class=@if(i==pageNumber){"active"}>
                     <a id="@i" href="@routes.Application.getResults(i)">
                       @i

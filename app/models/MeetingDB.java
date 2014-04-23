@@ -35,6 +35,9 @@ public class MeetingDB {
    * @return true if the meeting already exists, false otherwise.
    */
   private static boolean duplicateExists(Meeting newMeeting) {
+    if(newMeeting == null) {
+      return false;
+    }
     String crn = newMeeting.getCrn();
     List<Meeting> meetings = Meeting.find().where().eq("crn", crn).findList();
     if (meetings.size() > 0) {
