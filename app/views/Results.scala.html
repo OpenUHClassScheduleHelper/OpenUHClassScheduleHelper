@@ -208,6 +208,53 @@ $('#filterbutton').click(function() {
 });
 </script>
 
+<script>
+function replaceFullCalendarHeader() {
+  var elems = document.getElementsByTagName('*'), i;
+    for (i in elems) {
+      if((' ' + elems[i].className + ' ').indexOf(' ' + 'fc-sun fc-col0 fc-widget-header' + ' ') > -1) {
+        elems[i].innerHTML = 'Sunday';
+      }
+      if((' ' + elems[i].className + ' ').indexOf(' ' + 'fc-mon fc-col1 fc-widget-header' + ' ') > -1) {
+          elems[i].innerHTML = 'Monday';
+      }
+      if((' ' + elems[i].className + ' ').indexOf(' ' + 'fc-tue fc-col2 fc-widget-header' + ' ') > -1) {
+          elems[i].innerHTML = 'Tuesday';
+      }
+      if((' ' + elems[i].className + ' ').indexOf(' ' + 'fc-wed fc-col3 fc-widget-header' + ' ') > -1) {
+          elems[i].innerHTML = 'Wednesday';
+      }
+      if((' ' + elems[i].className + ' ').indexOf(' ' + 'fc-thu fc-col4 fc-widget-header' + ' ') > -1) {
+          elems[i].innerHTML = 'Thursday';
+      }
+      if((' ' + elems[i].className + ' ').indexOf(' ' + 'fc-fri fc-col5 fc-widget-header' + ' ') > -1) {
+          elems[i].innerHTML = 'Friday';
+      }
+      if((' ' + elems[i].className + ' ').indexOf(' ' + 'fc-sat fc-col6 fc-widget-header' + ' ') > -1) {
+          elems[i].innerHTML = 'Saturday';
+      }
+    }
+  }
+</script>
+
+<script>
+function addLoadEvent(func) {
+  var oldonload = window.onload;
+  if (typeof window.onload != 'function') {
+    window.onload = func;
+  } else {
+    window.onload = function() {
+      if (oldonload) {
+        oldonload();
+      }
+      func();
+    }
+  }
+}
+
+addLoadEvent(replaceFullCalendarHeader);
+</script>
+
 
 <!-- / FullCalendar Scripts and Style -->
 
