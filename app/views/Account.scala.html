@@ -2,7 +2,9 @@
   user : UserInfo, 
   schedule: List[Course], 
   watchList: List[Course], 
-  comments: List[UserComment],  
+  comments: List[UserComment],
+  scheduleNews: List[UserComment],
+  watchlistNews: List[UserComment],
   commentForm: Form[views.formdata.CommentFormData],
   preferencesForm: Form[views.formdata.NotificationPreferencesFormData])
 
@@ -100,7 +102,6 @@ function toggleMobileDiv(id)
 <!-- Begin User Information Section -->
 <div class="container">
   <h2>User Information</h2>
-  <p class="info"><b>Name: </b>@user.getFullName()</p>
   <p class="info"><b>UH Username: </b>@user.getUserName()</p>
 </div>
 <!-- End User Information Section -->
@@ -239,167 +240,222 @@ function toggleMobileDiv(id)
     
     <div class="tab-pane" id="Schedule">
       
-      <!-- Schedule in normal view -->
-      <table class="table table-bordered hidden-sm hidden-xs" style="margin-top:10px;margin-left:25px;">
-        <tr>
-          <th class="col-sm-1">CRN</th>
-          <th class="">Focus</th>
-          <th class="col-sm-1">Course</th>
-          <th>Title</th>
-          <th>Instructor</th>
-          <th class="col-sm-3">Day/Time/Location</th>
-          <th class="col-sm-1">Options</th>
-        </tr>
+      @if(schedule.length == 0) {
+        <h4>Your schedule is empty. Click <a style="color:blue;" href="@routes.Application.getResults(1)">here</a> 
+            to search for classes.</h4>
+      } else {
+        <!-- Schedule in normal view -->
+        <table class="table table-bordered hidden-sm hidden-xs" style="margin-top:10px;margin-left:25px;">
+          <tr>
+            <th class="col-sm-1">CRN</th>
+            <th class="">Focus</th>
+            <th class="col-sm-1">Course</th>
+            <th>Title</th>
+            <th>Instructor</th>
+            <th class="col-sm-3">Day/Time/Location</th>
+            <th class="col-sm-1">Options</th>
+          </tr>
+          @for(course <- schedule) {
+          <tr>
+            <td>@course.getCourseNumber()</td>
+            <td>@if(course.getGenFocus()=="") {None} else {@course.getGenFocus()}</td>
+            <td>@course.getCourseName()</td>
+            <td>@course.getCourseTitle()</td>
+            <td>@course.getInstructor()</td>
+            <td>@for(meeting <- course.getMeetingTimes()) {@meeting<br>}
+            </td>
+            <td>
+              <a class="btn btn-danger btn-xs" data-toggle="modal" href="#deleteSchedule@course.getCrn()">
+                <div class="glyphicon glyphicon-remove"></div>Remove
+              </a>
+            </td>
+          </tr>
+          }
+        </table>
+        
+        <!-- Schedule in mobile view -->
         @for(course <- schedule) {
-        <tr>
-          <td>@course.getCourseNumber()</td>
-          <td>@if(course.getGenFocus()=="") {None} else {@course.getGenFocus()}</td>
-          <td>@course.getCourseName()</td>
-          <td>@course.getCourseTitle()</td>
-          <td>@course.getInstructor()</td>
-          <td>@for(meeting <- course.getMeetingTimes()) {@meeting<br>}
-          </td>
-          <td>
-            <a class="btn btn-danger btn-xs" data-toggle="modal" href="#deleteSchedule@course.getCrn()">
-              <div class="glyphicon glyphicon-remove"></div>Remove
-            </a>
-          </td>
-        </tr>
+        <div class="visible-sm visible-xs">
+          <a class="btn course-dropdown-button" onclick="toggleMobileDiv(mobileSchedule@course.getCrn())">
+            @course.getCrn(): @course.getCourseName() - @course.getCourseTitle() 
+          </a>
+          <div id="mobileSchedule@course.getCrn()" style="display:none;">
+            <table class="table table-bordered">
+              <tr>
+                <td>Gen Ed/Focus</td>
+                <td>@if(course.getGenFocus()=="") {None} else {@course.getGenFocus()}</td>
+              </tr>
+              <tr>
+                <td>Instructor:</td>
+                <td>@course.getInstructor()</td>
+              </tr>
+              <tr>
+                <td>Day/Time/Location:</td>
+                <td>@for(meeting <- course.getMeetingTimes()) {@meeting<br>}</td>
+              </tr>
+              <tr>
+                <td>Delete from schedule?</td>
+                <td>
+                  <a class="btn btn-danger btn-sm" data-toggle="modal" href="#deleteSchedule@course.getCrn()">
+                    <div class="glyphicon glyphicon-remove"></div>Remove
+                  </a>
+                </td>
+              </tr>
+            </table>
+          </div> <!-- End of mobile table -->
+        </div> <!-- End of visible div -->
         }
-      </table>
-      
-      <!-- Schedule in mobile view -->
-      @for(course <- schedule) {
-      <div class="visible-sm visible-xs">
-        <a class="btn course-dropdown-button" onclick="toggleMobileDiv(mobileSchedule@course.getCrn())">
-          @course.getCrn(): @course.getCourseName() - @course.getCourseTitle() 
-        </a>
-        <div id="mobileSchedule@course.getCrn()" style="display:none;">
-          <table class="table table-bordered">
-            <tr>
-              <td>Gen Ed/Focus</td>
-              <td>@if(course.getGenFocus()=="") {None} else {@course.getGenFocus()}</td>
-            </tr>
-            <tr>
-              <td>Instructor:</td>
-              <td>@course.getInstructor()</td>
-            </tr>
-            <tr>
-              <td>Day/Time/Location:</td>
-              <td>@for(meeting <- course.getMeetingTimes()) {@meeting<br>}</td>
-            </tr>
-            <tr>
-              <td>Delete from schedule?</td>
-              <td>
-                <a class="btn btn-danger btn-sm" data-toggle="modal" href="#deleteSchedule@course.getCrn()">
-                  <div class="glyphicon glyphicon-remove"></div>Remove
-                </a>
-              </td>
-            </tr>
-          </table>
-        </div> <!-- End of mobile table -->
-      </div> <!-- End of visible div -->
-      }
-      <!-- End of Schedule in mobile view -->
-      
+        <!-- End of Schedule in mobile view -->
+      } <!-- End of if statement -->
     </div> <!-- End of Schedule Tab -->
     
     <div class="tab-pane" id="WatchList">
-      <h3>Spring 2014</h3>
-      
-      <!-- Watchlist in normal view -->
-      <table class="table table-bordered hidden-sm hidden-xs" style="margin-top:10px;margin-left:25px;">
-        <tr>
-          <th class="col-sm-1">CRN</th>
-          <th class="">Focus</th>
-          <th  class="col-sm-1">Course</th>
-          <th>Title</th>
-          <th>Instructor</th>
-          <th class="col-sm-3">Day/Time/Location</th>
-          <th class="col-sm-1">Options</th>
-        </tr>
-        @for(course <- watchList) {
-        <tr>
-          <td>@course.getCourseNumber()</td>
-          <td>@if(course.getGenFocus()=="") {None} else {@course.getGenFocus()}</td>
-          <td>@course.getCourseName()</td>
-          <td>@course.getCourseTitle()</td>
-          <td>@course.getInstructor()</td>
-          <td>@for(meeting <- course.getMeetingTimes()) {@meeting<br>}
-          </td>
-          <td>
-            <div>
-              <a class="btn btn-danger btn-xs" data-toggle="modal" href="#deleteWatchlist@course.getCrn()">
-                <div class="glyphicon glyphicon-remove"></div>Remove
-              </a>
-            </div>
-          </td>
-        </tr>
-        }
-      </table>
-      
-  <!-- Watchlist in mobile view -->
-      <!-- Schedule in mobile view -->
-      @for(course <- watchList) {
-      <div class="visible-sm visible-xs">
-        <a class="btn course-dropdown-button" onclick="toggleMobileDiv(mobileWatchList@course.getCrn())">
-          @course.getCrn(): @course.getCourseName() - @course.getCourseTitle() 
-        </a>
-        <div id="mobileWatchList@course.getCrn()" style="display:none;">
-          <table class="table table-bordered">
-            <tr>
-              <td>Gen Ed/Focus</td>
-              <td>@if(course.getGenFocus()=="") {None} else {@course.getGenFocus()}</td>
-            </tr>
-            <tr>
-              <td>Instructor:</td>
-              <td>@course.getInstructor()</td>
-            </tr>
-            <tr>
-              <td>Day/Time/Location:</td>
-              <td>@for(meeting <- course.getMeetingTimes()) {@meeting<br>}</td>
-            </tr>
-            <tr>
-              <td>Delete from watchlist?</td>
-              <td>
-                <a class="btn btn-danger btn-sm" data-toggle="modal" href="#deleteWatchlist@course.getCrn()">
+      @if(watchList.length == 0) {
+        <h4>Your watchlist is empty. Click <a style="color:blue;" href="@routes.Application.getResults(1)">here</a> 
+            to search for classes.</h4>
+      } else {
+        <!-- Watchlist in normal view -->
+        <table class="table table-bordered hidden-sm hidden-xs" style="margin-top:10px;margin-left:25px;">
+          <tr>
+            <th class="col-sm-1">CRN</th>
+            <th class="">Focus</th>
+            <th  class="col-sm-1">Course</th>
+            <th>Title</th>
+            <th>Instructor</th>
+            <th class="col-sm-3">Day/Time/Location</th>
+            <th class="col-sm-1">Options</th>
+          </tr>
+          @for(course <- watchList) {
+          <tr>
+            <td>@course.getCourseNumber()</td>
+            <td>@if(course.getGenFocus()=="") {None} else {@course.getGenFocus()}</td>
+            <td>@course.getCourseName()</td>
+            <td>@course.getCourseTitle()</td>
+            <td>@course.getInstructor()</td>
+            <td>@for(meeting <- course.getMeetingTimes()) {@meeting<br>}
+            </td>
+            <td>
+              <div>
+                <a class="btn btn-danger btn-xs" data-toggle="modal" href="#deleteWatchlist@course.getCrn()">
                   <div class="glyphicon glyphicon-remove"></div>Remove
                 </a>
-              </td>
-            </tr>
-          </table>
-        </div> <!-- End of mobile table -->
-      </div> <!-- End of visible div -->
+              </div>
+            </td>
+          </tr>
+          }
+        </table>
+        
+        <!-- Watchlist in mobile view -->
+        <!-- Schedule in mobile view -->
+        @for(course <- watchList) {
+        <div class="visible-sm visible-xs">
+          <a class="btn course-dropdown-button" onclick="toggleMobileDiv(mobileWatchList@course.getCrn())">
+            @course.getCrn(): @course.getCourseName() - @course.getCourseTitle() 
+          </a>
+          <div id="mobileWatchList@course.getCrn()" style="display:none;">
+            <table class="table table-bordered">
+              <tr>
+                <td>Gen Ed/Focus</td>
+                <td>@if(course.getGenFocus()=="") {None} else {@course.getGenFocus()}</td>
+              </tr>
+              <tr>
+                <td>Instructor:</td>
+                <td>@course.getInstructor()</td>
+              </tr>
+              <tr>
+                <td>Day/Time/Location:</td>
+                <td>@for(meeting <- course.getMeetingTimes()) {@meeting<br>}</td>
+              </tr>
+              <tr>
+                <td>Delete from watchlist?</td>
+                <td>
+                  <a class="btn btn-danger btn-sm" data-toggle="modal" href="#deleteWatchlist@course.getCrn()">
+                    <div class="glyphicon glyphicon-remove"></div>Remove
+                  </a>
+                </td>
+              </tr>
+            </table>
+          </div> <!-- End of mobile table -->
+        </div> <!-- End of visible div -->
+        }
+        <!-- End of Watchlist in mobile view -->
       }
-      <!-- End of Watchlist in mobile view -->
-
     </div> <!-- End of Watchlist tab -->
  
     <div class="tab-pane" id="News">
-  
-      <!-- Comments in normal view -->
-      <table class="table table-bordered" style="margin-top:10px;margin-left:25px;">
-        <tr>
-          <th class="col-sm-1">Date</th>
-          <th class="col-sm-1">Course</th>
-          <th class="">Comment</th>
-          <th class="col-sm-1">Edit</th>
-          <th class="col-sm-1">Delete</th>
-        </tr>
-        @for(comment <- comments) {
-        <tr>
-          <td>@comment.getPostDate()</td>
-          <td>@comment.getCourseNumber()</td>
-          <td>@comment.getComment()</td>
-          <td>
-            <a type="button" class="btn btn-primary btn-xs" data-toggle="modal" href="#editComment@comment.getId()">Edit</a>
-          </td>
-          <td>  
-            <a type="button" class="btn btn-danger btn-xs" data-toggle="modal" href="#deleteComment@comment.getId()">Delete</a>
-          </td>
-        </tr>
-        }
-      </table>
+      @if(comments.length == 0 && scheduleNews.length == 0 && watchlistNews.length == 0) {
+        <h4>There's currently no Late Breaking News for any of your classes.</h4>
+      }
+      
+      @if(comments.length > 0) {
+        <!-- Users Comments -->
+        <h4>Breaking News items you've posted</h4>
+        <table class="table table-bordered" style="margin-top:10px;margin-left:25px;">
+          <tr>
+            <th class="col-sm-1">Date</th>
+            <th class="col-sm-1">Course</th>
+            <th class="">Comment</th>
+            <th class="col-sm-1">Edit</th>
+            <th class="col-sm-1">Delete</th>
+          </tr>
+          @for(comment <- comments) {
+          <tr>
+            <td>@comment.getPostDate()</td>
+            <td>@comment.getCourseNumber()</td>
+            <td>@comment.getComment()</td>
+            <td>
+              <a type="button" class="btn btn-primary btn-xs" data-toggle="modal" href="#editComment@comment.getId()">Edit</a>
+            </td>
+            <td>  
+              <a type="button" class="btn btn-danger btn-xs" data-toggle="modal" href="#deleteComment@comment.getId()">Delete</a>
+            </td>
+          </tr>
+          }
+        </table>
+      } <!-- End of users comments -->
+      
+      @if(scheduleNews.length > 0) {
+        <!-- Breaking news in users schedule -->
+        <h4>Breaking News for courses in your Schedule</h4>
+        <table class="table table-bordered" style="margin-top:10px;margin-left:25px;">
+          <tr>
+            <th class="col-sm-1">Date</th>
+            <th class="col-sm-1">Course</th>
+            <th class="col-sm-2">Posted By</th>
+            <th>Comment</th>
+          </tr>
+          @for(comment <- scheduleNews) {
+          <tr>
+            <td>@comment.getPostDate()</td>
+            <td>@comment.getCourseNumber()</td>
+            <td>@comment.getUserName()</td>
+            <td>@comment.getComment()</td>
+          </tr>
+          }
+        </table>
+      } <!-- End of breaking news for scheduled courses -->
+
+      @if(watchlistNews.length > 0) {
+        <!-- Breaking news in users schedule -->
+        <h4>Breaking News for courses in your Watchlist</h4>
+        <table class="table table-bordered" style="margin-top:10px;margin-left:25px;">
+          <tr>
+            <th class="col-sm-1">Date</th>
+            <th class="col-sm-1">Course</th>
+            <th class="col-sm-2">Posted By</th>
+            <th>Comment</th>
+          </tr>
+          @for(comment <- watchlistNews) {
+          <tr>
+            <td>@comment.getPostDate()</td>
+            <td>@comment.getCourseNumber()</td>
+            <td>@comment.getUserName()</td>
+            <td>@comment.getComment()</td>
+          </tr>
+          }
+        </table>
+      } <!-- End of breaking news for scheduled courses -->
+        
     </div>
   </div>
 </div>
@@ -415,9 +471,10 @@ function toggleMobileDiv(id)
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-        <h4 class="modal-title" id="myModalLabel">Confirm Delete</h4>
+        <h4 class="modal-title" id="myModalLabel">Confirm Delete of @course.getCourseName()</h4>
       </div>
-      <div class="modal-body">Are you sure you want to delete this course from your Schedule? This action cannot be undone.</div>
+      <div class="modal-body">Are you sure you want to delete <strong>@course.getCourseTitle()</strong> from your Schedule? 
+                              This action cannot be undone.</div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
           <a id="modalconfirm"
@@ -439,9 +496,10 @@ function toggleMobileDiv(id)
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-        <h4 class="modal-title" id="myModalLabel">Confirm Delete</h4>
+        <h4 class="modal-title" id="myModalLabel">Confirm Delete of @course.getCourseName()</h4>
       </div>
-      <div class="modal-body">Are you sure you want to delete this course from your watchlist? This action cannot be undone.</div>
+      <div class="modal-body">Are you sure you want to delete <strong>@course.getCourseTitle()</strong> from your watchlist? 
+                              This action cannot be undone.</div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
           <a id="modalconfirm"
@@ -465,7 +523,7 @@ function toggleMobileDiv(id)
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-        <h4 class="modal-title" id="myModalLabel">Edit Your Comment</h4>
+        <h4 class="modal-title" id="myModalLabel">Edit Your Comment for @comment.getCourseNumber()</h4>
       </div>
       <div class="modal-body">
         <table>
@@ -491,9 +549,11 @@ function toggleMobileDiv(id)
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-        <h4 class="modal-title" id="myModalLabel">Confirm Delete</h4>
+        <h4 class="modal-title" id="myModalLabel">Delete Your Comment for @comment.getCourseNumber()</h4>
       </div>
-      <div class="modal-body">Are you sure you want to delete this comment? This action cannot be undone.</div>
+      <div class="modal-body">Are you sure you want to delete this comment:
+                              <blockquote>@comment.getComment()</blockquote>
+                              This action cannot be undone.</div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
           <a id="modalconfirm"

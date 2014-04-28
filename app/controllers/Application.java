@@ -268,13 +268,48 @@ public class Application extends Controller {
     Form<CommentFormData> commentForm = Form.form(CommentFormData.class);
     NotificationPreferencesFormData preferencesFormData = new NotificationPreferencesFormData(user);
     Form<NotificationPreferencesFormData> preferencesForm = Form.form(NotificationPreferencesFormData.class).fill(preferencesFormData);
+    
+    // Get late breaking news for all courses in the users schedule
+    List<UserComment> breakingNewsSchedule = getBreakingNews_Schedule();
+    List<UserComment> breakingNewsWatchlist = getBreakingNews_Watchlist();
+    
     return ok(Account.render("My Account", user, user.getSchedule(), user.getWatchList(),
-        UserCommentDB.getCommentsByUserName(user.getUserName()), commentForm, preferencesForm));
+        UserCommentDB.getCommentsByUserName(user.getUserName()), breakingNewsSchedule, breakingNewsWatchlist, 
+                                            commentForm, preferencesForm));
   }
 
   /**
+   * Get a list of breaking news for each course in the users schedule.
+   * @return A list of UserComments associated with each course in the users schedule.
+   */
+  private static List<UserComment> getBreakingNews_Schedule() {
+    UserInfo user = Secured.getUserInfo(ctx());
+    List<Course> courses = user.getSchedule();
+    List<UserComment> breakingNews = new ArrayList<UserComment>();
+    for (Course course : courses) {
+      breakingNews.addAll(UserCommentDB.getCommentsByCrn(course.getCrn()));
+    }
+    return breakingNews;
+  }
+  
+  /**
+   * Get a list of breaking news for each course in the users watchlist.
+   * @return A list of UserComments associated with each course in the users watchlist.
+   */
+  private static List<UserComment> getBreakingNews_Watchlist() {
+    UserInfo user = Secured.getUserInfo(ctx());
+    List<Course> courses = user.getWatchList();
+    List<UserComment> breakingNews = new ArrayList<UserComment>();
+    for (Course course : courses) {
+      breakingNews.addAll(UserCommentDB.getCommentsByCrn(course.getCrn()));
+    }
+    return breakingNews;
+  }
+  
+  
+  /**
    * Update the current users notification preferences.
-   * @return
+   * @return The My Account page with updated notification preferences.
    */
   @Security.Authenticated(Secured.class)
   public static Result updateNotificationPreferences() {
@@ -282,8 +317,12 @@ public class Application extends Controller {
     Form<CommentFormData> commentForm = Form.form(CommentFormData.class);
     Form<NotificationPreferencesFormData> preferencesForm = Form.form(NotificationPreferencesFormData.class).bindFromRequest();
     if (preferencesForm.hasErrors()) {
+      // Get late breaking news for all courses in the users schedule
+      List<UserComment> breakingNewsSchedule = getBreakingNews_Schedule();
+      List<UserComment> breakingNewsWatchlist = getBreakingNews_Watchlist();
       return badRequest(Account.render("My Account", user, user.getSchedule(), user.getWatchList(),
-          UserCommentDB.getCommentsByUserName(user.getUserName()), commentForm, preferencesForm));
+          UserCommentDB.getCommentsByUserName(user.getUserName()), breakingNewsSchedule, breakingNewsWatchlist,
+                                              commentForm, preferencesForm));
     }
     else {
       NotificationPreferencesFormData formData = preferencesForm.get();

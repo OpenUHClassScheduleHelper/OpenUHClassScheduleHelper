@@ -147,9 +147,12 @@ public class UserInfo extends Model {
    */
   public void addToSchedule(Course course) {
     // Don't add duplicates
-    CourseRoster entry = new CourseRoster(this, course, "schedule");
-    this.roster.add(entry);
-    this.save();
+    List<CourseRoster> roster = CourseRoster.find().where().eq("userInfo", this).eq("course", course).findList();
+    if (roster.size() == 0) {
+      CourseRoster entry = new CourseRoster(this, course, "schedule");
+      this.roster.add(entry);
+      this.save();
+    }
   }
   
   /**
@@ -191,9 +194,12 @@ public class UserInfo extends Model {
    */
   public void addToWatchList(Course course) {
     // Don't add duplicates
-    CourseRoster entry = new CourseRoster(this, course, "watchlist");
-    this.roster.add(entry);
-    this.save();
+    List<CourseRoster> roster = CourseRoster.find().where().eq("userInfo", this).eq("course", course).findList();
+    if (roster.size() == 0) {
+      CourseRoster entry = new CourseRoster(this, course, "watchlist");
+      this.roster.add(entry);
+      this.save();
+    }
   }
   
   /**
