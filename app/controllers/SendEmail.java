@@ -20,6 +20,34 @@ public class SendEmail {
     private SendEmail() {}
 
     /**
+     * Confirm opt-in status by sending an email to the user.
+     * @param recipientEmail The users email address.
+     */
+    public static void SendConfirmationByEmail(String recipientEmail) {
+      String message = "This is to confirm that you've opted-in to receiving messages by text.";
+      SendConfirmation(recipientEmail, message);
+    }
+    
+    /**
+     * Confirm opt-in status by sending a text message to the user.
+     * @param phoneNumber The users telephone number.
+     * @param carrier The users service provide.
+     */
+    public static void SendConfirmationBySms(String phoneNumber, String carrier) {
+      String message = "This is to confirm that you've opted-in to receiving messages by text.";
+      String smsGateway = getSmsGateway(phoneNumber, carrier);
+      SendConfirmation(smsGateway, message);
+    }
+    
+    private static void SendConfirmation(String recipientEmail, String message) {
+      try {
+        SendEmail.Send(recipientEmail, "", "A message from the UH Scheduler team.", message);
+      }
+      catch (AddressException e) {e.printStackTrace();}
+      catch (MessagingException e) {e.printStackTrace();}
+    }
+    
+    /**
      * Send email using GMail SMTP server.
      *
      * @param recipientEmail TO recipient
@@ -28,8 +56,16 @@ public class SendEmail {
      * @throws AddressException if the email address parse failed
      * @throws MessagingException if the connection is dead or not in the connected state or if the message is not a MimeMessage
      */
-    public static void SendByEmail(String recipientEmail, String title, String message) throws AddressException, MessagingException {
-      SendEmail.Send(recipientEmail, "", title, message);
+    public static void SendByEmail(String recipientEmail, String courses) {
+      courses = courses.trim();
+      courses = courses.substring(0, courses.length() - 1);
+      String message = "Hi there!\n\nNew late breaking information has been added to the following courses: " 
+                        + courses + ".\n\nThanks!";
+      try {
+        SendEmail.Send(recipientEmail, "", "New Late Breaking News!", message);
+      }
+      catch (AddressException e) {e.printStackTrace();}
+      catch (MessagingException e) {e.printStackTrace();}
     }
     
     /**
@@ -41,9 +77,9 @@ public class SendEmail {
      * @throws AddressException if the email address parse failed
      * @throws MessagingException if the connection is dead or not in the connected state or if the message is not a MimeMessage
      */
-    public static void SendBySms(String phoneNumber, String carrier, String title, String message) throws AddressException, MessagingException {
+    public static void SendBySms(String phoneNumber, String carrier, String courses) {
       String smsGateway = getSmsGateway(phoneNumber, carrier);
-      SendByEmail(smsGateway, title, message);
+      SendByEmail(smsGateway, courses);
     }
     
     /**

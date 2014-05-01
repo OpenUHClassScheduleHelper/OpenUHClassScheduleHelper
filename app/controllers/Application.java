@@ -3,6 +3,8 @@ package controllers;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.Map;
+import javax.mail.MessagingException;
+import javax.mail.internet.AddressException;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import models.UserInfoDB;
@@ -27,6 +29,7 @@ import views.html.Account;
 import views.html.MapRoute;
 import models.Course;
 import models.CourseDB;
+import models.CourseSearch;
 import models.Meeting;
 import models.ScheduleEvent;
 import models.UserComment;
@@ -74,7 +77,7 @@ public class Application extends Controller {
   }
 
   public static Result login() throws Exception {
-
+    
     Map<String, String[]> query = request().queryString();
 
     // service url is where you will handle validation after login
@@ -113,7 +116,7 @@ public class Application extends Controller {
           // add user to the database if they dont already exist
           UserInfoDB.addUserInfo(userName);
           
-          return redirect(routes.Application.getResults(1));
+          return redirect(routes.Application.search());
         }
         else {
           // you could redirect to the CAS login here if you want to
@@ -121,6 +124,7 @@ public class Application extends Controller {
       }
       return redirect(routes.Application.index());
     }
+    
   }
 
   @Security.Authenticated(Secured.class)
@@ -134,6 +138,27 @@ public class Application extends Controller {
     return redirect(CAS_LOGOUT + "?service=" + serviceURL);
 
   }
+
+  /**
+   * Returns the sample results page to see if classes are implemented properly. This is only for testing!
+   * @return The registration page.
+   */
+  @Security.Authenticated(Secured.class)
+  public static Result searchResults() {
+    List<Course> courseList = CourseDB.getCourses(); 
+    UserInfo user = Secured.getUserInfo(ctx());
+    return ok(Search.render("Search", user.getEmail(), true, courseList));
+  }
+
+  
+  /**
+   * Returns the search page with an empty results table.
+   * @return The results page with an empty results table.
+   */
+  public static Result search() {
+    return redirect(routes.Application.getResults(-1));
+  }
+  
   
   /**
    * Returns the Results page.
@@ -141,22 +166,26 @@ public class Application extends Controller {
    */
   @Security.Authenticated(Secured.class)
   public static Result getResults(int pageNum) {
+    
     Form<SearchForm> formData = searchForm.bindFromRequest();
     SearchForm data = formData.get();
-    List<Course> resultsList = new ArrayList<>();
+    
+    String currentDept = "";
+    int startPage = 0, endPage = 0;
+    List<Course> resultList = new ArrayList<>();
     List<Course> schedule = new ArrayList<>();
     List<String> instructorList = new ArrayList<>();
     List<String> courseList = new ArrayList<>();
     int pageCount = 0;
     int courseCount = 0;
-
-    UserInfo user = Secured.getUserInfo(ctx());
-    schedule = user.getSchedule();
+  
+    //UserInfo user = Secured.getUserInfo(ctx());
+    //schedule = user.getSchedule();
         
-    if (data != null) {
-      /*resultsList =
-          CourseDB.courseSearchList(data.days, data.focus, data.department, data.course, data.instructor,
-              data.startTime, data.endTime);*/
+    /*if (data != null) {
+      //resultsList =
+      //   CourseDB.courseSearchList(data.days, data.focus, data.department, data.course, data.instructor,
+      //        data.startTime, data.endTime);
       
       // Because we changed the way the department string is formatted in the search form select box,
       // we need to parse out the department abbreviation before passing it to this method.
@@ -204,7 +233,7 @@ public class Application extends Controller {
     return ok(Results.render("Results", user, FocusTypes.getFocusTypes(), Days.getDays(), Departments.getDepartments(),
         resultsList, searchForm.bindFromRequest(), schedule, events, courseCount, pageCount, pageNum, 
         instructorList, courseList));
-  }
+  }*/
   
   
   /**
@@ -216,8 +245,54 @@ public class Application extends Controller {
     Form<SearchForm> formData = searchForm.bindFromRequest();
     SearchForm data = formData.get();
     List<Course> resultsList = new ArrayList<>();
-    List<Course> schedule = new ArrayList<>();
-
+    List<Course> schedule = new ArrayList<>();*/
+    String dept = data.department;
+    if (data.department.indexOf(":") > 0) {
+      dept = data.department.substring(0, data.department.indexOf(":"));
+    }
+    
+    switch (pageNum) {
+      case -1:   // Navigated to page from link - no search performed.
+        resultList.clear();
+        break;
+      case 0:    // Search requested; query database and return page 1 of results.
+        CourseSearch.page(data.days, data.focus, dept, data.course, data.instructor,
+            data.startTime, data.endTime);
+        currentDept = CourseSearch.getParamDept();
+        resultList = CourseSearch.getResultsByPage(0);
+        pageNum = 1;
+        break;    
+      default:   // User has requested a specific page of results.
+        currentDept = CourseSearch.getParamDept();
+        resultList = CourseSearch.getResultsByPage(pageNum - 1);
+        break;
+    }
+    
+    if(! currentDept.equals("")) {
+      //instructorList = (List<String>) populateInstructorList(currentDept);
+      //courseList = (List<String>) populateCourseList(currentDept);
+    }
+    
+    // Calculate Pagination range
+    if (CourseSearch.getPageCount() <= 5) {
+      startPage = 1;
+      endPage = CourseSearch.getPageCount();
+    }
+    else {
+      if (pageNum <= 3) {
+        startPage = 1;
+        endPage = 5;
+      }
+      else if (pageNum >= CourseSearch.getPageCount() - 2) {
+        endPage = CourseSearch.getPageCount();
+        startPage = endPage - 4;
+      }
+      else {
+        startPage = (pageNum - 2);
+        endPage = (pageNum + 2);
+      }
+    }
+    
     UserInfo user = Secured.getUserInfo(ctx());
     schedule = user.getSchedule();
 
@@ -225,10 +300,9 @@ public class Application extends Controller {
     Boolean conflictExists = false;
     List<ScheduleEvent> events = new ArrayList<>();
 
-    if (resultsList.size() > 0 && schedule.size() > 0) {
-      for (Course result : resultsList) {
+    if (resultList.size() > 0) {
+      for (Course result : resultList) {
         for (Meeting rMeeting : result.getMeeting()) {
-
           // compare each result meeting with those on the schedule.
           for (Course course : schedule) {
             for (Meeting cMeeting : course.getMeeting()) {
@@ -249,10 +323,12 @@ public class Application extends Controller {
       } // end of result loop
     }
 
-    return ok(Results.render("Search", FocusTypes.getFocusTypes(), Days.getDays(), Departments.getDepartments(),
-        resultsList, searchForm, schedule, events, CourseDB.getCourseCount(), CourseDB.getPageCount(), pageNum));
-  }*/
-
+    return ok(Results.render("Results", user, FocusTypes.getFocusTypes(), Days.getDays(), 
+              Departments.getDepartments(currentDept), resultList, searchForm, schedule, events, 
+              CourseSearch.getResultsCount(), CourseSearch.getPageCount(), startPage, endPage, pageNum,
+              instructorList, courseList));
+  }
+  
   /**
    * Returns the personal account page.
    * @return The account page.
@@ -263,13 +339,48 @@ public class Application extends Controller {
     Form<CommentFormData> commentForm = Form.form(CommentFormData.class);
     NotificationPreferencesFormData preferencesFormData = new NotificationPreferencesFormData(user);
     Form<NotificationPreferencesFormData> preferencesForm = Form.form(NotificationPreferencesFormData.class).fill(preferencesFormData);
+    
+    // Get late breaking news for all courses in the users schedule
+    List<UserComment> breakingNewsSchedule = getBreakingNews_Schedule();
+    List<UserComment> breakingNewsWatchlist = getBreakingNews_Watchlist();
+    
     return ok(Account.render("My Account", user, user.getSchedule(), user.getWatchList(),
-        UserCommentDB.getCommentsByUserName(user.getUserName()), commentForm, preferencesForm));
+        UserCommentDB.getCommentsByUserName(user.getUserName()), breakingNewsSchedule, breakingNewsWatchlist, 
+                                            commentForm, preferencesForm));
   }
 
   /**
+   * Get a list of breaking news for each course in the users schedule.
+   * @return A list of UserComments associated with each course in the users schedule.
+   */
+  private static List<UserComment> getBreakingNews_Schedule() {
+    UserInfo user = Secured.getUserInfo(ctx());
+    List<Course> courses = user.getSchedule();
+    List<UserComment> breakingNews = new ArrayList<UserComment>();
+    for (Course course : courses) {
+      breakingNews.addAll(UserCommentDB.getCommentsByCrn(course.getCrn()));
+    }
+    return breakingNews;
+  }
+  
+  /**
+   * Get a list of breaking news for each course in the users watchlist.
+   * @return A list of UserComments associated with each course in the users watchlist.
+   */
+  private static List<UserComment> getBreakingNews_Watchlist() {
+    UserInfo user = Secured.getUserInfo(ctx());
+    List<Course> courses = user.getWatchList();
+    List<UserComment> breakingNews = new ArrayList<UserComment>();
+    for (Course course : courses) {
+      breakingNews.addAll(UserCommentDB.getCommentsByCrn(course.getCrn()));
+    }
+    return breakingNews;
+  }
+  
+  
+  /**
    * Update the current users notification preferences.
-   * @return
+   * @return The My Account page with updated notification preferences.
    */
   @Security.Authenticated(Secured.class)
   public static Result updateNotificationPreferences() {
@@ -277,8 +388,12 @@ public class Application extends Controller {
     Form<CommentFormData> commentForm = Form.form(CommentFormData.class);
     Form<NotificationPreferencesFormData> preferencesForm = Form.form(NotificationPreferencesFormData.class).bindFromRequest();
     if (preferencesForm.hasErrors()) {
+      // Get late breaking news for all courses in the users schedule
+      List<UserComment> breakingNewsSchedule = getBreakingNews_Schedule();
+      List<UserComment> breakingNewsWatchlist = getBreakingNews_Watchlist();
       return badRequest(Account.render("My Account", user, user.getSchedule(), user.getWatchList(),
-          UserCommentDB.getCommentsByUserName(user.getUserName()), commentForm, preferencesForm));
+          UserCommentDB.getCommentsByUserName(user.getUserName()), breakingNewsSchedule, breakingNewsWatchlist,
+                                              commentForm, preferencesForm));
     }
     else {
       NotificationPreferencesFormData formData = preferencesForm.get();
@@ -287,6 +402,17 @@ public class Application extends Controller {
       user.setTelephone(formData.userPhone);
       user.setCarrier(formData.userCarrier);
       user.save();
+      
+      // Send the user a confirmation email/txt if they've opted in
+      if (user.wantsNotification()) {
+        // send confirmation text
+        if (!user.getTelephone().equals("")) {
+          SendEmail.SendConfirmationBySms(user.getTelephone(), user.getCarrier());
+        }
+        if (!user.getEmail().equals("")) {
+          SendEmail.SendConfirmationByEmail(user.getEmail());
+        }
+      }
     }
     return redirect(routes.Application.myAccount());
   }

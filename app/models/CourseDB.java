@@ -621,6 +621,7 @@ public class CourseDB {
     }
     
     //================================================================================================================
+
     index = 0;
     for(String crn : finalCrnList) {
       String indexParameter = ":crn" + index;
@@ -646,8 +647,6 @@ public class CourseDB {
     
 
      pages = finalQuery.findPagingList(PAGINATION_MAX);
-     CourseDB.setPages(pages);
-    
   }
   
   
@@ -940,39 +939,6 @@ public class CourseDB {
     */
   }
   
-  
-  /**
-  * @param results The pages to set
-  */
-    public static void setPages(PagingList<Course> results) {
-      pages = results;
-    }
-    
-    /**
-  * Get the specified results page.
-  * @param page The page to retrieve.
-  * @return The specified results page.
-  */
-    public static List<Course> getCoursesInPage(int page) {
-      return pages.getPage(page).getList();
-    }
-    
-    /**
-  * Get the total number of pages of results.
-  * @return The number of result pages.
-  */
-    public static int getPageCount() {
-      return pages.getTotalPageCount();
-    }
-    
-    /**
-  * Get the total number of results (surfers).
-  * @return The number of surfers.
-  */
-    public static int getCourseCount() {
-      return pages.getTotalRowCount();
-    }
-  
- 
+
   
 }

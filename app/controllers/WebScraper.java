@@ -28,7 +28,8 @@ public class WebScraper {
    */
   public void scrapeLinks(String url) {
     
-    String semester = getSemester(url);
+    //String semester = getSemester(url);
+    String semester = "";
     ArrayList<PageScraper> scrapers = new ArrayList<PageScraper>();
 
     ArrayList<String> links = getLinks(url);

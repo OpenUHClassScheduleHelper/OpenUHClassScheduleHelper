@@ -1,8 +1,15 @@
 package models;
 
-import java.util.ArrayList;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.TimeZone;
+import javax.mail.MessagingException;
+import javax.mail.internet.AddressException;
+import controllers.SendEmail;
 
 /**
  * A repository to store user comment information.
@@ -57,7 +64,7 @@ public class UserCommentDB {
    * @return A list of UserComment objects associated with the given CRN.
    */
   public static List<UserComment> getCommentsByCrn(String crn) {
-    return UserComment.find().where().eq("crn", crn).findList();
+    return UserComment.find().where().eq("crn", crn).orderBy("postTime desc").findList();
   }
   
   
@@ -67,12 +74,8 @@ public class UserCommentDB {
    * @return A list of UserComment objects associated with the given CRN.
    */
   public static List<UserComment> getCommentsByCrnReverse(String crn) {
-    List<UserComment> tempList = UserComment.find().where().eq("crn", crn).findList();
-    List<UserComment> newList = new ArrayList<>();
-    for(int i = tempList.size()-1; i == 0; i--) {
-      newList.add(tempList.get(i));
-    }
-    return newList;
+    List<UserComment> tempList = UserComment.find().where().eq("crn", crn).orderBy("postTime desc").findList();
+    return tempList;
   }
   
   /**
@@ -99,7 +102,7 @@ public class UserCommentDB {
    * @return A list of UserComment objects associated with the given user.
    */
   public static List<UserComment> getCommentsByUserName(String userName) {
-    return UserComment.find().where().eq("userName", userName).findList();
+    return UserComment.find().where().eq("userName", userName).orderBy("postTime desc").findList();
   }
- 
+
 }
