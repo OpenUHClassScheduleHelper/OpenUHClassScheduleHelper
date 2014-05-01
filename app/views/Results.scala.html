@@ -9,7 +9,9 @@
   events: List[ScheduleEvent],
   courseCount: Int, 
   pageCount: Int, 
-  pageNumber: Int)
+  pageNumber: Int,
+  instructorList: List[String],
+  courseList: List[String])
   
   
 @import helper.form 
@@ -216,17 +218,23 @@ $('#filterbutton').click(function() {
     <form class="form-inline" role="form">
       @form(routes.Application.getResults(1), 'class -> "form-group") {
       <div id="searchForm" class="form-group">
-          @searchselect(searchForm("department"), id = "selDept", searchType = "Any Department", optionMap = departmentList, isMultiple = false, "getInstructorList(); getCourseList();")
+          @searchselect(searchForm("department"), id = "selDept", searchType = "Any Department", optionMap = departmentList, isMultiple = false, "getCourseList(); getInstructorList();")
           <select name="instructor" id="selInstructor" class="form-control" placeholder="Instructor" onchange="instructorsToCourses()">
             <option>Any Instructor</option>
+            @for(instructor <- instructorList) {
+            <option>@instructor</option>
+            }
           </select>
           <select name="course" id="selCourse" class="form-control" placeholder="Course Title" onchange="coursesToInstructors()">
             <option>Any Course</option>
+            @for(course <- courseList) {
+            <option>@course</option>
+            }
           </select>               
       </div>
       <button type="submit" class="btn btn-primary" style="margin-left:15px">Search</button>
       
-      <button type="button" class="btn" id="filterbutton">Filter</button>
+      <button type="button" class="btn" id="filterbutton">Show Filters</button>
       <div id="filterSearch">
       @checkboxes(searchForm("focus"), label = "Focus:", checkboxMap = focusList)
       
@@ -245,8 +253,9 @@ $('#filterbutton').click(function() {
 
   <!-- results -->
   <div>
+   @if(resultsList.size() != 0) {
     <h2 id="resultsHeader"><b>Results</b></h2>
-
+   }
     <div class="visible-sm visible-xs">
       <a class="btn course-dropdown-button" id="resultbutton1" onMouseOut="div.show('84935')"
         onMouseOver="div.hide('84935')"> ICS 111 Intro to Computer Science I </a>
@@ -500,7 +509,7 @@ $('#filterbutton').click(function() {
           <h4 class="modal-title"></h4>
         </div>
         <div class="modal-body">
-          <h4><b>Add this class to your watch list?</b></h4>
+          <h4><b>Add @course.getCourseName() @course.getCourseTitle() to your watch list?</b></h4>
 
         </div>
         <div class="modal-footer">
@@ -525,7 +534,12 @@ $('#filterbutton').click(function() {
           <h4 class="modal-title"></h4>
         </div>
         <div class="modal-body">
-          <h4><b>Add this class to your schedule?</b></h4>
+          <h4><b>Add @course.getCourseName() @course.getCourseTitle() to your schedule?</b></h4>
+          @for(scheduledCourse <- schedule) {
+                @if(MeetingDB.hasConflict(course, scheduledCourse)) {
+                  <p style="color:red;">There is a conflict with @scheduledCourse.getCourseName() @scheduledCourse.getCourseTitle()<p>
+                }
+          }
 
         </div>
         <div class="modal-footer">

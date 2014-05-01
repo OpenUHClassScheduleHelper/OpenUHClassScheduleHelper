@@ -6,14 +6,13 @@
 GET     /                               controllers.Application.index()
 
 # searchResults is just a test page to see if lists were constructed properly
-GET     /searchresults                  controllers.Application.searchResults()
 
 GET     /login                          controllers.Application.login()
 GET     /logout                         controllers.Application.logout()
 
 GET     /map                            controllers.Application.map()
 
-GET     /results                        controllers.Application.getResults(pageNum: Int ?= 1)
+GET    /results                         controllers.Application.getResults(pageNum:Int ?= 1)
 
 GET     /populateInstructors            controllers.Application.populateInstructorList(dept: String)
 GET     /populateCourses                controllers.Application.populateCourseList(dept: String)

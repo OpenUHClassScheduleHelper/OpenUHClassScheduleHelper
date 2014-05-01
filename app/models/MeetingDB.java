@@ -54,4 +54,15 @@ public class MeetingDB {
     return false;
   }
   
+  public static boolean hasConflict(Course course1, Course course2) {
+    for(Meeting meeting1 : course1.getMeeting()) {
+      for(Meeting meeting2 : course2.getMeeting()) {
+        if(meeting1.isOverlapping(meeting2)) {
+          return true;
+        }
+      }
+    }
+    return false;
+  }
+  
 }

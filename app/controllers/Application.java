@@ -134,18 +134,7 @@ public class Application extends Controller {
     return redirect(CAS_LOGOUT + "?service=" + serviceURL);
 
   }
-
-  /**
-   * Returns the sample results page to see if classes are implemented properly. This is only for testing!
-   * @return The registration page.
-   */
-  @Security.Authenticated(Secured.class)
-  public static Result searchResults() {
-    List<Course> courseList = CourseDB.getCourses(); 
-    UserInfo user = Secured.getUserInfo(ctx());
-    return ok(Search.render("Search", user.getEmail(), true, courseList));
-  }
-
+  
   /**
    * Returns the Results page.
    * @return The results page.
@@ -156,6 +145,10 @@ public class Application extends Controller {
     SearchForm data = formData.get();
     List<Course> resultsList = new ArrayList<>();
     List<Course> schedule = new ArrayList<>();
+    List<String> instructorList = new ArrayList<>();
+    List<String> courseList = new ArrayList<>();
+    int pageCount = 0;
+    int courseCount = 0;
 
     UserInfo user = Secured.getUserInfo(ctx());
     schedule = user.getSchedule();
@@ -170,15 +163,16 @@ public class Application extends Controller {
       String dept = data.department;
       if (data.department.indexOf(":") > 0) {
         dept = data.department.substring(0, data.department.indexOf(":"));
+          //instructorList = (List<String>) populateInstructorList(dept);
+          //courseList = (List<String>) populateCourseList(dept);
       }
       CourseDB.page(data.days, data.focus, dept, data.course, data.instructor,
           data.startTime, data.endTime);
       resultsList = CourseDB.getCoursesInPage(pageNum-1);
+      pageCount = CourseDB.getPageCount();
+      courseCount = CourseDB.getCourseCount();
     }
     
-    else {
-      //resultsList = CourseDB.getCourses();
-    }
 
     // Create Schedule Events
     Boolean conflictExists = false;
@@ -208,7 +202,8 @@ public class Application extends Controller {
     }
 
     return ok(Results.render("Results", user, FocusTypes.getFocusTypes(), Days.getDays(), Departments.getDepartments(),
-        resultsList, searchForm, schedule, events, CourseDB.getCourseCount(), CourseDB.getPageCount(), pageNum));
+        resultsList, searchForm.bindFromRequest(), schedule, events, courseCount, pageCount, pageNum, 
+        instructorList, courseList));
   }
   
   
