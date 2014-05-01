@@ -3,6 +3,8 @@ package controllers;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.Map;
+import javax.mail.MessagingException;
+import javax.mail.internet.AddressException;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import models.UserInfoDB;
@@ -74,7 +76,7 @@ public class Application extends Controller {
   }
 
   public static Result login() throws Exception {
-
+    
     Map<String, String[]> query = request().queryString();
 
     // service url is where you will handle validation after login
@@ -121,6 +123,7 @@ public class Application extends Controller {
       }
       return redirect(routes.Application.index());
     }
+    
   }
 
   @Security.Authenticated(Secured.class)
@@ -331,6 +334,17 @@ public class Application extends Controller {
       user.setTelephone(formData.userPhone);
       user.setCarrier(formData.userCarrier);
       user.save();
+      
+      // Send the user a confirmation email/txt if they've opted in
+      if (user.wantsNotification()) {
+        // send confirmation text
+        if (!user.getTelephone().equals("")) {
+          SendEmail.SendConfirmationBySms(user.getTelephone(), user.getCarrier());
+        }
+        if (!user.getEmail().equals("")) {
+          SendEmail.SendConfirmationByEmail(user.getEmail());
+        }
+      }
     }
     return redirect(routes.Application.myAccount());
   }
