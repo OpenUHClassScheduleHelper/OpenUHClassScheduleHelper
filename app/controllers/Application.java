@@ -261,7 +261,7 @@ public class Application extends Controller {
         currentDept = CourseSearch.getParamDept();
         resultList = CourseSearch.getResultsByPage(0);
         pageNum = 1;
-        break;    
+        break;
       default:   // User has requested a specific page of results.
         currentDept = CourseSearch.getParamDept();
         resultList = CourseSearch.getResultsByPage(pageNum - 1);
@@ -511,6 +511,7 @@ public class Application extends Controller {
   }
 
   public static Result populateCourseList(String dept) {
+    dept = dept.substring(0, dept.indexOf(":"));
     List<String> courses = CourseDB.getCourses(dept);
     String courseddl = "";
     for (int i = 0; i < courses.size(); i++) {
