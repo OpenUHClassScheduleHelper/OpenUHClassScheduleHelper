@@ -29,6 +29,7 @@ import views.html.Account;
 import views.html.MapRoute;
 import models.Course;
 import models.CourseDB;
+import models.CourseSearch;
 import models.Meeting;
 import models.ScheduleEvent;
 import models.UserComment;
@@ -115,7 +116,7 @@ public class Application extends Controller {
           // add user to the database if they dont already exist
           UserInfoDB.addUserInfo(userName);
           
-          return redirect(routes.Application.getResults(1));
+          return redirect(routes.Application.search());
         }
         else {
           // you could redirect to the CAS login here if you want to
@@ -149,83 +150,67 @@ public class Application extends Controller {
     return ok(Search.render("Search", user.getEmail(), true, courseList));
   }
 
+  
+  /**
+   * Returns the search page with an empty results table.
+   * @return The results page with an empty results table.
+   */
+  public static Result search() {
+    return redirect(routes.Application.getResults(-1));
+  }
+  
+  
   /**
    * Returns the Results page.
    * @return The results page.
    */
   @Security.Authenticated(Secured.class)
   public static Result getResults(int pageNum) {
+    
     Form<SearchForm> formData = searchForm.bindFromRequest();
     SearchForm data = formData.get();
-    List<Course> resultsList = new ArrayList<>();
+    
+    String currentDept = "";
+    int startPage = 0, endPage = 0;
+    List<Course> resultList = new ArrayList<>();
     List<Course> schedule = new ArrayList<>();
-
-    UserInfo user = Secured.getUserInfo(ctx());
-    schedule = user.getSchedule();
-        
-    if (data != null) {
-      /*resultsList =
-          CourseDB.courseSearchList(data.days, data.focus, data.department, data.course, data.instructor,
-              data.startTime, data.endTime);*/
-      
-      // Because we changed the way the department string is formatted in the search form select box,
-      // we need to parse out the department abbreviation before passing it to this method.
-      String dept = data.department;
-      if (data.department.indexOf(":") > 0) {
-        dept = data.department.substring(0, data.department.indexOf(":"));
-      }
-      CourseDB.page(data.days, data.focus, dept, data.course, data.instructor,
-          data.startTime, data.endTime);
-      resultsList = CourseDB.getCoursesInPage(pageNum-1);
+    
+    switch (pageNum) {
+      case -1:   // Navigated to page from link - no search performed.
+        resultList.clear();
+        break;
+      case 0:    // Search requested; query database and return page 1 of results.
+        CourseSearch.queryDatabase(data);
+        currentDept = CourseSearch.getParamDept();
+        resultList = CourseSearch.getResultsByPage(0);
+        pageNum = 1;
+        break;    
+      default:   // User has requested a specific page of results.
+        currentDept = CourseSearch.getParamDept();
+        resultList = CourseSearch.getResultsByPage(pageNum - 1);
+        break;
     }
     
+    // Calculate Pagination range
+    if (CourseSearch.getPageCount() <= 5) {
+      startPage = 1;
+      endPage = CourseSearch.getPageCount();
+    }
     else {
-      //resultsList = CourseDB.getCourses();
+      if (pageNum <= 3) {
+        startPage = 1;
+        endPage = 5;
+      }
+      else if (pageNum >= CourseSearch.getPageCount() - 2) {
+        endPage = CourseSearch.getPageCount();
+        startPage = endPage - 4;
+      }
+      else {
+        startPage = (pageNum - 2);
+        endPage = (pageNum + 2);
+      }
     }
-
-    // Create Schedule Events
-    Boolean conflictExists = false;
-    List<ScheduleEvent> events = new ArrayList<>();
-
-    if (resultsList.size() > 0) {
-      for (Course result : resultsList) {
-        for (Meeting rMeeting : result.getMeeting()) {
-          // compare each result meeting with those on the schedule.
-          for (Course course : schedule) {
-            for (Meeting cMeeting : course.getMeeting()) {
-              if (!conflictExists) {
-                conflictExists = rMeeting.isOverlapping(cMeeting);
-              }
-            } // end of schedule meeting loop
-          } // end of schedule loop
-
-          // Create a new schedule event object with appropriate attributes.
-          ScheduleEvent event =
-              new ScheduleEvent(result.getCrn(), result.getCourseName(), rMeeting.getFullCalendarStartTime(),
-                  rMeeting.getFullCalendarEndTime(), conflictExists);
-          // Add it to the list of events
-          events.add(event);
-          conflictExists = false;
-        } // end of result meeting loop
-      } // end of result loop
-    }
-
-    return ok(Results.render("Results", user, FocusTypes.getFocusTypes(), Days.getDays(), Departments.getDepartments(),
-        resultsList, searchForm, schedule, events, CourseDB.getCourseCount(), CourseDB.getPageCount(), pageNum));
-  }
-  
-  
-  /**
-   * Returns the Search page.
-   * @return The results page.
-   */
-  /*@Security.Authenticated(Secured.class)
-  public static Result search() {
-    Form<SearchForm> formData = searchForm.bindFromRequest();
-    SearchForm data = formData.get();
-    List<Course> resultsList = new ArrayList<>();
-    List<Course> schedule = new ArrayList<>();
-
+    
     UserInfo user = Secured.getUserInfo(ctx());
     schedule = user.getSchedule();
 
@@ -233,10 +218,9 @@ public class Application extends Controller {
     Boolean conflictExists = false;
     List<ScheduleEvent> events = new ArrayList<>();
 
-    if (resultsList.size() > 0 && schedule.size() > 0) {
-      for (Course result : resultsList) {
+    if (resultList.size() > 0) {
+      for (Course result : resultList) {
         for (Meeting rMeeting : result.getMeeting()) {
-
           // compare each result meeting with those on the schedule.
           for (Course course : schedule) {
             for (Meeting cMeeting : course.getMeeting()) {
@@ -257,10 +241,11 @@ public class Application extends Controller {
       } // end of result loop
     }
 
-    return ok(Results.render("Search", FocusTypes.getFocusTypes(), Days.getDays(), Departments.getDepartments(),
-        resultsList, searchForm, schedule, events, CourseDB.getCourseCount(), CourseDB.getPageCount(), pageNum));
-  }*/
-
+    return ok(Results.render("Results", user, FocusTypes.getFocusTypes(), Days.getDays(), 
+              Departments.getDepartments(currentDept), resultList, searchForm, schedule, events, 
+              CourseSearch.getResultsCount(), CourseSearch.getPageCount(), startPage, endPage, pageNum));
+  }
+  
   /**
    * Returns the personal account page.
    * @return The account page.

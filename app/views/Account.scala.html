@@ -289,7 +289,7 @@ function toggleMobileDiv(id)
     <div class="tab-pane" id="Schedule">
       
       @if(schedule.length == 0) {
-        <h4>Your schedule is empty. Click <a style="color:blue;" href="@routes.Application.getResults(1)">here</a> 
+        <h4>Your schedule is empty. Click <a style="color:blue;" href="@routes.Application.search()">here</a> 
             to search for classes.</h4>
       } else {
         <!-- Schedule in normal view -->
@@ -359,7 +359,7 @@ function toggleMobileDiv(id)
     
     <div class="tab-pane" id="WatchList">
       @if(watchList.length == 0) {
-        <h4>Your watchlist is empty. Click <a style="color:blue;" href="@routes.Application.getResults(1)">here</a> 
+        <h4>Your watchlist is empty. Click <a style="color:blue;" href="@routes.Application.search()">here</a> 
             to search for classes.</h4>
       } else {
         <!-- Watchlist in normal view -->
