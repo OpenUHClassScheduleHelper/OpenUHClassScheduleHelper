@@ -19,7 +19,7 @@ public class Global extends GlobalSettings {
    * @param app The Play application.
    */
   public void onStart(Application app) {
-    
+    /*
     // Schedule the notifier
     Timer timer = new Timer();
     Date date = new Date();
@@ -35,7 +35,7 @@ public class Global extends GlobalSettings {
       cal.getTime(),
       1000 * 60 * 60 * 24
     );
-        
+        */
     // Update Database
     //WebScraper ws = new WebScraper();
     //ws.scrapeLinks("https://www.sis.hawaii.edu/uhdad/avail.classes?i=MAN&t=201510");

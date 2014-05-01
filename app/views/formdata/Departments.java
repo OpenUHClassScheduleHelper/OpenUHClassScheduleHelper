@@ -13,12 +13,12 @@ import models.CourseDB;
 public class Departments {
 
 
-  public static Map<String, Boolean> getDepartments() {
+  public static Map<String, Boolean> getDepartments(String currentDept) {
     // A TreeMap imposes a sorted order of key values.
     TreeMap<String, Boolean> deptMap = new TreeMap<String, Boolean>();
     List<String> deptList = CourseDB.getDepartmentList();
     for (String dept : deptList) {
-      deptMap.put(dept, false);
+      deptMap.put(dept, (dept.equals(currentDept)));
     }
     return deptMap;
     

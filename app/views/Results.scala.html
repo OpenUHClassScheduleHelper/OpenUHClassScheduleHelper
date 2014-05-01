@@ -7,9 +7,11 @@
   searchForm : Form[views.formdata.SearchForm], 
   schedule: List[Course], 
   events: List[ScheduleEvent],
-  courseCount: Int, 
-  pageCount: Int, 
-  pageNumber: Int)
+  courseCount: Int,
+  maxPage: Int,
+  startPage: Int,
+  endPage: Int,
+  currentPage: Int)
   
   
 @import helper.form 
@@ -261,7 +263,7 @@ addLoadEvent(replaceFullCalendarHeader);
  <!-- search form -->
   <div id="searchFormWrapper">
     <form class="form-inline" role="form">
-      @form(routes.Application.getResults(1), 'class -> "form-group") {
+      @form(routes.Application.getResults(0), 'class -> "form-horizontal", 'role -> "form") {
       <div id="searchForm" class="form-group">
           @searchselect(searchForm("department"), id = "selDept", searchType = "Any Department", optionMap = departmentList, isMultiple = false, "getInstructorList(); getCourseList();")
           <select name="instructor" id="selInstructor" class="form-control" placeholder="Instructor" onchange="instructorsToCourses()">
@@ -427,68 +429,23 @@ addLoadEvent(replaceFullCalendarHeader);
       }
       </table>
       
-       <!-- Pagination -->
-            <div style="text-align:center">
-              <ul class="pagination">
-                  <li>
-                    <a id="first" href="@routes.Application.getResults(1)">
-                      First
-                    </a>
-                  </li>
-                  @if(pageNumber-1 >= 1) {
-                  <li>
-                    <a id="previous" href="@routes.Application.getResults(pageNumber-1)">
-                      &laquo;
-                    </a>
-                  </li>
-                  }
-                @if(pageNumber+5 >= pageCount) {
-                  @if(pageCount < 5) {
-                    @for(i <- 1 until pageCount+1) {
-                       <li class=@if(i==pageNumber){"active"}>
-                    <a id="@i" href="@routes.Application.getResults(i)">
-                      @i
-                    </a>
-                  </li>
-                    }
-                  }else {
-                  @for(i <- (pageCount-4) until (pageCount + 5)) {
-                    @if(i <= pageCount) {
-                    <li class=@if(i==pageNumber){"active"}>
-                    <a id="@i" href="@routes.Application.getResults(i)">
-                      @i
-                    </a>
-                  </li>
-                  }
-                  }
-                  }
-                }
-                 @if(pageNumber+5 < pageCount) {
-                @for(i <- pageNumber until (pageNumber + 5)) {
-                  @if(i <= pageCount+1) {
-                  <li class=@if(i==pageNumber){"active"}>
-                    <a id="@i" href="@routes.Application.getResults(i)">
-                      @i
-                    </a>
-                  </li>
-                  }
-                }
-                }
-                @if(pageNumber+1 <= pageCount) {
-                <li>
-                    <a id="next" href="@routes.Application.getResults(pageNumber+1)">
-                      &raquo;
-                    </a>
-                  </li>
-                  }
-                <li>
-                
-                    <a id="last" href="@routes.Application.getResults(pageCount)">
-                      Last
-                    </a>
-                  </li>
-              </ul>
-            </div> 
+      <!-- Pagination -->
+      <div style="text-align:center">
+        <ul class="pagination">
+        <li><a href="@routes.Application.getResults(1)">First</a></li>
+          <li class=@if(currentPage<6){"disabled"}><a href="@routes.Application.getResults(startPage-5)">&laquo;</a></li>
+          @for(i <- startPage until endPage + 1) {
+            <li class=@if(i==currentPage){"active"}>
+              <a id="@i" href="@routes.Application.getResults(i)">
+                @i
+              </a>
+            </li>
+          }
+          <li class=@if(currentPage>=(maxPage-2)){"disabled"}><a href="@routes.Application.getResults(endPage+5)">&raquo;</a></li>
+          <li><a href="@routes.Application.getResults(maxPage)">Last</a></li>
+        </ul>
+      </div> 
+  
 }
 
   </div>
