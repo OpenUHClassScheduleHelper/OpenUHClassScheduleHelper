@@ -76,10 +76,7 @@ public class Application extends Controller {
   }
 
   public static Result login() throws Exception {
-
     
-    /*
-     
     Map<String, String[]> query = request().queryString();
 
     // service url is where you will handle validation after login
@@ -126,11 +123,6 @@ public class Application extends Controller {
       }
       return redirect(routes.Application.index());
     }
-    
-    */
-    session().clear();
-    session("userName", "rnamahoe");
-    return redirect(routes.Application.getResults(1));
     
   }
 
@@ -283,10 +275,6 @@ public class Application extends Controller {
     // Get late breaking news for all courses in the users schedule
     List<UserComment> breakingNewsSchedule = getBreakingNews_Schedule();
     List<UserComment> breakingNewsWatchlist = getBreakingNews_Watchlist();
-    
-    // Test
-    UserCommentDB.issueNotices();
-    // End Test
     
     return ok(Account.render("My Account", user, user.getSchedule(), user.getWatchList(),
         UserCommentDB.getCommentsByUserName(user.getUserName()), breakingNewsSchedule, breakingNewsWatchlist, 
