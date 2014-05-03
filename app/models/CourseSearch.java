@@ -95,11 +95,20 @@ public class CourseSearch {
     //CourseDB.setPages(pages);
     
     if(! department.equals("")) {
-      query.where().eq("department", department);
+      String dept = department;
+      if (department.indexOf(":") > 0) {
+        dept = department.substring(0, department.indexOf(":"));
+      }
+      query.where().eq("department", dept);
     }
     
     if(! instructor.equals("Any Instructor") && ! instructor.equals("")) {
-      String comparableInstName = instructor.split(", ")[1] + " " + instructor.split(", ")[0];
+      String comparableInstName = "";
+      if(instructor.equals("TBA")) {
+        comparableInstName = instructor;
+      }else {
+       comparableInstName = instructor.split(", ")[1] + " " + instructor.split(", ")[0];
+      }
       query.where().eq("instructor", comparableInstName);
     }
     

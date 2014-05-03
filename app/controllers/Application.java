@@ -171,6 +171,8 @@ public class Application extends Controller {
     SearchForm data = formData.get();
     
     String currentDept = "";
+    String currentInstructor = "";
+    String currentCourse ="";
     int startPage = 0, endPage = 0;
     List<Course> resultList = new ArrayList<>();
     List<Course> schedule = new ArrayList<>();
@@ -256,9 +258,11 @@ public class Application extends Controller {
         resultList.clear();
         break;
       case 0:    // Search requested; query database and return page 1 of results.
-        CourseSearch.page(data.days, data.focus, dept, data.course, data.instructor,
+        CourseSearch.page(data.days, data.focus, data.department, data.course, data.instructor,
             data.startTime, data.endTime);
         currentDept = CourseSearch.getParamDept();
+        currentInstructor = CourseSearch.getParamInstructor();
+        currentCourse = CourseSearch.getParamCourse();
         resultList = CourseSearch.getResultsByPage(0);
         pageNum = 1;
         break;
@@ -326,7 +330,7 @@ public class Application extends Controller {
     return ok(Results.render("Results", user, FocusTypes.getFocusTypes(), Days.getDays(), 
               Departments.getDepartments(currentDept), resultList, searchForm, schedule, events, 
               CourseSearch.getResultsCount(), CourseSearch.getPageCount(), startPage, endPage, pageNum,
-              instructorList, courseList));
+              CourseDB.getInstructorMap(dept, currentInstructor), CourseDB.getCoursesMap(dept, currentCourse)));
   }
   
   /**

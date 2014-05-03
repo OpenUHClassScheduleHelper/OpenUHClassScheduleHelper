@@ -12,8 +12,8 @@
   startPage: Int,
   endPage: Int,
   currentPage: Int,
-  instructorList: List[String],
-  courseList: List[String])
+  instructorList: Map[String, Boolean],
+  courseList: Map[String, Boolean])
   
   
 @import helper.form 
@@ -270,14 +270,14 @@ addLoadEvent(replaceFullCalendarHeader);
           @searchselect(searchForm("department"), id = "selDept", searchType = "Any Department", optionMap = departmentList, isMultiple = false, "getCourseList(); getInstructorList();")
           <select name="instructor" id="selInstructor" class="form-control" placeholder="Instructor" onchange="instructorsToCourses()">
             <option>Any Instructor</option>
-            @for(instructor <- instructorList) {
-            <option>@instructor</option>
+            @for((instructorName, isSelected) <- instructorList) {
+            <option id="@instructorName" value="@instructorName" @if(isSelected) {selected}>@instructorName</option>
             }
           </select>
           <select name="course" id="selCourse" class="form-control" placeholder="Course Title" onchange="coursesToInstructors()">
             <option>Any Course</option>
-            @for(course <- courseList) {
-            <option>@course</option>
+            @for((course, isSelected) <- courseList) {
+            <option id="@course" value="@course" @if(isSelected) {selected}>@course</option>
             }
           </select>               
       </div>

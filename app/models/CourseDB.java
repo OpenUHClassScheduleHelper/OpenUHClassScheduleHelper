@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 import com.avaje.ebean.Ebean;
 import com.avaje.ebean.FetchConfig;
 import com.avaje.ebean.PagingList;
@@ -122,6 +123,40 @@ public class CourseDB {
     // sorted by last name.
     Collections.sort(results, new InstructorComparator());
     return results;
+  }
+  
+  
+  public static Map<String, Boolean> getInstructorMap(String department, String currentInstructor) {
+    // A TreeMap imposes a sorted order of key values.
+    TreeMap<String, Boolean> instructorMap = new TreeMap<String, Boolean>();
+    List<String> instructorList = CourseDB.getInstructors(department);
+    String firstName = "";
+    String lastName = "";
+    String listName = "";
+    for (String instructor : instructorList) {
+      if(! instructor.equalsIgnoreCase("TBA")) {
+        lastName = instructor.split(" ")[1];
+        firstName = instructor.split(" ")[0];
+        listName = lastName + ", " + firstName;
+      }else {
+        listName = instructor;
+      }
+      instructorMap.put(listName, (listName.equals(currentInstructor)));
+    }
+    return instructorMap;
+    
+  }
+  
+  
+  public static Map<String, Boolean> getCoursesMap(String department, String currentCourse) {
+    // A TreeMap imposes a sorted order of key values.
+    TreeMap<String, Boolean> courseMap = new TreeMap<String, Boolean>();
+    List<String> courseList = CourseDB.getCourses(department);
+    for (String course : courseList) {
+      courseMap.put(course, (course.equals(currentCourse)));
+    }
+    return courseMap;
+    
   }
   
   /**
