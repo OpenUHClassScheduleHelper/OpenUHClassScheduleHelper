@@ -96,8 +96,8 @@ public class CourseSearch {
     
     if(! department.equals("")) {
       String dept = department;
-      if (department.indexOf(":") > 0) {
-        dept = department.substring(0, department.indexOf(":"));
+      if (department.split(": ").length > 1) {
+        dept = department.split(": ")[0];
       }
       query.where().eq("department", dept);
     }
@@ -362,7 +362,6 @@ public class CourseSearch {
     }
     
     //================================================================================================================
-
     index = 0;
     for(String crn : finalCrnList) {
       String indexParameter = ":crn" + index;
@@ -375,7 +374,7 @@ public class CourseSearch {
     }
     
     if(finalQueryString.equals("find course where ")) {
-      finalQueryString = "find course *";  
+      finalQueryString += "'1'='0'";
     }
     
     finalQuery = Ebean.createQuery(Course.class, finalQueryString);
