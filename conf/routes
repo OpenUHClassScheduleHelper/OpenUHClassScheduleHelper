@@ -28,6 +28,7 @@ GET     /deleteFromSchedule             controllers.Application.deleteCourseFrom
 GET     /addCourseToWatchlist           controllers.Application.addCourseToWatchlist(crn: String)
 GET     /addCourseToSchedule            controllers.Application.addCourseToSchedule(crn: String)
 
+GET    /addComment                     controllers.Application.addComment()
 GET    /editComment                     controllers.Application.editComment()
 
 

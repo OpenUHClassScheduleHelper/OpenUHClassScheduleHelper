@@ -385,7 +385,6 @@ public class CourseSearch {
       finalQuery.setParameter(indexParameter, crn);
     }
     
-
      pages = finalQuery.findPagingList(PAGINATION_MAX);
   }
   

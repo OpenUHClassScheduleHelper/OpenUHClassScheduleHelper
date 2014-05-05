@@ -9,6 +9,10 @@ public class CommentFormData {
   public String id;
   /** The comment */
   public String comment = "";
+  /**The course crn**/
+  public String crn = "";
+  /**The User that wrote the comment**/
+  public String username = "";
 
   /**
    * Default constructor.
@@ -20,9 +24,11 @@ public class CommentFormData {
   /**
    * Constructor method.
    */
-  public CommentFormData(String id, String comment) {
+  public CommentFormData(String id, String comment, String crn, String username) {
     this.id = id;
     this.comment = comment;
+    this.crn = crn;
+    this.username = username;
   }
   
 }

@@ -13,7 +13,8 @@
   endPage: Int,
   currentPage: Int,
   instructorList: Map[String, Boolean],
-  courseList: Map[String, Boolean])
+  courseList: Map[String, Boolean],
+  commentForm: Form[views.formdata.CommentFormData])
   
   
 @import helper.form 
@@ -259,6 +260,15 @@ function addLoadEvent(func) {
 addLoadEvent(replaceFullCalendarHeader);
 </script>
 
+<script>
+function submitComment(crn)
+{
+  document.getElementById('crn').value=crn;
+  document.getElementById('comment').value=$('#text' + crn).val();
+  document.getElementById('hiddenCommentForm').submit();
+}
+</script>
+
 
 <!-- / FullCalendar Scripts and Style -->
 
@@ -464,6 +474,13 @@ addLoadEvent(replaceFullCalendarHeader);
   <!-- /main -->
   <div class="bottom-spacing"></div>
   
+  <!-- Hidden form to edit comment -->
+@form(routes.Application.addComment(), 'id -> "hiddenCommentForm") {
+  @hidden(commentForm("comment"))
+  @hidden(commentForm("crn"))
+  @hidden(commentForm("username"))
+}
+  
   @for(course <- resultsList) {
   <div class="modal fade" id="infomodal@course.getCourseNumber()">
     <div class="modal-dialog">
@@ -474,26 +491,22 @@ addLoadEvent(replaceFullCalendarHeader);
         </div>
         <div class="modal-body">
           <h4>
-            <b>Course Summary</b>
-          </h4>
-          <p></p>
-          <br>
-          <h4>
             <b>Late Breaking Information</b>
           </h4>
           @for(comment <- UserCommentDB.getCommentsByCrnReverse(course.getCourseNumber())) {
-              <p>@comment.getPostDate() @comment.getFullName: @comment.getComment()</p>
+              <p>@comment.getPostDate() @comment.getUserName(): @comment.getComment()</p>
           }
-          <div id="messagebox" class="add-comment-area">
+          <br>
+          <div id="messagebox@course.getCourseNumber()" class="add-comment-area">
             <p>
               <b>New Message:</b>
             </p>
-            <textarea rows="4" cols="50"></textarea>
+            <textarea id="text@course.getCourseNumber()" rows="4" cols="50"></textarea>
           </div>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-          <button type="button" id="addmessage" class="btn btn-primary">New Message</button>
+          <button type="button" id="addmessage@course.getCourseNumber()" class="btn btn-primary" onclick="submitComment(@course.getCourseNumber())">Add New Message</button>
         </div>
       </div>
       <!-- /.modal-content -->

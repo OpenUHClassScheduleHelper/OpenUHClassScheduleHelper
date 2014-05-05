@@ -170,6 +170,7 @@ public class Application extends Controller {
     Form<SearchForm> formData = searchForm.bindFromRequest();
     SearchForm data = formData.get();
     
+    Form<CommentFormData> commentForm = Form.form(CommentFormData.class).bindFromRequest();
     String currentDept = "";
     String currentInstructor = "";
     String currentCourse ="";
@@ -180,6 +181,7 @@ public class Application extends Controller {
     List<String> courseList = new ArrayList<>();
     int pageCount = 0;
     int courseCount = 0;
+    
   
     //UserInfo user = Secured.getUserInfo(ctx());
     //schedule = user.getSchedule();
@@ -249,8 +251,8 @@ public class Application extends Controller {
     List<Course> resultsList = new ArrayList<>();
     List<Course> schedule = new ArrayList<>();*/
     String dept = data.department;
-    if (data.department.indexOf(":") > 0) {
-      dept = data.department.substring(0, data.department.indexOf(":"));
+    if (data.department.indexOf(": ") > 0) {
+      dept = data.department.substring(0, data.department.indexOf(": "));
     }
     
     switch (pageNum) {
@@ -326,11 +328,12 @@ public class Application extends Controller {
         } // end of result meeting loop
       } // end of result loop
     }
-
+    //System.out.println(CourseSearch.getResultsCount());
     return ok(Results.render("Results", user, FocusTypes.getFocusTypes(), Days.getDays(), 
               Departments.getDepartments(currentDept), resultList, searchForm, schedule, events, 
               CourseSearch.getResultsCount(), CourseSearch.getPageCount(), startPage, endPage, pageNum,
-              CourseDB.getInstructorMap(dept, currentInstructor), CourseDB.getCoursesMap(dept, currentCourse)));
+              CourseDB.getInstructorMap(dept, currentInstructor), CourseDB.getCoursesMap(dept, currentCourse),
+              commentForm));
   }
   
   /**
@@ -445,6 +448,34 @@ public class Application extends Controller {
       UserCommentDB.removeComment(id);
     }
     return redirect(routes.Application.myAccount());
+  }
+  
+  
+  /**
+   * Edit a comment in the users CommentDB. Called from the MyAccount page.
+   */
+  @Security.Authenticated(Secured.class)
+  public static Result addComment() {
+    Form<CommentFormData> commentForm = Form.form(CommentFormData.class).bindFromRequest();
+    UserInfo user = Secured.getUserInfo(ctx());
+    if (commentForm.hasErrors()) {
+      // This wont actually work since theres no validate method.
+      // Do nothing, just reload My account page.
+      System.out.println("eror");
+    }
+    else {
+      CommentFormData commentFormData = commentForm.get();
+
+      String crn = commentFormData.crn;
+      String username = user.getUserName();
+      String newComment = commentFormData.comment;
+
+      // Get the old comment and use it to create the new comment.
+      //UserComment oldComment = UserCommentDB.getCommentById(id);
+      UserCommentDB.addComment(crn, username, newComment);
+
+    }
+    return redirect(routes.Application.getResults(1));
   }
   
   /**
