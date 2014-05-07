@@ -118,7 +118,6 @@ public class Application extends Controller {
       }
       return redirect(routes.Application.index());
     }
-    
   }
 
   /**
