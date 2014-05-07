@@ -36,14 +36,14 @@ import models.UserInfo;
 public class Application extends Controller {
   
   // Development
-  private static final String CAS_LOGIN = "https://cas-test.its.hawaii.edu/cas/login";
-  private static final String CAS_VALIDATE = "https://cas-test.its.hawaii.edu/cas/serviceValidate";
-  private static final String CAS_LOGOUT = "https://cas-test.its.hawaii.edu/cas/logout";
+  //private static final String CAS_LOGIN = "https://cas-test.its.hawaii.edu/cas/login";
+  //private static final String CAS_VALIDATE = "https://cas-test.its.hawaii.edu/cas/serviceValidate";
+  //private static final String CAS_LOGOUT = "https://cas-test.its.hawaii.edu/cas/logout";
   
   // Production
-  //private static final String CAS_LOGIN = "https://authn.hawaii.edu/cas/login";
-  //private static final String CAS_VALIDATE = "https://authn.hawaii.edu/cas/serviceValidate";
-  //private static final String CAS_LOGOUT = "https://authn.hawaii.edu/cas/logout";
+  private static final String CAS_LOGIN = "https://authn.hawaii.edu/cas/login";
+  private static final String CAS_VALIDATE = "https://authn.hawaii.edu/cas/serviceValidate";
+  private static final String CAS_LOGOUT = "https://authn.hawaii.edu/cas/logout";
   
   private static final Form<SearchForm> searchForm = Form.form(SearchForm.class);
 
@@ -53,13 +53,7 @@ public class Application extends Controller {
    * @return The home page.
    */
   public static Result index() {
-    UserInfo user = Secured.getUserInfo(ctx());
-    boolean isLoggedIn = Secured.isLoggedIn(ctx());
-    return ok(Index.render("Home", user, isLoggedIn));
-    //if(user == null) {
-    //  return ok(Index.render("Home", "", false));
-   // }
-   // return ok(Index.render("Home", user, Secured.isLoggedIn(ctx())));
+    return ok(Index.render("Home", Secured.getUserInfo(ctx()), Secured.isLoggedIn(ctx())));
   }
 
   /**
@@ -69,12 +63,6 @@ public class Application extends Controller {
   @Security.Authenticated(Secured.class)
   public static Result map() {
     return ok(MapRoute.render("Campus Map", Secured.getUserInfo(ctx()), Secured.isLoggedIn(ctx())));
-    
-    //UserInfo user = Secured.getUserInfo(ctx());
-    //if(user == null) {
-    //  return ok(MapRoute.render("Campus Map", ""));
-   // }
-   // return ok(MapRoute.render("Campus Map", user.getEmail()));
   }
 
   /**

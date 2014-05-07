@@ -14,6 +14,6 @@ Wiki Pages:
  - [Stakeholder Requirements](https://github.com/OpenUHClassScheduleHelper/OpenUHClassScheduleHelper/wiki/Stakeholder-Requirements)
 
 
- - [Cloudbees Deployment](http://uhscheduler.com/)
+ - [Cloudbees Deployment](http://www.uhscheduler.com/)
  - [Use Cases 2](https://github.com/OpenUHClassScheduleHelper/OpenUHClassScheduleHelper/wiki/Use-Cases-2.0)
  - [Installation Instructions](https://github.com/OpenUHClassScheduleHelper/OpenUHClassScheduleHelper/wiki/Installation-Instructions)
