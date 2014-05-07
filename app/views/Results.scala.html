@@ -270,6 +270,21 @@ function submitComment(crn)
 }
 </script>
 
+<script>
+function toggleMobileDiv(id)
+{
+  if ($(id).is(":visible")) {
+    $(id).slideUp(400, function() {
+      //Animation Complete
+    });
+  } else {
+      $(id).slideDown(600, function() {
+      //Animation Complete
+    });
+  }
+}
+</script>
+
 
 <!-- / FullCalendar Scripts and Style -->
 
@@ -316,95 +331,59 @@ function submitComment(crn)
    @if(resultsList.size() != 0) {
     <h2 id="resultsHeader"><b>Results</b></h2>
    }
-    <div class="visible-sm visible-xs">
-      <a class="btn course-dropdown-button" id="resultbutton1" onMouseOut="div.show('84935')"
-        onMouseOver="div.hide('84935')"> ICS 111 Intro to Computer Science I </a>
-      <div class="mobileresults" id="resultinfo1">
-        <p>
-          <b>CRN: </b><br>84935
-        </p>
-        <hr></hr>
-        <p>
-          <b>Gen Ed./Focus: </b><br>
-        </p>
-        <hr></hr>
-        <p>
-          <b>Instructor: </b><br>Ravi Narayan
-        </p>
-        <hr></hr>
-        <p>
-          <b>Location: </b><br>POST 127<br>POST 319
-        </p>
-        <hr></hr>
-        <p>
-          <b>Time: </b><br>M 0530-0800p<br>W 0530-0645p
-        </p>
-        <hr></hr>
-        <p></p>
-      </div>
+   
+    <!-- Schedule in mobile view -->
+        @for(course <- resultsList) {
+        <div class="visible-sm visible-xs">
+          <a class="btn course-dropdown-button" onclick="toggleMobileDiv(mobileSchedule@course.getCrn())">
+            @course.getCrn(): @course.getCourseName() - @course.getCourseTitle() 
+          </a>
+          <div id="mobileSchedule@course.getCrn()" style="display:none;">
+            <table class="table table-bordered">
+              <tr>
+                <td>Gen Ed/Focus</td>
+                <td>@if(course.getGenFocus()=="") {None} else {@course.getGenFocus()}</td>
+              </tr>
+              <tr>
+                <td>Instructor:</td>
+                <td>@course.getInstructor()</td>
+              </tr>
+              <tr>
+                <td>Day/Time/Location:</td>
+                <td>@for(meeting <- course.getMeetingTimes()) {@meeting<br>}</td>
+              </tr>
+              <tr>
+                <td>Add to schedule?</td>
+                <td>
+                  @if(schedule.contains(course)) {
+                    <button class="btn btn-success btn-sm added" title="Already Added">
+                      <div class="glyphicon glyphicon-plus" title="Already Added"></div>
+                     } else {
+                       <button class="btn btn-success btn-sm" data-toggle="modal" data-target="#addmodal@course.getCourseNumber()" title="Add to Schedule">
+                       <div class="glyphicon glyphicon-plus" data-toggle="modal" data-target="#addmodal@course.getCourseNumber()" title="Add to Schedule"></div></button>
+                  }
+                </td>
+              </tr>
+              <tr>
+                <td>Late Breaking News</td>
+                <td>
+                  <img class="infoicon" id="infoicon@course.getCourseNumber()" src="@routes.Assets.at("images/more_information_icon.jpg")" data-toggle="modal"
+                  data-target="#infomodal@course.getCourseNumber()" title="Late Breaking News"></img>
+                </td>
+              </tr>
+              <tr>
+                <td>Add to Watchlist?</td>
+                <td>
+                  <img class="watchicon" src="@routes.Assets.at("images/eye.svg")" data-toggle="modal" data-target="#watchmodal@course.getCourseNumber()"></img>
+                </td>
+              </tr>
+            </table>
+          </div> <!-- End of mobile table -->
+        </div> <!-- End of visible div -->
+        }
+        <!-- End of Schedule in mobile view -->
 
-      <a class="btn course-dropdown-button" id="resultbutton2" onMouseOut="div.show('84095')"
-        onMouseOver="div.hide('84095')"> ICS 142 Discrete Math for CS I </a>
-      <div class="mobileresults" id="resultinfo2">
-        <p>
-          <b>CRN: </b><br>84095
-        </p>
-        <hr></hr>
-        <p>
-          <b>Gen Ed./Focus: </b><br>
-        </p>
-        <hr></hr>
-        <p>
-          <b>Instructor: </b><br>Kazuo Sugihara
-        </p>
-        <hr></hr>
-        <p>
-          <b>Location: </b><br>BIL 150<br>MSB 114
-        </p>
-        <hr></hr>
-        <p>
-          <b>Time: </b><br>TR 0130-0245p<br>F 1200-0115p
-        </p>
-        <hr></hr>
-        <p>
-          <a href="addclassresults.html"><button class="btn btn-success btn-sm">
-              <div class="glyphicon glyphicon-plus"></div>
-              Add To Schedule
-            </button></a>
-        </p>
-      </div>
-
-      <a class="btn course-dropdown-button" id="resultbutton3" onMouseOut="conflict.hide('84494')"
-        onMouseOver="conflict.show('84494')"> ICS 212 Program Structure </a>
-      <div class="mobileresults" id="resultinfo3">
-        <p>
-          <b>CRN: </b><br>84494
-        </p>
-        <hr></hr>
-        <p>
-          <b>Gen Ed./Focus: </b><br>
-        </p>
-        <hr></hr>
-        <p>
-          <b>Instructor: </b><br>Julia Patriarche
-        </p>
-        <hr></hr>
-        <p>
-          <b>Location: </b><br>TBA
-        </p>
-        <hr></hr>
-        <p>
-          <b>Time: </b><br>TBA
-        </p>
-        <hr></hr>
-        <p>
-          <button class="btn btn-success btn-sm">
-            <div class="glyphicon glyphicon-plus"></div>
-            Add To Schedule
-          </button>
-        </p>
-      </div>
-    </div>
+      
 
 @if(resultsList.size() == 0) {
 <h3 id="resultsHeader">No Results</h3>
