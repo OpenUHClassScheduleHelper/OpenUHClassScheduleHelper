@@ -2,6 +2,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
 import java.util.Timer;
+import controllers.WebScraper;
 import play.Application;
 import play.GlobalSettings;
 import models.Notifier;

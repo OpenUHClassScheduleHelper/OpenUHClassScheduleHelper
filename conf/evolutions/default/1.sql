@@ -58,13 +58,6 @@ create table user_info (
   constraint pk_user_info primary key (id))
 ;
 
-create table viewed_comment (
-  id                        bigint auto_increment not null,
-  user_name                 varchar(255),
-  crn                       varchar(255),
-  constraint pk_viewed_comment primary key (id))
-;
-
 alter table course_roster add constraint fk_course_roster_userInfo_1 foreign key (user_info_id) references user_info (id) on delete restrict on update restrict;
 create index ix_course_roster_userInfo_1 on course_roster (user_info_id);
 alter table course_roster add constraint fk_course_roster_course_2 foreign key (course_id) references course (id) on delete restrict on update restrict;
@@ -85,8 +78,6 @@ drop table meeting;
 drop table user_comment;
 
 drop table user_info;
-
-drop table viewed_comment;
 
 SET FOREIGN_KEY_CHECKS=1;
 

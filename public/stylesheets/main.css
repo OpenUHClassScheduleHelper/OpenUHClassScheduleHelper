@@ -597,6 +597,12 @@ a:hover {
   min-height:50px; /*must be min-height or pull down menu will be transparent.*/
 }
 
+.navbar-inverse .navbar-text {
+  color: white;
+  margin-left: 120px;
+  margin-bottom: 0px;
+}
+
 /***** Sticky footer *****/
 
 html, body {height: 100%;}

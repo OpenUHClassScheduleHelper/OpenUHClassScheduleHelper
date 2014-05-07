@@ -13,8 +13,8 @@ import javax.mail.internet.MimeMessage;
 import play.Play;
 
 /**
- * Code obtained from http://stackoverflow.com/questions/3649014/send-email-using-java
- * @author doraemon
+ * A class that handles the sending of emails/sms messages.
+ * @author Rob Namahoe
  */
 public class SendEmail {
     private SendEmail() {}
@@ -39,6 +39,12 @@ public class SendEmail {
       SendConfirmation(smsGateway, message);
     }
     
+    /**
+     * A private method called by SendConfirmationByEmail and SendConfirmationBySms.
+     * Sends the confirmation email to the specified recipient.
+     * @param recipientEmail The email address of the recipient.
+     * @param message The message to send.
+     */
     private static void SendConfirmation(String recipientEmail, String message) {
       try {
         SendEmail.Send(recipientEmail, "", "A message from the UH Scheduler team.", message);
@@ -84,6 +90,7 @@ public class SendEmail {
     
     /**
      * Send email using GMail SMTP server.
+     * Code obtained from http://stackoverflow.com/questions/3649014/send-email-using-java
      *
      * @param recipientEmail TO recipient
      * @param ccEmail CC recipient. Can be empty if there is no CC recipient

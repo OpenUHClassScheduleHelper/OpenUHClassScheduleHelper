@@ -1,7 +1,7 @@
 
-@(page: String, email: String)
+@(page: String, user: UserInfo, isLoggedIn: Boolean)
 
-@Main("Open UH Schedule Helper", email, false) {
+@Main("Open UH Schedule Helper", user, isLoggedIn) {
   <!-- social glyphicons -->
   <link href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
 
@@ -43,7 +43,7 @@
     </div>
     <!-- End of col-md-6 (Text Columns) -->
     <div class="col-md-6 col-md-pull-6">
-      <img class="block-image" src="@routes.Assets.at("images/info.jpg")">
+      <img class="block-image" src="@routes.Assets.at("images/latebreakinginfo.png")">
     </div>
     <!-- End of col-md-6 (Image Columns) -->
   </div>
@@ -69,13 +69,13 @@
   <!-- Map Block -->
   <div class="colorblock-gradient">
     <div class="col-md-6 col-md-push-6">
-      <div class="block-header">Map your route between classes</div>
-      <div class="block-text">Don't know where your class is? Curious how far it is between classes? Click on the
-        Maps link to see a map of your schedule.</div>
+      <div class="block-header" style="color:white;">Map your route between classes</div>
+      <div class="block-text" style="color:white;">New to the campus and don't know where your classes are? We understand; 
+      we were freshmen once too. Click on the Campus Map link for an awesome, easy to use map of the campus.</div>
     </div>
     <!-- End of col-md-6 (Text Columns) -->
     <div class="col-md-6 col-md-pull-6">
-      <img class="block-image" src="@routes.Assets.at("images/myroute.jpg")">
+      <img class="block-image" src="@routes.Assets.at("images/campusmap.jpg")">
     </div>
     <!-- End of col-md-6 (Image Columns) -->
   </div>

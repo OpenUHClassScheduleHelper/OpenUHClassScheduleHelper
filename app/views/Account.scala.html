@@ -1,5 +1,6 @@
 @(page: String, 
   user : UserInfo, 
+  isLoggedIn: Boolean,
   schedule: List[Course], 
   watchList: List[Course], 
   comments: List[UserComment],
@@ -11,7 +12,7 @@
 @import helper._
 @import bootstrap3._
 
-@Main(page, user.getEmail(), true) {
+@Main(page, user, isLoggedIn) {
 
 <!-- FullCalendar Scripts and Style -->
 <link rel="stylesheet" href="@routes.Assets.at("fullcalendar/fullcalendar.css")">
@@ -274,19 +275,19 @@ function toggleMobileDiv(id)
 <br>
 <div class="container">
   <ul class="nav nav-tabs" data-tabs="tabs" style="margin-left: 10px; margin-right: 10px; margin-top: 10px;">
-    <li class="active"><a data-toggle="tab" href="#Calendar">Calendar</a></li>
-    <li><a data-toggle="tab" href="#Schedule">Schedule</a></li>  
+    <li class="active"><a data-toggle="tab" href="#Schedule">Schedule</a></li>
+    <li><a data-toggle="tab" href="#CourseList">Course List</a></li>  
     <li><a data-toggle="tab" href="#WatchList">Watch List</a></li>
     <li><a data-toggle="tab" href="#News">Late Breaking News</a></li>
   </ul>
   
   <div class="tab-content" style="margin-left: 10px; margin-right: 10px;">
-    <div class="tab-pane active" id="Calendar">    
+    <div class="tab-pane active" id="Schedule">    
       <!-- Full Calendar -->
       <div id='calendar' style="padding:1em;"></div>
     </div> <!-- End of tab-pane div -->
     
-    <div class="tab-pane" id="Schedule">
+    <div class="tab-pane" id="CourseList">
       
       @if(schedule.length == 0) {
         <h4>Your schedule is empty. Click <a style="color:blue;" href="@routes.Application.search()">here</a> 

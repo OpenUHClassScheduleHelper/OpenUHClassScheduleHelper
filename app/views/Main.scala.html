@@ -1,4 +1,4 @@
-@(page: String, email: String, isLoggedIn: Boolean)(content: Html)
+@(page: String, user: UserInfo, isLoggedIn: Boolean)(content: Html)
 
 <!DOCTYPE html>
 
@@ -48,6 +48,9 @@
         </div>
         <div class="collapse navbar-collapse">
           @if(isLoggedIn) {
+          <ul class="nav navbar-nav pull-left">
+            <p class="navbar-text pull-left">Welcome, @user.getUserName()!</p> 
+          </ul>
           <ul class="nav navbar-nav navbar-right">
             <li>
               <a href="@routes.Application.search()" 
@@ -61,7 +64,7 @@
             </li>
             <li>
               <a href="@routes.Application.myAccount()" 
-                 style="color: @if(page=="My Account"){black}else{white};">@email
+                 style="color: @if(page=="My Account"){black}else{white};">My Account
               </a>
             </li>
             <li>
