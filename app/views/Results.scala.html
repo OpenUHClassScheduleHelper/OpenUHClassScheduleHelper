@@ -1,5 +1,6 @@
 @(page: String, 
   user: UserInfo,
+  isLoggedIn: Boolean,
   focusList: Map[String, Boolean], 
   dayList: Map[String, Boolean], 
   departmentList: Map[String, Boolean], 
@@ -20,7 +21,7 @@
 @import helper.form 
 @import bootstrap3._
 
-@Main(page, user.getEmail(), true) {
+@Main(page, user, isLoggedIn) {
  <script type='text/javascript'>
             $(document).ready(function() { 
 
@@ -442,7 +443,7 @@ function submitComment(crn)
           }
           </button> <img class="infoicon" id="infoicon@course.getCourseNumber()" src="@routes.Assets.at("images/more_information_icon.jpg")" data-toggle="modal"
           data-target="#infomodal@course.getCourseNumber()" title="Late Breaking News"></img>
-          <img class="watchicon" src="@routes.Assets.at("images/eye.svg")" data-toggle="modal" data-target="#watchmodal@course.getCourseNumber()"></img>
+          <img class="watchicon" src="@routes.Assets.at("images/eye.svg")" data-toggle="modal" data-target="#watchmodal@course.getCourseNumber()" title="Add to Watchlist"></img>
         </td>
         </tr>
       }
@@ -452,7 +453,7 @@ function submitComment(crn)
       <div style="text-align:center">
         <ul class="pagination">
         <li><a href="@routes.Application.getResults(1)">First</a></li>
-          <li class=@if(currentPage<6){"disabled"}><a href="@routes.Application.getResults(startPage-5)">&laquo;</a></li>
+          <li class=@if(currentPage<6){"disabled"}><a href=@if(currentPage<6){} else {@routes.Application.getResults(startPage-5)}>&laquo;</a></li>
           @for(i <- startPage until endPage + 1) {
             <li class=@if(i==currentPage){"active"}>
               <a id="@i" href="@routes.Application.getResults(i)">
@@ -505,7 +506,7 @@ function submitComment(crn)
           </div>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
           <button type="button" id="addmessage@course.getCourseNumber()" class="btn btn-primary" onclick="submitComment(@course.getCourseNumber())">Add New Message</button>
         </div>
       </div>
@@ -530,7 +531,7 @@ function submitComment(crn)
 
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
           <a href="@routes.Application.addCourseToWatchlist(course.getCourseNumber())"><button type="button" class="btn btn-primary">Add</button></a>
         </div>
       </div>
@@ -560,7 +561,7 @@ function submitComment(crn)
 
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
           <a href="@routes.Application.addCourseToSchedule(course.getCourseNumber())"><button type="button" class="btn btn-primary">Add</button></a>
         </div>
       </div>
@@ -593,7 +594,7 @@ function submitComment(crn)
 
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
           <button type="button" class="btn btn-primary">Add Message</button>
         </div>
       </div>
@@ -623,7 +624,7 @@ function submitComment(crn)
           <p class="professor-new-info">12/10/14 Julia Patriarche: This class will be conducted as an online course.</p>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
           <button type="button" class="btn btn-primary">Add Message</button>
         </div>
       </div>
@@ -645,7 +646,7 @@ function submitComment(crn)
 
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
           <button type="button" class="btn btn-primary">Add</button>
         </div>
       </div>
@@ -706,7 +707,7 @@ function submitComment(crn)
           </label> <br>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
           <!-- both buttons close modal for now -->
           <button type="button" class="btn btn-success" data-dismiss="modal">Search</button>
         </div>

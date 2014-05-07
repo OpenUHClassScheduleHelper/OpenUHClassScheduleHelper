@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 import com.avaje.ebean.Ebean;
-import com.avaje.ebean.FetchConfig;
 import com.avaje.ebean.PagingList;
 import com.avaje.ebean.Query;
 

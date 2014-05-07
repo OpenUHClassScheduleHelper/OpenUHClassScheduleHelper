@@ -3,8 +3,6 @@ package controllers;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.Map;
-import javax.mail.MessagingException;
-import javax.mail.internet.AddressException;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import models.UserInfoDB;
@@ -24,7 +22,6 @@ import java.util.List;
 import java.util.ArrayList;
 import views.html.Index;
 import views.html.Results;
-import views.html.Search;
 import views.html.Account;
 import views.html.MapRoute;
 import models.Course;
@@ -57,10 +54,12 @@ public class Application extends Controller {
    */
   public static Result index() {
     UserInfo user = Secured.getUserInfo(ctx());
-    if(user == null) {
-      return ok(Index.render("Home", ""));
-    }
-    return ok(Index.render("Home", user.getEmail()));
+    boolean isLoggedIn = Secured.isLoggedIn(ctx());
+    return ok(Index.render("Home", user, isLoggedIn));
+    //if(user == null) {
+    //  return ok(Index.render("Home", "", false));
+   // }
+   // return ok(Index.render("Home", user, Secured.isLoggedIn(ctx())));
   }
 
   /**
@@ -69,13 +68,20 @@ public class Application extends Controller {
    */
   @Security.Authenticated(Secured.class)
   public static Result map() {
-    UserInfo user = Secured.getUserInfo(ctx());
-    if(user == null) {
-      return ok(MapRoute.render("Campus Map", ""));
-    }
-    return ok(MapRoute.render("Campus Map", user.getEmail()));
+    return ok(MapRoute.render("Campus Map", Secured.getUserInfo(ctx()), Secured.isLoggedIn(ctx())));
+    
+    //UserInfo user = Secured.getUserInfo(ctx());
+    //if(user == null) {
+    //  return ok(MapRoute.render("Campus Map", ""));
+   // }
+   // return ok(MapRoute.render("Campus Map", user.getEmail()));
   }
 
+  /**
+   * Returns the login page.
+   * @return The Login Page.
+   * @throws Exception CAS exception.
+   */
   public static Result login() throws Exception {
     
     Map<String, String[]> query = request().queryString();
@@ -127,6 +133,11 @@ public class Application extends Controller {
     
   }
 
+  /**
+   * Retuns the logout page.
+   * @return The logout page.
+   * @throws Exception CAS exception.
+   */
   @Security.Authenticated(Secured.class)
   public static Result logout() throws Exception {
     // clear your session
@@ -138,18 +149,6 @@ public class Application extends Controller {
     return redirect(CAS_LOGOUT + "?service=" + serviceURL);
 
   }
-
-  /**
-   * Returns the sample results page to see if classes are implemented properly. This is only for testing!
-   * @return The registration page.
-   */
-  @Security.Authenticated(Secured.class)
-  public static Result searchResults() {
-    List<Course> courseList = CourseDB.getCourses(); 
-    UserInfo user = Secured.getUserInfo(ctx());
-    return ok(Search.render("Search", user.getEmail(), true, courseList));
-  }
-
   
   /**
    * Returns the search page with an empty results table.
@@ -300,6 +299,8 @@ public class Application extends Controller {
     }
     
     UserInfo user = Secured.getUserInfo(ctx());
+    boolean isLoggedIn = Secured.isLoggedIn(ctx());
+    
     schedule = user.getSchedule();
 
     // Create Schedule Events
@@ -329,7 +330,7 @@ public class Application extends Controller {
       } // end of result loop
     }
     //System.out.println(CourseSearch.getResultsCount());
-    return ok(Results.render("Results", user, FocusTypes.getFocusTypes(), Days.getDays(), 
+    return ok(Results.render("Results", user, isLoggedIn, FocusTypes.getFocusTypes(), Days.getDays(), 
               Departments.getDepartments(currentDept), resultList, searchForm, schedule, events, 
               CourseSearch.getResultsCount(), CourseSearch.getPageCount(), startPage, endPage, pageNum,
               CourseDB.getInstructorMap(dept, currentInstructor), CourseDB.getCoursesMap(dept, currentCourse),
@@ -343,6 +344,7 @@ public class Application extends Controller {
   @Security.Authenticated(Secured.class)
   public static Result myAccount() {
     UserInfo user = Secured.getUserInfo(ctx());
+    boolean isLoggedIn = Secured.isLoggedIn(ctx());
     Form<CommentFormData> commentForm = Form.form(CommentFormData.class);
     NotificationPreferencesFormData preferencesFormData = new NotificationPreferencesFormData(user);
     Form<NotificationPreferencesFormData> preferencesForm = Form.form(NotificationPreferencesFormData.class).fill(preferencesFormData);
@@ -351,7 +353,7 @@ public class Application extends Controller {
     List<UserComment> breakingNewsSchedule = getBreakingNews_Schedule();
     List<UserComment> breakingNewsWatchlist = getBreakingNews_Watchlist();
     
-    return ok(Account.render("My Account", user, user.getSchedule(), user.getWatchList(),
+    return ok(Account.render("My Account", user, isLoggedIn, user.getSchedule(), user.getWatchList(),
         UserCommentDB.getCommentsByUserName(user.getUserName()), breakingNewsSchedule, breakingNewsWatchlist, 
                                             commentForm, preferencesForm));
   }
@@ -391,14 +393,15 @@ public class Application extends Controller {
    */
   @Security.Authenticated(Secured.class)
   public static Result updateNotificationPreferences() {
-    UserInfo user = Secured.getUserInfo(ctx());    
+    UserInfo user = Secured.getUserInfo(ctx());   
+    boolean isLoggedIn = Secured.isLoggedIn(ctx());
     Form<CommentFormData> commentForm = Form.form(CommentFormData.class);
     Form<NotificationPreferencesFormData> preferencesForm = Form.form(NotificationPreferencesFormData.class).bindFromRequest();
     if (preferencesForm.hasErrors()) {
       // Get late breaking news for all courses in the users schedule
       List<UserComment> breakingNewsSchedule = getBreakingNews_Schedule();
       List<UserComment> breakingNewsWatchlist = getBreakingNews_Watchlist();
-      return badRequest(Account.render("My Account", user, user.getSchedule(), user.getWatchList(),
+      return badRequest(Account.render("My Account", user, isLoggedIn, user.getSchedule(), user.getWatchList(),
           UserCommentDB.getCommentsByUserName(user.getUserName()), breakingNewsSchedule, breakingNewsWatchlist,
                                               commentForm, preferencesForm));
     }
@@ -502,12 +505,22 @@ public class Application extends Controller {
     return redirect(routes.Application.myAccount());
   }
   
+/**
+ * Handles adding a course to the users watchlist.
+ * @param crn The CRN of the course to add
+ * @return Redirects to the Results page.
+ */
   public static Result addCourseToWatchlist(String crn) {
     UserInfo user = Secured.getUserInfo(ctx());
     user.addToWatchList(CourseDB.getCourse(crn));
     return redirect(routes.Application.getResults(1));
   }
 
+  /**
+   * Handles adding a course to the users schedule.
+   * @param crn The CRN of the course to add.
+   * @return Redirects to the Results page.
+   */
   public static Result addCourseToSchedule(String crn) {
     UserInfo user = Secured.getUserInfo(ctx());
     user.addToSchedule(crn);
@@ -526,6 +539,11 @@ public class Application extends Controller {
     return redirect(routes.Application.myAccount());
   }
   
+  /**
+   * Generate a list of instructors teaching in the specified department.
+   * @param dept The department.
+   * @return A list of instructors teaching in the specified department.
+   */
   public static Result populateInstructorList(String dept) {
     dept = dept.substring(0, dept.indexOf(":"));
     List<String> instructors = CourseDB.getInstructors(dept);
@@ -544,7 +562,12 @@ public class Application extends Controller {
     }
     return ok(instructorddl);
   }
-
+  
+/**
+ * Generates a list of courses offered by the specified department.
+ * @param dept The department.
+ * @return A list of courses offered by the specified department.
+ */
   public static Result populateCourseList(String dept) {
     dept = dept.substring(0, dept.indexOf(":"));
     List<String> courses = CourseDB.getCourses(dept);
@@ -555,6 +578,10 @@ public class Application extends Controller {
     return ok(courseddl);
   }
   
+  /**
+   * 
+   * @return
+   */
   public static Result jsRoutes() {
     response().setContentType("text/javascript");
     return ok(Routes.javascriptRouter("appRoutes", // appRoutes will be the JS object available in our view

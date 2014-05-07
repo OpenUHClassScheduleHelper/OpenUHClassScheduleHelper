@@ -1,6 +1,6 @@
-@(page: String, email: String)
+@(page: String, user: UserInfo, isLoggedIn: Boolean)
 
-@Main(page, email, true) {
+@Main(page, user, isLoggedIn) {
   <div class="container">
     <div class="full col-md-12">
       <h2>Campus Map</h2>

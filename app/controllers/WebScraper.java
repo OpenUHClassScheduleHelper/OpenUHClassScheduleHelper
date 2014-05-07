@@ -28,7 +28,6 @@ public class WebScraper {
    */
   public void scrapeLinks(String url) {
     
-    //String semester = getSemester(url);
     String semester = "";
     ArrayList<PageScraper> scrapers = new ArrayList<PageScraper>();
 
@@ -65,9 +64,10 @@ public class WebScraper {
 
   }
   
-  
-  
-  
+  /**
+   * A class that performs the webscraping operation.
+   * @author rckndn
+   */
   private class PageScraper extends Thread {
     String url = "";
     String semester = "";
@@ -232,11 +232,8 @@ public class WebScraper {
         ret = ret.replace(toBeReplaced, "");
       }
       return ret;
-    }
-
-    
+    } 
   }
-  
   
   /**
    * Get the semester associated with the main page.
@@ -267,9 +264,6 @@ public class WebScraper {
     }
     return semester;
   }
-  
-  
-
   
   /**
    * Get a list of all the links on the main Class Availability web site.
