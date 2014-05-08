@@ -272,9 +272,15 @@ public class CourseSearch {
     }
     
     //================================================================================================================
-    if(startTime.equals("") || endTime.equals("")) {
+    if(startTime.equals("") || endTime.equals("") || (startTime.equals("6:00 AM") && endTime.equals("11:00 PM"))) {
       //Use crnList as finalCrnList
+      if(crnList.size() != 0) {
       finalCrnList = crnList;
+      }else {
+        for(Course course : initialCourseList) {
+          finalCrnList.add(course.getCourseNumber());
+        }
+      }
     }else {
     String start = startTime.split(" ")[0].replace(":", "");
     String startAbbreviation =  startTime.split(" ")[1];

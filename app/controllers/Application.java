@@ -36,14 +36,14 @@ import models.UserInfo;
 public class Application extends Controller {
   
   // Development
-  //private static final String CAS_LOGIN = "https://cas-test.its.hawaii.edu/cas/login";
-  //private static final String CAS_VALIDATE = "https://cas-test.its.hawaii.edu/cas/serviceValidate";
-  //private static final String CAS_LOGOUT = "https://cas-test.its.hawaii.edu/cas/logout";
+  private static final String CAS_LOGIN = "https://cas-test.its.hawaii.edu/cas/login";
+  private static final String CAS_VALIDATE = "https://cas-test.its.hawaii.edu/cas/serviceValidate";
+  private static final String CAS_LOGOUT = "https://cas-test.its.hawaii.edu/cas/logout";
   
   // Production
-  private static final String CAS_LOGIN = "https://authn.hawaii.edu/cas/login";
-  private static final String CAS_VALIDATE = "https://authn.hawaii.edu/cas/serviceValidate";
-  private static final String CAS_LOGOUT = "https://authn.hawaii.edu/cas/logout";
+  //private static final String CAS_LOGIN = "https://authn.hawaii.edu/cas/login";
+  //private static final String CAS_VALIDATE = "https://authn.hawaii.edu/cas/serviceValidate";
+  //private static final String CAS_LOGOUT = "https://authn.hawaii.edu/cas/logout";
   
   private static final Form<SearchForm> searchForm = Form.form(SearchForm.class);
 

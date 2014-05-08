@@ -49,7 +49,9 @@
         <div class="collapse navbar-collapse">
           @if(isLoggedIn) {
           <ul class="nav navbar-nav pull-left">
-            <p class="navbar-text pull-left hidden-xs">Welcome, @user.getUserName()!</p> 
+            @if(user != null) {
+            <p class="navbar-text pull-left hidden-xs">Welcome, @user.getUserName()!</p>
+            } 
           </ul>
           <ul class="nav navbar-nav navbar-right">
             <li>
