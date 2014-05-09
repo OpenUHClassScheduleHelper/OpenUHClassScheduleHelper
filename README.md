@@ -23,6 +23,6 @@ Milestone 2:
 Milestone 3:
  - [www.uhscheduler.com](http://www.uhscheduler.com/)
  - [Developer Guide](https://github.com/OpenUHClassScheduleHelper/OpenUHClassScheduleHelper/wiki/Developer-Guide) and [Developer Screencast](http://youtu.be/ms1GNL_i7cw)
- - [Users Guide](https://github.com/OpenUHClassScheduleHelper/OpenUHClassScheduleHelper/wiki/User-Guide) and [User Screencast]()
+ - [Users Guide](https://github.com/OpenUHClassScheduleHelper/OpenUHClassScheduleHelper/wiki/User-Guide) and [User Screencast](https://www.youtube.com/watch?v=L2S1RPwVpXg)
  - [Use Cases 3](https://github.com/OpenUHClassScheduleHelper/OpenUHClassScheduleHelper/wiki/Use-Cases-3.0)
  - [Final User Evaluations](https://github.com/OpenUHClassScheduleHelper/OpenUHClassScheduleHelper/wiki/Final-User-Evaluations)
